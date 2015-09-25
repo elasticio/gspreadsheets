@@ -2,7 +2,7 @@
 // Test for metadata fetching and parsing
 var events = require('events');
 var _ = require('lodash-node');
-var messages = require('../../../../lib/components/messages.js');
+var messages = require('elasticio-node').messages;
 var util = require("util");
 
 var expectedPayload = '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">\n' +
@@ -34,7 +34,7 @@ util.inherits(FakeEmitter, events.EventEmitter);
 
 describe('Adding row action', function () {
     var nock = require('nock'), cfg, self;
-    var verify = require('../../../../lib/components/gspreadsheets/actions/addrow.js');
+    var verify = require('../../lib/actions/addrow.js');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -68,12 +68,12 @@ describe('Adding row action', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/../metadata/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/../data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/../metadata/worksheet.json');
+            .replyWithFile(200, __dirname + '/../data/worksheet.json');
 
         // POST data
         nock('https://spreadsheets.google.com')

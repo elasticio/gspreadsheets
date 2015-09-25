@@ -1,6 +1,6 @@
 describe('List available google spreadsheets', function () {
     var nock = require('nock'), cfg, cb;
-    var verify = require('../../../lib/components/gspreadsheets/triggers/rows');
+    var verify = require('../lib/triggers/rows');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -13,11 +13,12 @@ describe('List available google spreadsheets', function () {
     });
 
     it('Should provide message if no credentials is set', function () {
+
+        verify.listSpreadsheets({}, cb);
+
         waitsFor(function () {
             return cb.callCount;
         });
-
-        verify.listSpreadsheets({}, cb);
 
         runs(function () {
             expect(cb).toHaveBeenCalled();
@@ -27,9 +28,6 @@ describe('List available google spreadsheets', function () {
     });
 
     it('should react on auth errors when refreshing token', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -39,22 +37,23 @@ describe('List available google spreadsheets', function () {
                 client_secret: 'app-secret',
                 refresh_token: 'some-refresh-token',
                 format: 'json'
-            }).reply(500, "fuck off");
+            }).reply(500, "Server error");
 
         verify.listSpreadsheets(cfg, cb);
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();
             expect(cb.calls.length).toEqual(1);
-            expect(cb.calls.length).toEqual(1);
-            expect(cb.calls[0].args[0]).toEqual({ responseBody : 'fuck off', statusCode : 500 });
+            expect(cb.calls[0].args[0].message).toEqual('Unexpected return code 500, expected 200, body Server error');
+            expect(cb.calls[0].args[0]).toEqual({ responseBody : 'Server error', statusCode : 500 });
         });
     });
 
     it('should react on errors when fetching resource', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -72,23 +71,23 @@ describe('List available google spreadsheets', function () {
         // List all spreadsheets
         nock('https://spreadsheets.google.com')
             .get('/feeds/spreadsheets/private/full?alt=json&access_token=access-token-2')
-            .reply(500, 'fuck off');
+            .reply(500, 'Server error');
 
         verify.listSpreadsheets(cfg, cb);
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();
             expect(cb.calls.length).toEqual(1);
-            expect(cb.calls.length).toEqual(1);
+            expect(cb.calls[0].args[0].message).toEqual('HTTP request failed with code 500');
             expect(cb.calls[0].args[0].response.status).toEqual(500);
         });
     });
 
-
     it('should list spreadsheets', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -106,9 +105,13 @@ describe('List available google spreadsheets', function () {
         // List all spreadsheets
         nock('https://spreadsheets.google.com')
             .get('/feeds/spreadsheets/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/list/response.json');
+            .replyWithFile(200, __dirname + '/data/response.json');
 
         verify.listSpreadsheets(cfg, cb);
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();

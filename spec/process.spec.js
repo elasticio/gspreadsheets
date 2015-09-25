@@ -1,5 +1,3 @@
-// Spec for testing process method
-// Test for metadata fetching and parsing
 var events = require('events');
 var _ = require('lodash-node');
 var util = require("util");
@@ -27,7 +25,7 @@ util.inherits(FakeEmitter, events.EventEmitter);
 
 describe('List available google spreadsheets', function () {
     var nock = require('nock'), cfg, self;
-    var verify = require('../../../lib/components/gspreadsheets/triggers/rows');
+    var verify = require('../lib/triggers/rows');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -41,13 +39,14 @@ describe('List available google spreadsheets', function () {
     });
 
     it('Should provide message if no spreadsheet URL is set', function () {
-        waitsFor(function () {
-            return self.endCalled;
-        });
 
         delete cfg.spreadsheetURL;
 
         verify.process.call(self, {}, cfg, null, {});
+
+        waitsFor(function () {
+            return self.endCalled;
+        });
 
         runs(function () {
             expect(self.errors.length).toEqual(1);
@@ -56,9 +55,6 @@ describe('List available google spreadsheets', function () {
     });
 
     it('should load successfully first time', function () {
-        waitsFor(function () {
-            return self.endCalled;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -76,14 +72,18 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/worksheet.json');
+            .replyWithFile(200, __dirname + '/data/worksheet.json');
 
         verify.process.call(self, {}, cfg, null, {});
+
+        waitsFor(function () {
+            return self.endCalled;
+        });
 
         runs(function () {
             expect(self.errors).toBeUndefined();
@@ -101,9 +101,6 @@ describe('List available google spreadsheets', function () {
     });
 
     it('should see if there any changes', function () {
-        waitsFor(function () {
-            return self.endCalled;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -121,16 +118,20 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/worksheet.json');
+            .replyWithFile(200, __dirname + '/data/worksheet.json');
 
         verify.process.call(self, {}, cfg, null, {
             rows: ['d313f058', '751d59a2', '7ff46ada', '5c71c00e'],
             lastUpdate: 1424456602727
+        });
+
+        waitsFor(function () {
+            return self.endCalled;
         });
 
         runs(function () {
@@ -146,9 +147,6 @@ describe('List available google spreadsheets', function () {
     });
 
     it('should detect changed rows', function () {
-        waitsFor(function () {
-            return self.endCalled;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -166,16 +164,20 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/worksheet.json');
+            .replyWithFile(200, __dirname + '/data/worksheet.json');
 
         verify.process.call(self, {}, cfg, null, {
             rows: ['d313f058', '751d59a2', 'updated!', '5c71c00e'],
             lastUpdate: 1424456602721
+        });
+
+        waitsFor(function () {
+            return self.endCalled;
         });
 
         runs(function () {

@@ -1,6 +1,7 @@
 describe('List available google spreadsheets', function () {
+
     var nock = require('nock'), cfg, cb;
-    var verify = require('../../../lib/components/gspreadsheets/triggers/rows');
+    var verify = require('../lib/triggers/rows');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -14,13 +15,14 @@ describe('List available google spreadsheets', function () {
     });
 
     it('Should provide message if no spreadsheet URL is set', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         delete cfg.spreadsheetURL;
 
         verify.getMetaModel(cfg, cb);
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();
@@ -30,9 +32,6 @@ describe('List available google spreadsheets', function () {
     });
 
     it('should react on worksheet load failure', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -50,28 +49,31 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
 
         // Load worksheet
-        nock('https://spreadsheets.google.com')
+        var scope3 = nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
             .reply(302, 'Authentication failed');
 
-        verify.getMetaModel(cfg, cb);
+        runs(function () {
+            verify.getMetaModel(cfg, cb);
+        });
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();
             expect(cb.calls.length).toEqual(1);
-            expect(cb.calls.length).toEqual(1);
+            expect(cb.calls[0].args[0].message).toEqual('HTTP request failed with code 302');
             expect(cb.calls[0].args[0].response.status).toEqual(302);
         });
 
     });
 
     it('should load successfully', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -89,14 +91,18 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/metadata/worksheet.json');
+            .replyWithFile(200, __dirname + '/data/worksheet.json');
 
         verify.getMetaModel(cfg, cb);
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();

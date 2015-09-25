@@ -1,10 +1,10 @@
 describe('OAuth Utils', function () {
 
-    var utils = require('../../lib/components/oauth-utils.js');
+    var utils = require('../lib/oauth-utils.js');
     var request = require("request");
 
-    process.env.SALESFORCE_KEY = "aSalesforceKey";
-    process.env.SALESFORCE_SECRET = "aSalesforceSecret";
+    process.env.GOOGLE_APP_ID = "app-id";
+    process.env.GOOGLE_APP_SECRET = "app-secret";
 
     var cfg, expectedOpts;
 
@@ -20,13 +20,13 @@ describe('OAuth Utils', function () {
         };
 
        expectedOpts = {
-            url : 'https://login.salesforce.com/services/oauth2/token',
+            url : 'https://accounts.google.com/o/oauth2/token',
             agent: false,
             headers : {},
             form : {
                 grant_type : 'refresh_token',
-                client_id : 'aSalesforceKey',
-                client_secret : 'aSalesforceSecret',
+                client_id : 'app-id',
+                client_secret : 'app-secret',
                 refresh_token : "2222222222222222",
                 format : 'json'
             },
