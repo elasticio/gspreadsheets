@@ -197,7 +197,5 @@ describe('List available google spreadsheets', function () {
                 foo: 'asd'
             });
         });
-
     });
-
 });
