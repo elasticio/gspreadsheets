@@ -20,13 +20,13 @@
             "auth_uri":"https://accounts.google.com/o/oauth2/auth",
             "token_uri":"https://accounts.google.com/o/oauth2/token",
             "scopes": [
-              "https://spreadsheets.google.com/feeds"
+                "https://spreadsheets.google.com/feeds"
             ]
         }
     },
     "triggers":{
         "rows":{
-            "main":"./triggers/rows.js",
+            "main":"./lib/triggers/rows.js",
             "title":"Rows",
             "type":"polling",
             "fields": {
@@ -43,7 +43,7 @@
     },
     "actions" : {
         "addrow" : {
-            "main" : "./actions/addrow.js",
+            "main" : "./lib/actions/addrow.js",
             "title" : "Add Row",
             "fields" : {
                 "spreadsheetURL": {
