@@ -2,6 +2,10 @@
     "title":"Google Spreadsheets",
     "description" : "Spreadsheets from Google",
     "url" : "http://www.google.com/spreadsheets/",
+    "env": [
+        "GOOGLE_APP_ID",
+        "GOOGLE_APP_SECRET"
+    ],
     "credentials" : {
         "fields":{
             "oauth":{
