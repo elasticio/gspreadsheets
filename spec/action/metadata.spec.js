@@ -58,7 +58,5 @@ describe('Metadata for add new row ', function () {
             expect(metadata.out.properties.description).toBeDefined();
             expect(metadata.out.properties.price).toBeDefined();
         });
-
     });
-
 });
