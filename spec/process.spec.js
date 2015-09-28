@@ -42,7 +42,7 @@ describe('List available google spreadsheets', function () {
 
         delete cfg.spreadsheetURL;
 
-        verify.process.call(self, {}, cfg, null, {});
+        verify.process.call(self, {}, cfg, {});
 
         waitsFor(function () {
             return self.endCalled;
@@ -79,7 +79,7 @@ describe('List available google spreadsheets', function () {
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
             .replyWithFile(200, __dirname + '/data/worksheet.json');
 
-        verify.process.call(self, {}, cfg, null, {});
+        verify.process.call(self, {}, cfg, {});
 
         waitsFor(function () {
             return self.endCalled;
@@ -125,7 +125,7 @@ describe('List available google spreadsheets', function () {
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
             .replyWithFile(200, __dirname + '/data/worksheet.json');
 
-        verify.process.call(self, {}, cfg, null, {
+        verify.process.call(self, {}, cfg, {
             rows: ['d313f058', '751d59a2', '7ff46ada', '5c71c00e'],
             lastUpdate: 1424456602727
         });
@@ -171,7 +171,7 @@ describe('List available google spreadsheets', function () {
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
             .replyWithFile(200, __dirname + '/data/worksheet.json');
 
-        verify.process.call(self, {}, cfg, null, {
+        verify.process.call(self, {}, cfg, {
             rows: ['d313f058', '751d59a2', 'updated!', '5c71c00e'],
             lastUpdate: 1424456602721
         });
