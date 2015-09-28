@@ -1,6 +1,7 @@
-describe('List available google spreadsheets', function () {
+describe('Common function listSpreadsheets', function () {
     var nock = require('nock'), cfg, cb;
-    var verify = require('../lib/triggers/rows');
+    var common = require('../lib/common.js');
+    var that;
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -10,11 +11,12 @@ describe('List available google spreadsheets', function () {
         };
 
         cb = jasmine.createSpy('cb');
+        that = jasmine.createSpyObj('scope', ['emit']);
     });
 
     it('Should provide message if no credentials is set', function () {
 
-        verify.listSpreadsheets({}, cb);
+        common.listSpreadsheets.call(that, {}, cb);
 
         waitsFor(function () {
             return cb.callCount;
@@ -39,7 +41,7 @@ describe('List available google spreadsheets', function () {
                 format: 'json'
             }).reply(500, "Server error");
 
-        verify.listSpreadsheets(cfg, cb);
+        common.listSpreadsheets.call(that, cfg, cb);
 
         waitsFor(function () {
             return cb.callCount;
@@ -73,7 +75,7 @@ describe('List available google spreadsheets', function () {
             .get('/feeds/spreadsheets/private/full?alt=json&access_token=access-token-2')
             .reply(500, 'Server error');
 
-        verify.listSpreadsheets(cfg, cb);
+        common.listSpreadsheets.call(that, cfg, cb);
 
         waitsFor(function () {
             return cb.callCount;
@@ -107,7 +109,7 @@ describe('List available google spreadsheets', function () {
             .get('/feeds/spreadsheets/private/full?alt=json&access_token=access-token-2')
             .replyWithFile(200, __dirname + '/data/response.json');
 
-        verify.listSpreadsheets(cfg, cb);
+        common.listSpreadsheets.call(that, cfg, cb);
 
         waitsFor(function () {
             return cb.callCount;

@@ -1,7 +1,7 @@
 // Test for metadata fetching and parsing
 describe('Metadata for add new row ', function () {
-    var nock = require('nock'), cfg, cb;
-    var verify = require('../../lib/actions/addrow.js');
+    var nock = require('nock'), cfg, cb, self;
+    var addrow = require('../../lib/actions/addrow.js');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -12,12 +12,10 @@ describe('Metadata for add new row ', function () {
         };
 
         cb = jasmine.createSpy('cb');
+        self = jasmine.createSpyObj('scope', ['emit']);
     });
 
     it('should load successfully', function () {
-        waitsFor(function () {
-            return cb.callCount;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -42,7 +40,11 @@ describe('Metadata for add new row ', function () {
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
             .replyWithFile(200, __dirname + '/../data/worksheet.json');
 
-        verify.getMetaModel(cfg, cb);
+        addrow.getMetaModel.call(self, cfg, cb);
+
+        waitsFor(function () {
+            return cb.callCount;
+        });
 
         runs(function () {
             expect(cb).toHaveBeenCalled();
@@ -57,6 +59,11 @@ describe('Metadata for add new row ', function () {
             expect(metadata.out.properties.name).toBeDefined();
             expect(metadata.out.properties.description).toBeDefined();
             expect(metadata.out.properties.price).toBeDefined();
+
+            expect(self.emit).toHaveBeenCalled();
+            expect(self.emit.callCount).toEqual(1);
+            expect(self.emit.calls[0].args[0]).toEqual('updateKeys');
+            expect(self.emit.calls[0].args[1]).toEqual({oauth : {refresh_token: 'refresh-token-2', access_token: 'access-token-2'}});
         });
     });
 });

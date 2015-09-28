@@ -25,7 +25,7 @@ util.inherits(FakeEmitter, events.EventEmitter);
 
 describe('List available google spreadsheets', function () {
     var nock = require('nock'), cfg, self;
-    var verify = require('../lib/triggers/rows');
+    var verify = require('../../lib/triggers/rows');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -72,12 +72,12 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/../data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/worksheet.json');
+            .replyWithFile(200, __dirname + '/../data/worksheet.json');
 
         verify.process.call(self, {}, cfg, {});
 
@@ -118,12 +118,12 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/../data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/worksheet.json');
+            .replyWithFile(200, __dirname + '/../data/worksheet.json');
 
         verify.process.call(self, {}, cfg, {
             rows: ['d313f058', '751d59a2', '7ff46ada', '5c71c00e'],
@@ -164,12 +164,12 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/../data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/worksheet.json');
+            .replyWithFile(200, __dirname + '/../data/worksheet.json');
 
         verify.process.call(self, {}, cfg, {
             rows: ['d313f058', '751d59a2', 'updated!', '5c71c00e'],

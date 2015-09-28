@@ -11,27 +11,6 @@ var expectedPayload = '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="htt
     '\t<gsx:price>22</gsx:price>\n' +
     '</entry>';
 
-function FakeEmitter() {
-    events.EventEmitter.call(this);
-    this.endCalled = false;
-    this.on('error', function (err) {
-        this.errors = this.errors || [];
-        this.errors.push(err);
-    });
-    this.on('snapshot', function (snap) {
-        this.snapshot = this.snapshot || [];
-        this.snapshot.push(snap);
-    });
-    this.on('data', function (data) {
-        this.data = this.data || [];
-        this.data.push(data);
-    });
-    this.on('end', function () {
-        this.endCalled = true;
-    });
-}
-util.inherits(FakeEmitter, events.EventEmitter);
-
 describe('Adding row action', function () {
     var nock = require('nock'), cfg, self;
     var verify = require('../../lib/actions/addrow.js');
@@ -44,13 +23,10 @@ describe('Adding row action', function () {
             spreadsheetURL: 'https://elastic.io/foo'
         };
 
-        self = new FakeEmitter();
+        self = jasmine.createSpyObj('scope', ['emit']);
     });
 
     it('should load successfully first time', function () {
-        waitsFor(function () {
-            return self.endCalled;
-        });
 
         // Refresh token
         nock('https://accounts.google.com').
@@ -87,9 +63,20 @@ describe('Adding row action', function () {
             description: '<xml>injection</xml><?DTD?>'
         }), cfg, {});
 
+        waitsFor(function () {
+            return self.emit.callCount >= 3;
+        });
+
         runs(function () {
-            expect(self.errors).toBeUndefined();
-            expect(self.data.length).toEqual(1);
+            expect(self.emit).toHaveBeenCalled();
+            expect(self.emit.callCount).toEqual(3);
+
+            expect(self.emit.calls[0].args[0]).toEqual('updateKeys');
+            expect(self.emit.calls[1].args[0]).toEqual('data');
+            expect(self.emit.calls[2].args[0]).toEqual('end');
+
+            expect(self.emit.calls[0].args[1]).toEqual({oauth: {refresh_token: 'refresh-token-2', access_token: 'access-token-2'}});
+            expect(self.emit.calls[1].args[1].body).toEqual({sku: 'foo', bar: 'hasi', price: 22, description: '<xml>injection</xml><?DTD?>'});
         });
 
     });

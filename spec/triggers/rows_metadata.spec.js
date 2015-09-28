@@ -1,7 +1,7 @@
 describe('List available google spreadsheets', function () {
 
-    var nock = require('nock'), cfg, cb;
-    var verify = require('../lib/triggers/rows');
+    var nock = require('nock'), cfg, cb, that;
+    var verify = require('../../lib/triggers/rows');
 
     beforeEach(function () {
         process.env.GOOGLE_APP_ID = 'app-id';
@@ -12,13 +12,14 @@ describe('List available google spreadsheets', function () {
         };
 
         cb = jasmine.createSpy('cb');
+        that = jasmine.createSpyObj('scope', ['emit']);
     });
 
     it('Should provide message if no spreadsheet URL is set', function () {
 
         delete cfg.spreadsheetURL;
 
-        verify.getMetaModel(cfg, cb);
+        verify.getMetaModel.call(that, cfg, cb);
 
         waitsFor(function () {
             return cb.callCount;
@@ -49,7 +50,7 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/../data/spreadsheet.json');
 
         // Load worksheet
         var scope3 = nock('https://spreadsheets.google.com')
@@ -57,7 +58,7 @@ describe('List available google spreadsheets', function () {
             .reply(302, 'Authentication failed');
 
         runs(function () {
-            verify.getMetaModel(cfg, cb);
+            verify.getMetaModel.call(that, cfg, cb);
         });
 
         waitsFor(function () {
@@ -91,14 +92,14 @@ describe('List available google spreadsheets', function () {
         // Load spreadsheet
         nock('https://elastic.io')
             .get('/foo?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/spreadsheet.json');
+            .replyWithFile(200, __dirname + '/../data/spreadsheet.json');
 
         // Load worksheet
         nock('https://spreadsheets.google.com')
             .get('/feeds/list/1DLLZwg5xanRYNQBF5VkN5tIIVsyvw6MUljm6P0rJiJc/od6/private/full?alt=json&access_token=access-token-2')
-            .replyWithFile(200, __dirname + '/data/worksheet.json');
+            .replyWithFile(200, __dirname + '/../data/worksheet.json');
 
-        verify.getMetaModel(cfg, cb);
+        verify.getMetaModel.call(that, cfg, cb);
 
         waitsFor(function () {
             return cb.callCount;
