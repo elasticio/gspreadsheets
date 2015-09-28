@@ -126,5 +126,4 @@ describe('Common function listSpreadsheets', function () {
             expect(result[Object.keys(result)[0]]).toEqual("Debitoor Product Sample");
         });
     });
-
 });
