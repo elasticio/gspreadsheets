@@ -85,7 +85,7 @@ describe('Adding row action', function () {
             bar: 'hasi',
             price: 22,
             description: '<xml>injection</xml><?DTD?>'
-        }), cfg, null, {});
+        }), cfg, {});
 
         runs(function () {
             expect(self.errors).toBeUndefined();
