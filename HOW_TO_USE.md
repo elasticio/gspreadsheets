@@ -1,6 +1,6 @@
 # How to use Google Spreadsheets Component
 
-To install Google Spreadsheets component please follow instructions in README.md .
+To install Google Spreadsheets component please follow instructions in [README.md](gspreadsheets/README.md) .
 
 Within the elastic.io environment Google Spreadsheets **can be used both as a trigger and an action component**. 
 
