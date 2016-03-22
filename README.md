@@ -14,7 +14,7 @@ Before you can deploy any code into our system **you must be a registered elasti
 
 After the registration and opening of the account you must **[upload your SSH Key](http://docs.elastic.io/docs/ssh-key)** into our platform. 
 
-> If you fail to upload you SSH Key you will get **persmission denied** error during the deployment.
+> If you fail to upload you SSH Key you will get **permission denied** error during the deployment.
 
 ## Getting Started
 
