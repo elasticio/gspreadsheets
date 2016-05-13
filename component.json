@@ -23,7 +23,8 @@
             "scopes": [
                 "https://spreadsheets.google.com/feeds"
             ],
-            "access_type": "offline"
+            "access_type": "offline",
+            "prompt": "consent"
         }
     },
     "triggers":{
