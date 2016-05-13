@@ -22,7 +22,8 @@
             "token_uri":"https://accounts.google.com/o/oauth2/token",
             "scopes": [
                 "https://spreadsheets.google.com/feeds"
-            ]
+            ],
+            "access_type": "offline"
         }
     },
     "triggers":{
