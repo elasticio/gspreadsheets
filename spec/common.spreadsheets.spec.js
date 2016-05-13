@@ -32,8 +32,8 @@ describe('Common function listSpreadsheets', function () {
     it('should react on auth errors when refreshing token', function () {
 
         // Refresh token
-        nock('https://accounts.google.com').
-            post('/o/oauth2/token', {
+        nock('https://www.googleapis.com').
+            post('/oauth2/v4/token', {
                 grant_type: 'refresh_token',
                 client_id: 'app-id',
                 client_secret: 'app-secret',
@@ -58,8 +58,8 @@ describe('Common function listSpreadsheets', function () {
     it('should react on errors when fetching resource', function () {
 
         // Refresh token
-        nock('https://accounts.google.com').
-            post('/o/oauth2/token', {
+        nock('https://www.googleapis.com').
+            post('/oauth2/v4/token', {
                 grant_type: 'refresh_token',
                 client_id: 'app-id',
                 client_secret: 'app-secret',
@@ -92,8 +92,8 @@ describe('Common function listSpreadsheets', function () {
     it('should list spreadsheets', function () {
 
         // Refresh token
-        nock('https://accounts.google.com').
-            post('/o/oauth2/token', {
+        nock('https://www.googleapis.com').
+            post('/oauth2/v4/token', {
                 grant_type: 'refresh_token',
                 client_id: 'app-id',
                 client_secret: 'app-secret',

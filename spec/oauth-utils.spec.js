@@ -20,7 +20,7 @@ describe('OAuth Utils', function () {
         };
 
        expectedOpts = {
-            url : 'https://accounts.google.com/o/oauth2/token',
+            url : 'https://www.googleapis.com/oauth2/v4/token',
             agent: false,
             headers : {},
             form : {

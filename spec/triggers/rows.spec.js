@@ -57,8 +57,8 @@ describe('List available google spreadsheets', function () {
     it('should load successfully first time', function () {
 
         // Refresh token
-        nock('https://accounts.google.com').
-            post('/o/oauth2/token', {
+        nock('https://www.googleapis.com').
+            post('/oauth2/v4/token', {
                 grant_type: 'refresh_token',
                 client_id: 'app-id',
                 client_secret: 'app-secret',
@@ -103,8 +103,8 @@ describe('List available google spreadsheets', function () {
     it('should see if there any changes', function () {
 
         // Refresh token
-        nock('https://accounts.google.com').
-            post('/o/oauth2/token', {
+        nock('https://www.googleapis.com').
+            post('/oauth2/v4/token', {
                 grant_type: 'refresh_token',
                 client_id: 'app-id',
                 client_secret: 'app-secret',
@@ -149,8 +149,8 @@ describe('List available google spreadsheets', function () {
     it('should detect changed rows', function () {
 
         // Refresh token
-        nock('https://accounts.google.com').
-            post('/o/oauth2/token', {
+        nock('https://www.googleapis.com').
+            post('/oauth2/v4/token', {
                 grant_type: 'refresh_token',
                 client_id: 'app-id',
                 client_secret: 'app-secret',
