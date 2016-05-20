@@ -44,6 +44,6 @@ Following environment are required:
  - ``GOOGLE_APP_ID`` oauth App ID
  - ``GOOGLE_APP_SECRET`` oauth App Secret
 
-To get these please use the Google Developers Console is available from https://console.developers.google.com.
+To get these please use the Google Developers Console is available from https://console.developers.google.com. As a callback please use ``https://your-tenant.elastic.io/callback/oauth2``
 
 Instructions on how to use the **gspreadsheets** component can be found in [HOW TO USE](https://github.com/elasticio/gspreadsheets/blob/master/HOW_TO_USE.md) section.
