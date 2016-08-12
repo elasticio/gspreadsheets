@@ -26,7 +26,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jasmine-node');
     grunt.loadNpmTasks("grunt-jscs");
 
-    // grunt.registerTask('default', ['jscs', 'jasmine_node']);
+    grunt.registerTask('default', ['jscs', 'jasmine_node']);
     grunt.registerTask('test', ['jscs']);
 
 };
