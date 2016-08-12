@@ -6,9 +6,15 @@ Within the elastic.io environment Google Spreadsheets **can be used both as a tr
 
 > The description below is based on the initial state of the Google Spreadsheet component presented here. Any third party modification should also be documented for the consistency.
 
+## Required authorization credentials
+
+1. ``https://www.googleapis.com/auth/spreadsheets`` -  Allows read/write access to the user's sheets and their properties. Required to read and write to spreadsheets.
+1. ``https://www.googleapis.com/auth/drive.readonly`` - Allows read-only access to the user's file metadata and file content. Required to fetch the list of spreadsheets.
+
 ## Limitations
 
-1. Google spreadsheets discovery will only fetch first 1000 spreadsheets from your Google Drive
+1. Google spreadsheets discovery will only fetch last modified 1000 spreadsheets from your Google Drive.
+1. Trigger will only work with the first Worksheet of the spreadsheet
 
 ## Triggers
 
