@@ -43,6 +43,7 @@ After the installation don't forget to specify the Application Key and Secret fo
 Following environment are required:
  - ``GOOGLE_APP_ID`` oauth App ID
  - ``GOOGLE_APP_SECRET`` oauth App Secret
+ - ``REDIRECT_URL`` optional if you have your own tenant, see sample below
 
 To get these please use the Google Developers Console is available from https://console.developers.google.com. As a callback please use ``https://your-tenant.elastic.io/callback/oauth2``
 

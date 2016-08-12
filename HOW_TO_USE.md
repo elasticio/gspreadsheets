@@ -6,6 +6,10 @@ Within the elastic.io environment Google Spreadsheets **can be used both as a tr
 
 > The description below is based on the initial state of the Google Spreadsheet component presented here. Any third party modification should also be documented for the consistency.
 
+## Limitations
+
+1. Google spreadsheets discovery will only fetch first 1000 spreadsheets from your Google Drive
+
 ## Triggers
 
 ### Rows
