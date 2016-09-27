@@ -15,6 +15,7 @@ Within the elastic.io environment Google Spreadsheets **can be used both as a tr
 
 1. Google spreadsheets discovery will only fetch last modified 1000 spreadsheets from your Google Drive.
 1. Trigger will only work with the first Worksheet of the spreadsheet
+1. First row of your first Worksheet of your Spreadsheet should contain a spreadsheet header
 
 ## Triggers
 
