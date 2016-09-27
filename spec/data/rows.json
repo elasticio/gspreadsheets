@@ -1,0 +1,51 @@
+{
+  "range": "\"Customers and Contracts\"!A1:AD3",
+  "majorDimension": "ROWS",
+  "values": [
+    [
+      "Renewal in",
+      "Invoice in",
+      "Customer Nr",
+      "Account",
+      "Project",
+      "Contract Value",
+      "Contract Start",
+      "Contract Ends",
+      "Contract Duration (Month)",
+      "Notice Period (days)",
+      "Prolongation on",
+      "Last invoice number",
+      "MRR"
+    ],
+    [
+      "-192",
+      "-150",
+      "100153",
+      "Fabric House S.r.l. Unipersonale",
+      "Platform+ERP+CRM+Support",
+      "3.099,60 €",
+      "01.05.2015",
+      "30.04.2016",
+      "12",
+      "42",
+      "19.03.2016",
+      "20150031",
+      "258 €"
+    ],
+    [
+      "-11",
+      "3",
+      "100174",
+      "Tucker Allen LLC",
+      "Dedicated Retainer for Consulting work",
+      "400,00 €",
+      "01.08.2016",
+      "30.9.2016",
+      "3",
+      "14",
+      "16.9.2016",
+      "20160060",
+      "2.233 €"
+    ]
+  ]
+}
