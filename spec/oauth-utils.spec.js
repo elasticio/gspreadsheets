@@ -1,113 +1,107 @@
-describe('OAuth Utils', function () {
+describe('OAuth Utils', () => {
+  const utils = require('../lib/oauth-utils.js');
+  const request = require('request');
 
-    var utils = require('../lib/oauth-utils.js');
-    var request = require("request");
+  process.env.GOOGLE_APP_ID = 'app-id';
+  process.env.GOOGLE_APP_SECRET = 'app-secret';
 
-    process.env.GOOGLE_APP_ID = "app-id";
-    process.env.GOOGLE_APP_SECRET = "app-secret";
+  let cfg; let
+    expectedOpts;
 
-    var cfg, expectedOpts;
+  beforeEach(() => {
+    cfg = {
+      oauth: {
+        access_token: '1111111111111111',
+        refresh_token: '2222222222222222',
+        expires_in: 3600,
+        token_type: 'Bearer',
+      },
+      prodEnv: 'login',
+    };
 
-    beforeEach(function(){
-        cfg = {
-            oauth: {
-                "access_token" : "1111111111111111",
-                "refresh_token" : "2222222222222222",
-                "expires_in" : 3600,
-                "token_type" : "Bearer"
-            },
-            prodEnv : 'login'
-        };
+    expectedOpts = {
+      url: 'https://www.googleapis.com/oauth2/v4/token',
+      agent: false,
+      headers: {},
+      form: {
+        grant_type: 'refresh_token',
+        client_id: 'app-id',
+        client_secret: 'app-secret',
+        refresh_token: '2222222222222222',
+        format: 'json',
+      },
+      json: undefined,
+    };
+  });
 
-       expectedOpts = {
-            url : 'https://www.googleapis.com/oauth2/v4/token',
-            agent: false,
-            headers : {},
-            form : {
-                grant_type : 'refresh_token',
-                client_id : 'app-id',
-                client_secret : 'app-secret',
-                refresh_token : "2222222222222222",
-                format : 'json'
-            },
-            json : undefined
-        };
+  afterEach(() => {
+    expect(request.post).toHaveBeenCalledWith(expectedOpts, jasmine.any(Function));
+  });
+
+  it('Refresh access_token', () => {
+    const serverResponse = {
+      access_token: '33333333333333333',
+    };
+
+    spyOn(request, 'post').andCallFake((options, callback) => {
+      callback(null, { statusCode: 200 }, JSON.stringify(serverResponse));
     });
 
-    afterEach(function(){
-        expect(request.post).toHaveBeenCalledWith(expectedOpts, jasmine.any(Function));
+    let result = false;
+
+    runs(() => {
+      utils.refreshAppToken('salesforce', cfg, (err, data) => {
+        result = { err, data };
+      });
     });
 
-    it('Refresh access_token', function () {
+    waitsFor(() => result);
 
-        var serverResponse = {
-            "access_token" : "33333333333333333"
-        };
+    runs(() => {
+      expect(result.err).toBeNull();
+      expect(result.data).toEqual({
+        oauth: {
+          access_token: '33333333333333333',
+          refresh_token: '2222222222222222',
+          expires_in: 3600,
+          token_type: 'Bearer',
+        },
+        prodEnv: 'login',
+      });
+    });
+  });
 
-        spyOn(request, 'post').andCallFake(function (options, callback) {
-            callback(null, {statusCode: 200}, JSON.stringify(serverResponse));
-        });
+  it('Refresh access_token and refresh_token if server returns both', () => {
+    const serverResponse = {
+      access_token: '33333333333333333',
+      refresh_token: '44444444444444444',
+    };
 
-        var result = false;
-
-        runs(function(){
-            utils.refreshAppToken('salesforce', cfg, function(err, data) {
-                result = {err: err, data: data};
-            });
-        });
-
-        waitsFor(function(){
-            return result;
-        });
-
-        runs(function(){
-            expect(result.err).toBeNull();
-            expect(result.data).toEqual({
-                oauth: {
-                    "access_token" : "33333333333333333",
-                    "refresh_token" : "2222222222222222",
-                    "expires_in" : 3600,
-                    "token_type" : "Bearer"
-                },
-                prodEnv : 'login'
-            });
-        });
+    spyOn(request, 'post').andCallFake((options, callback) => {
+      callback(null, { statusCode: 200 }, JSON.stringify(serverResponse));
     });
 
-    it('Refresh access_token and refresh_token if server returns both', function () {
+    let result = false;
 
-        var serverResponse = {
-            "access_token" : "33333333333333333",
-            "refresh_token" : "44444444444444444"
-        };
-
-        spyOn(request, 'post').andCallFake(function (options, callback) {
-            callback(null, {statusCode: 200}, JSON.stringify(serverResponse));
-        });
-
-        var result = false;
-
-        runs(function(){
-            utils.refreshAppToken('salesforce', cfg, function(err, data) {
-                result = {err: err, data: data};
-            });
-        });
-
-        waitsFor(function(){
-            return result;
-        });
-
-        runs(function(){
-            expect(result.err).toBeNull();
-            expect(result.data).toEqual({
-                oauth: {
-                    "access_token" : "33333333333333333",
-                    "refresh_token" : "44444444444444444",
-                    "expires_in" : 3600,
-                    "token_type" : "Bearer"
-                },
-                prodEnv : 'login'
-            });
-        });
+    runs(() => {
+      utils.refreshAppToken('salesforce', cfg, (err, data) => {
+        result = { err, data };
+      });
     });
+
+    waitsFor(() => result);
+
+    runs(() => {
+      expect(result.err).toBeNull();
+      expect(result.data).toEqual({
+        oauth: {
+          access_token: '33333333333333333',
+          refresh_token: '44444444444444444',
+          expires_in: 3600,
+          token_type: 'Bearer',
+        },
+        prodEnv: 'login',
+      });
+    });
+  });
 });
