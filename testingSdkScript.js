@@ -3,7 +3,7 @@ const readline = require('readline');
 const {google} = require('googleapis');
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -72,10 +72,9 @@ function getNewToken(oAuth2Client, callback) {
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
 function listMajors(auth) {
-  // const drive = google.drive({version: 'v3', auth});
+  // const drive = google.drive({version: 'v3', auth}); //// Get all for metadata
   // drive.files.list({
   //   q: "mimeType='application/vnd.google-apps.spreadsheet'",
-  //   fields: 'nextPageToken, files(id, name)'
   // }, (err, response) => {
   //   if (err) {
   //     console.error(err)
@@ -83,56 +82,50 @@ function listMajors(auth) {
   //   console.log(JSON.stringify(response))
   // })
 
-  const drive = google.drive({version: 'v3', auth});
-  drive.files.get({
-    fileId: '1f6o4Xun9VLaYqHCnTJ6b_cFlmT0xO7Lp85Fg73GBCLk',
-  }, function(err, response) {
-    if (err) {
-      console.error(err);
-      return;
+  const sheets = google.sheets({version: 'v4', auth}); //// Get spreadsheet content
+  sheets.spreadsheets.values.get({
+    spreadsheetId: '1f6o4Xun9VLaYqHCnTJ6b_cFlmT0xO7Lp85Fg73GBCLk',
+    majorDimension: 'ROWS',
+    range: 'Sheet1',
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+    const rows = res.data.values;
+    if (rows.length) {
+      // Print columns A and E, which correspond to indices 0 and 4.
+      rows.map((row) => {
+        const rowStr = row
+          .map(v => v.length > 0 ? v : 'N/A')
+          .reduce((v1, v2) => `${v1} ${v2}`);
+        console.log(`${row.length}  ${rowStr}`)
+      });
+    } else {
+      console.log('No data found.');
     }
-    console.log(JSON.stringify(response));
   });
 
-  // const sheets = google.sheets({version: 'v4', auth});
-  // sheets.spreadsheets.values.get({
-  //   spreadsheetId: '1f6o4Xun9VLaYqHCnTJ6b_cFlmT0xO7Lp85Fg73GBCLk',
-  //   majorDimension: 'ROWS',
-  //   range: 'Sheet1',
-  // }, (err, res) => {
-  //   if (err) return console.log('The API returned an error: ' + err);
-  //   const rows = res.data.values;
-  //   if (rows.length) {
-  //     // Print columns A and E, which correspond to indices 0 and 4.
-  //     rows.map((row) => {
-  //       const rowStr = row
-  //         .map(v => v.length > 0 ? v : 'N/A')
-  //         .reduce((v1, v2) => `${v1} ${v2}`);
-  //       console.log(`${row.length}  ${rowStr}`)
-  //     });
-  //   } else {
-  //     console.log('No data found.');
+  // const sheets = google.sheets({version: 'v4', auth}); //// Creating
+  // sheets.spreadsheets.create({
+  //   resource: {
+  //     properties: {
+  //       title: 'Node JS generate G-sheet'
+  //     }
   //   }
+  // }, function(err, response) {
+  //   if (err) {
+  //     console.error(err);
+  //     return;
+  //   }
+  //
+  //   console.log(JSON.stringify(response, null, 2));
   // });
 
-  // sheets.spreadsheets.values.batchUpdate({
-  //   spreadsheetId: '1f6o4Xun9VLaYqHCnTJ6b_cFlmT0xO7Lp85Fg73GBCLk',
-  //   textToColumns: {
-  //
+  // const drive = google.drive({version: 'v3', auth}); //// Deleting
+  // drive.files.delete({
+  //   fileId: '1AXVlL-HNvn9HaiYTwEMFQgK1Wk36M0EyO15r1gSAa6Y',
+  // }, (err, response) => {
+  //   if (err) {
+  //     console.error(err)
   //   }
-  // }, (err, res) => {
-  //   if (err) return console.log('The API returned an error: ' + err);
-  //   const rows = res.data.values;
-  //   if (rows.length) {
-  //     // Print columns A and E, which correspond to indices 0 and 4.
-  //     rows.map((row) => {
-  //       const rowStr = row
-  //         .map(v => v.length > 0 ? v : 'N/A')
-  //         .reduce((v1, v2) => `${v1} ${v2}`);
-  //       console.log(`${row.length}  ${rowStr}`)
-  //     });
-  //   } else {
-  //     console.log('No data found.');
-  //   }
-  // });
+  //   console.log(JSON.stringify(response))
+  // })
 }
