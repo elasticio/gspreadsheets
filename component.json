@@ -5,7 +5,8 @@
     "url" : "http://www.google.com/spreadsheets/",
     "env": [
         "GOOGLE_APP_ID",
-        "GOOGLE_APP_SECRET"
+        "GOOGLE_APP_SECRET",
+        "TENANT_DOMAIN"
     ],
     "credentials" : {
         "fields":{
@@ -21,7 +22,8 @@
             "auth_uri":"https://accounts.google.com/o/oauth2/v2/auth",
             "token_uri":"https://www.googleapis.com/oauth2/v4/token",
             "scopes": [
-                "https://spreadsheets.google.com/feeds"
+                "https://spreadsheets.google.com/feeds",
+                "https://www.googleapis.com/auth/drive.metadata.readonly"
             ],
             "access_type": "offline",
             "prompt": "consent"
@@ -31,6 +33,21 @@
         "rows":{
             "main":"./lib/triggers/rows.js",
             "title":"Rows",
+            "type":"polling",
+            "fields": {
+                "spreadsheetURL": {
+                    "viewClass": "SelectView",
+                    "prompt": "Select your spreadsheet",
+                    "label": "Spreadsheet",
+                    "required": true,
+                    "model": "listSpreadsheets"
+                }
+            },
+            "dynamicMetadata": true
+        },
+        "newSpreadsheetRow":{
+            "main":"./lib/triggers/newSpreadsheetRow.js",
+            "title":"New Spreadsheet Row",
             "type":"polling",
             "fields": {
                 "spreadsheetURL": {
