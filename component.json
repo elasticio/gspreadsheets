@@ -3,22 +3,13 @@
     "description" : "Spreadsheets from Google",
     "docsUrl": "https://github.com/elasticio/gspreadsheets",
     "url" : "http://www.google.com/spreadsheets/",
+    "env": [
+        "GOOGLE_APP_ID",
+        "GOOGLE_APP_SECRET",
+        "GOOGLE_REDIRECT_URI"
+    ],
     "credentials" : {
         "fields":{
-            "googleAppId": {
-                "label": "Google App Key (Id)",
-                "required": true,
-                "viewClass": "TextAreaView",
-                "prompt": "Enter the Consumer Key",
-                "placeholder": "Consumer Key"
-            },
-            "googleAppSecret": {
-                "label": "Google App Secret",
-                "required": true,
-                "viewClass": "PasswordFieldView",
-                "prompt": "Enter the Consumer Secret",
-                "placeholder": "Consumer Secret"
-            },
             "oauth":{
                 "label":"Authentication",
                 "viewClass":"OAuthFieldView",
@@ -26,12 +17,18 @@
             }
         },
         "oauth2":{
-            "client_id":"{{googleAppId}}",
-            "client_secret":"{{googleAppSecret}}",
+            "client_id":"{{GOOGLE_APP_ID}}",
+            "client_secret":"{{GOOGLE_APP_SECRET}}",
             "auth_uri":"https://accounts.google.com/o/oauth2/v2/auth",
             "token_uri":"https://www.googleapis.com/oauth2/v4/token",
             "scopes": [
-                "https://spreadsheets.google.com/feeds"
+                "https://spreadsheets.google.com/feeds",
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive"
+            ],
+            "redirect_uris": [
+                "urn:ietf:wg:oauth:2.0:oob",
+                "http://localhost"
             ],
             "access_type": "offline",
             "prompt": "consent"

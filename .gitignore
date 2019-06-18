@@ -15,6 +15,9 @@ lib-cov
 # Webstorm generated files
 .idea/
 
+# Credentials for integration tests
+.env
+
 # Coverage directory used by tools like istanbul
 coverage
 
