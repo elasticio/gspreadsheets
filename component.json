@@ -22,8 +22,7 @@
             "auth_uri":"https://accounts.google.com/o/oauth2/v2/auth",
             "token_uri":"https://www.googleapis.com/oauth2/v4/token",
             "scopes": [
-                "https://spreadsheets.google.com/feeds",
-                "https://www.googleapis.com/auth/drive.metadata.readonly"
+                "https://spreadsheets.google.com/feeds"
             ],
             "access_type": "offline",
             "prompt": "consent"
