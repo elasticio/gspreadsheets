@@ -18,6 +18,7 @@ describe('Add new row', function() {
     }
     configuration = {
       spreadsheetId: '1f6o4Xun9VLaYqHCnTJ6b_cFlmT0xO7Lp85Fg73GBCLk',
+      worksheetId: 'Sheet1',
       oauth: {
         access_token: process.env.ACCESS_TOKEN,
         expiry_date: 1560935120410,
@@ -43,5 +44,10 @@ describe('Add new row', function() {
     expect(result.updates.updatedRows).to.equal(1);
     expect(result.updates.updatedColumns).to.equal(msg.body.values.length);
     expect(result.updates.updatedCells).to.equal(msg.body.values.length);
+  });
+
+  it('listWorksheets', async () => {
+    const result = await createSpreadsheetRow.listWorksheets(configuration);
+    expect(result).to.deep.equal({ Sheet1: 'Sheet1' });
   });
 });
