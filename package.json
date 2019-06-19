@@ -31,7 +31,7 @@
     "chai": "^4.2.0",
     "dotenv": "^8.0.0",
     "elasticio-node": "0.0.9",
-    "elasticio-sailor-nodejs": "2.3.0",
+    "elasticio-sailor-nodejs": "2.4.0",
     "eslint": "^5.16.0",
     "googleapis": "^39.2.0",
     "hbs": "1.0.5",
