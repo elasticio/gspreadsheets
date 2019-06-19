@@ -1,80 +1,105 @@
 {
-    "title":"Google Spreadsheets",
-    "description" : "Spreadsheets from Google",
-    "docsUrl": "https://github.com/elasticio/gspreadsheets",
-    "url" : "http://www.google.com/spreadsheets/",
-    "env": [
-        "GOOGLE_APP_ID",
-        "GOOGLE_APP_SECRET",
-        "TENANT_DOMAIN"
-    ],
-    "credentials" : {
-        "fields":{
-            "oauth":{
-                "label":"Authentication",
-                "viewClass":"OAuthFieldView",
-                "required":true
-            }
-        },
-        "oauth2":{
-            "client_id":"{{GOOGLE_APP_ID}}",
-            "client_secret":"{{GOOGLE_APP_SECRET}}",
-            "auth_uri":"https://accounts.google.com/o/oauth2/v2/auth",
-            "token_uri":"https://www.googleapis.com/oauth2/v4/token",
-            "scopes": [
-                "https://spreadsheets.google.com/feeds",
-                "https://www.googleapis.com/auth/drive.metadata.readonly"
-            ],
-            "access_type": "offline",
-            "prompt": "consent"
-        }
+  "title": "Google Spreadsheets",
+  "description": "Spreadsheets from Google",
+  "docsUrl": "https://github.com/elasticio/gspreadsheets",
+  "url": "http://www.google.com/spreadsheets/",
+  "env": [
+    "GOOGLE_APP_ID",
+    "GOOGLE_APP_SECRET",
+    "TENANT_DOMAIN"
+  ],
+  "credentials": {
+    "fields": {
+      "oauth": {
+        "label": "Authentication",
+        "viewClass": "OAuthFieldView",
+        "required": true
+      }
     },
-    "triggers":{
-        "rows":{
-            "main":"./lib/triggers/rows.js",
-            "title":"Rows",
-            "type":"polling",
-            "fields": {
-                "spreadsheetURL": {
-                    "viewClass": "SelectView",
-                    "prompt": "Select your spreadsheet",
-                    "label": "Spreadsheet",
-                    "required": true,
-                    "model": "listSpreadsheets"
-                }
-            },
-            "dynamicMetadata": true
-        },
-        "newSpreadsheetRow":{
-            "main":"./lib/triggers/newSpreadsheetRow.js",
-            "title":"New Spreadsheet Row",
-            "type":"polling",
-            "fields": {
-                "spreadsheetId": {
-                    "viewClass": "SelectView",
-                    "prompt": "Select your spreadsheet",
-                    "label": "Spreadsheet",
-                    "required": true,
-                    "model": "listSpreadsheets"
-                }
-            },
-            "dynamicMetadata": true
-        }
-    },
-    "actions" : {
-        "addrow" : {
-            "main" : "./lib/actions/addrow.js",
-            "title" : "Add Row",
-            "fields" : {
-                "spreadsheetURL": {
-                    "viewClass": "SelectView",
-                    "prompt": "Select your spreadsheet",
-                    "label": "Spreadsheet",
-                    "required": true,
-                    "model": "listSpreadsheets"
-                }
-            },
-            "dynamicMetadata": true
-        }
+    "oauth2": {
+      "client_id": "{{GOOGLE_APP_ID}}",
+      "client_secret": "{{GOOGLE_APP_SECRET}}",
+      "auth_uri": "https://accounts.google.com/o/oauth2/v2/auth",
+      "token_uri": "https://www.googleapis.com/oauth2/v4/token",
+      "scopes": [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive.metadata.readonly"
+      ],
+      "access_type": "offline",
+      "prompt": "consent"
     }
+  },
+  "triggers": {
+    "rows": {
+      "main": "./lib/triggers/rows.js",
+      "title": "Rows",
+      "type": "polling",
+      "fields": {
+        "spreadsheetURL": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        }
+      },
+      "dynamicMetadata": true
+    },
+    "newSpreadsheetRow": {
+      "main": "./lib/triggers/newSpreadsheetRow.js",
+      "title": "New Spreadsheet Row",
+      "type": "polling",
+      "fields": {
+        "spreadsheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        },
+        "worksheetName": {
+          "viewClass": "SelectView",
+          "prompt": "Select your worksheet",
+          "label": "Worksheet",
+          "required": true,
+          "model": "listWorksheets"
+        },
+        "includeHeader": {
+          "viewClass": "SelectView",
+          "prompt": "Use first row/column as header",
+          "model": {
+            "yes": "Yes",
+            "no": "No"
+          }
+        },
+        "dimension": {
+          "viewClass": "SelectView",
+          "prompt": "Select dimension",
+          "label": "Dimension",
+          "required": true,
+          "model": {
+            "ROWS": "ROWS",
+            "COLUMNS": "COLUMNS"
+          }
+        }
+      },
+      "dynamicMetadata": true
+    }
+  },
+  "actions": {
+    "addrow": {
+      "main": "./lib/actions/addrow.js",
+      "title": "Add Row",
+      "fields": {
+        "spreadsheetURL": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        }
+      },
+      "dynamicMetadata": true
+    }
+  }
 }
