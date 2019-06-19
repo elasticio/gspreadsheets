@@ -75,6 +75,27 @@
                 }
             },
             "dynamicMetadata": true
+        },
+        "createSpreadsheetRow":{
+            "main":"./lib/actions/createSpreadsheetRow.js",
+            "title":"Add Spreadsheet Row",
+            "fields": {
+                "spreadsheetId": {
+                    "viewClass": "SelectView",
+                    "prompt": "Select your spreadsheet",
+                    "label": "Spreadsheet",
+                    "required": true,
+                    "model": "listSpreadsheets"
+                },
+                "worksheetId": {
+                    "viewClass": "SelectView",
+                    "prompt": "Select your worksheet (spreadsheet required)",
+                    "label": "Worksheet",
+                    "required": true,
+                    "model": "listWorksheets"
+                }
+            },
+            "dynamicMetadata": true
         }
     }
 }

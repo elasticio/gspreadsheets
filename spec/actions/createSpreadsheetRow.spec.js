@@ -1,10 +1,14 @@
 const fs = require('fs');
 const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 
 const createSpreadsheetRow = require('../../lib/actions/createSpreadsheetRow');
 
+chai.use(chaiAsPromised);
+const { expect } = chai;
+
 describe('Add new row', function() {
-  this.timeout(20000);
+  this.timeout(5000);
 
   let configuration;
   before(() => {
@@ -13,6 +17,7 @@ describe('Add new row', function() {
       require('dotenv').config();
     }
     configuration = {
+      spreadsheetId: '1f6o4Xun9VLaYqHCnTJ6b_cFlmT0xO7Lp85Fg73GBCLk',
       oauth: {
         access_token: process.env.ACCESS_TOKEN,
         expiry_date: 1560935120410,
@@ -24,7 +29,19 @@ describe('Add new row', function() {
   });
 
   it('success', async () => {
-    await createSpreadsheetRow.process({}, configuration);
-    console.log('DONE!')
+    const msg = {
+      body: {
+        values: [1, -6.8, 'string_line', true]
+      }
+    };
+
+    const result = await createSpreadsheetRow.process(msg, configuration);
+    console.log(JSON.stringify(result));
+
+    expect(result.spreadsheetId).to.equal(configuration.spreadsheetId);
+    expect(result.updates.spreadsheetId).to.equal(configuration.spreadsheetId);
+    expect(result.updates.updatedRows).to.equal(1);
+    expect(result.updates.updatedColumns).to.equal(msg.body.values.length);
+    expect(result.updates.updatedCells).to.equal(msg.body.values.length);
   });
 });
