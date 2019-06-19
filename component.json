@@ -77,6 +77,10 @@
             },
             "dynamicMetadata": true
         },
+        "createSpreadsheet":{
+            "main":"./lib/actions/createSpreadsheet.js",
+            "title":"Create new Spreadsheet"
+        },
         "createSpreadsheetRow":{
             "main":"./lib/actions/createSpreadsheetRow.js",
             "title":"Add Spreadsheet Row",
