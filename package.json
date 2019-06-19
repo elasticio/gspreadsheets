@@ -7,8 +7,7 @@
     "test": ""
   },
   "engines": {
-    "node": "10.16.0",
-    "npm": "6.9.0"
+    "node": ">=10.15.0"
   },
   "repository": {
     "type": "git",
