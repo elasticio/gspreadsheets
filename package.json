@@ -7,7 +7,7 @@
     "test": ""
   },
   "engines": {
-    "node": "^10"
+    "node": "^8"
   },
   "repository": {
     "type": "git",
@@ -35,12 +35,13 @@
     "lodash-node": "2.4.1",
     "q": "1.0.0",
     "q-io": "1.11.3",
-    "request": "2.88.0"
+    "request": "2.88.0",
+    "sinon": "^7.3.2"
   },
   "devDependencies": {
-    "dotenv": "8.0.0",
+    "@elastic.io/component-logger": "^0.0.1",
     "chai": "4.2.0",
-    "mocha": "6.1.4",
+    "dotenv": "8.0.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.3",
@@ -48,6 +49,7 @@
     "grunt-cli": "0.1.9",
     "grunt-jasmine-node": "0.2.1",
     "grunt-jscs": "2.1.0",
-    "nock": "0.53.0"
+    "mocha": "6.1.4",
+    "nock": "^0.53.0"
   }
 }
