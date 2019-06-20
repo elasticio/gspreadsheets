@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // Test for metadata fetching and parsing
 describe('Metadata for add new row ', function () {
     var nock = require('nock'), cfg, cb, self;

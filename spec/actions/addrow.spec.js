@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Spec for testing process method
 // Test for metadata fetching and parsing
 var events = require('events');
