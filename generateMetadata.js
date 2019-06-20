@@ -45,25 +45,32 @@ async function getMetadataForOperation() {
 
 
   function makeSchemaInline(json) {
-    Object.keys(json).forEach(key => {
-      if (key === '$ref') {
-        json[json[key]] = response.data.schemas[json[key]];
-        if (typeof (json[json[key]]) === 'object') {
-          makeSchemaInline(json[json[key]]);
-        }
-        delete json[key];
-      } else if (key === 'items') {
-        Object.defineProperty(json, 'properties', Object.getOwnPropertyDescriptor(json, 'items'));
-        delete json.items;
-        makeSchemaInline(json['properties']);
-      } else if (typeof (json[key]) === 'object') {
-        makeSchemaInline(json[key]);
-      } else if (typeof (json[key]) === 'array') {
-        json[key].forEach(item => {
-          makeSchemaInline(item);
+    if(Object.keys(json).indexOf('$ref') > -1) {
+      const resolvation = response.data.schemas[json['$ref']];
+
+      json.properties = resolvation.properties;
+      json.additionalProperties = resolvation.additionalProperties;
+      json.id = resolvation.id;
+      json.description = resolvation.description;
+      json.title = resolvation.title;
+      json.type = resolvation.type;
+      delete json['$ref'];
+    }
+
+    if (json.type === 'object') {
+      if (json.properties) {
+        Object.keys(json.properties).forEach(k => {
+          console.log(k + '  ' + JSON.stringify(json.properties[k]))
+          makeSchemaInline(json.properties[k])
         });
       }
-    });
+      if (json.additionalProperties) {
+        makeSchemaInline(json.additionalProperties);
+      }
+    }
+    if (json.type === 'array') {
+      makeSchemaInline(json.items);
+    }
   }
 };
 

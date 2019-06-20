@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "title": "Input Row",
+  "properties": {
+    "values": {
+      "type": "array"
+    }
+  }
+}

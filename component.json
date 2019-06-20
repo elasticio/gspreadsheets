@@ -23,6 +23,7 @@
       "token_uri": "https://www.googleapis.com/oauth2/v4/token",
       "scopes": [
         "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive.metadata.readonly"
       ],
       "access_type": "offline",
@@ -87,11 +88,11 @@
       "dynamicMetadata": true
     }
   },
-  "actions": {
-    "addrow": {
-      "main": "./lib/actions/addrow.js",
-      "title": "Add Row",
-      "fields": {
+  "actions" : {
+    "addrow" : {
+      "main" : "./lib/actions/addrow.js",
+      "title" : "Add Row",
+      "fields" : {
         "spreadsheetURL": {
           "viewClass": "SelectView",
           "prompt": "Select your spreadsheet",
@@ -101,6 +102,38 @@
         }
       },
       "dynamicMetadata": true
+    },
+    "createSpreadsheet":{
+      "main":"./lib/actions/createSpreadsheet.js",
+      "title":"Create new Spreadsheet",
+      "metadata": {
+        "in": "./schemas/createSpreadsheet.in.json",
+        "out": "./schemas/createSpreadsheet.out.json"
+      }
+    },
+    "createSpreadsheetRow":{
+      "main":"./lib/actions/createSpreadsheetRow.js",
+      "title":"Add Spreadsheet Row",
+      "fields": {
+        "spreadsheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        },
+        "worksheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your worksheet (spreadsheet required)",
+          "label": "Worksheet",
+          "required": true,
+          "model": "listWorksheets"
+        }
+      },
+      "metadata": {
+        "in": "./schemas/createSpreadsheetRow.in.json",
+        "out": "./schemas/createSpreadsheetRow.out.json"
+      }
     }
   }
 }

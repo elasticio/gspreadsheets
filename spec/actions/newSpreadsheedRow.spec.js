@@ -86,9 +86,10 @@ describe('newSpreadsheetRow', () => {
 
 
     // nock.recorder.rec();
-    await processTrigger.call(context, {}, configuration, snapshot);
-    const nockCallObjects = nock.recorder.play();
-    console.log(nockCallObjects);
+    // const nockCallObjects = nock.recorder.play();
     // nock.restore();
+
+    await processTrigger.call(context, {}, configuration, snapshot);
+
   });
 });

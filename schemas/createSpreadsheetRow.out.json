@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "properties": {
+    "spreadsheetId": {
+      "type": "string",
+      "required": true
+    },
+    "tableRange": {
+      "type": "string",
+      "required": true
+    },
+    "updates": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "spreadsheetId": {
+          "type": "string",
+          "required": true
+        },
+        "updatedRange": {
+          "type": "string",
+          "required": true
+        },
+        "updatedRows": {
+          "type": "numeric",
+          "required": true
+        },
+        "updatedColumns": {
+          "type": "numeric",
+          "required": true
+        },
+        "updatedCells": {
+          "type": "numeric",
+          "required": true
+        }
+      }
+    }
+  }
+}
