@@ -79,7 +79,11 @@
         },
         "createSpreadsheet":{
             "main":"./lib/actions/createSpreadsheet.js",
-            "title":"Create new Spreadsheet"
+            "title":"Create new Spreadsheet",
+            "metadata": {
+                "in": "./schemas/createSpreadsheet.in.json",
+                "out": "./schemas/createSpreadsheet.out.json"
+            }
         },
         "createSpreadsheetRow":{
             "main":"./lib/actions/createSpreadsheetRow.js",
@@ -99,6 +103,10 @@
                     "required": true,
                     "model": "listWorksheets"
                 }
+            },
+            "metadata": {
+                "in": "./schemas/createSpreadsheetRow.in.json",
+                "out": "./schemas/createSpreadsheetRow.out.json"
             }
         }
     }

@@ -35,8 +35,12 @@ describe('Add new spreadsheet', function() {
 
     const msg = {
       body: {
-        title: 'Some name'
-      }
+        properties: { title: 'Some name' },
+        sheets: [
+          { properties: { title: 'Sheet A', }, },
+          { properties: { title: 'Sheet B', }, },
+        ],
+      },
     };
 
     const result = await createSpreadsheet.process(msg, configuration);
