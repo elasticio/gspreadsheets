@@ -33,14 +33,16 @@ describe('Add new row', function () {
   it('success', async () => {
     const msg = {
       body: {
-        values: [1, -6.8, 'string_line', true]
-      }
+        values: [1, -6.8, 'string_line', true],
+      },
     };
 
     nock('https://sheets.googleapis.com')
       .persist()
-      .post(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}:append?valueInputOption=RAW`,
-        { majorDimension: 'ROWS', values: [[1, -6.8, 'string_line', true]] })
+      .post(
+        `/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}:append?valueInputOption=RAW`,
+        { majorDimension: 'ROWS', values: [[1, -6.8, 'string_line', true]] },
+      )
       .reply(200, { success: 'OK' });
 
     const result = await createSpreadsheetRow.process(msg, configuration);

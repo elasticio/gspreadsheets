@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe('List available google spreadsheets', function () {
 
     var nock = require('nock'), cfg, cb, that;

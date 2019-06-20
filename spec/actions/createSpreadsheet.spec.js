@@ -8,7 +8,7 @@ const createSpreadsheet = require('../../lib/actions/createSpreadsheet');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('Add new spreadsheet', function() {
+describe('Add new spreadsheet', function () {
   this.timeout(5000);
 
   let configuration;
@@ -37,8 +37,8 @@ describe('Add new spreadsheet', function() {
       body: {
         properties: { title: 'Some name' },
         sheets: [
-          { properties: { title: 'Sheet A', }, },
-          { properties: { title: 'Sheet B', }, },
+          { properties: { title: 'Sheet A' } },
+          { properties: { title: 'Sheet B' } },
         ],
       },
     };

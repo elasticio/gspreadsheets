@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe('Common function listSpreadsheets', function () {
     var nock = require('nock'), cfg, cb;
     var common = require('../lib/common.js');

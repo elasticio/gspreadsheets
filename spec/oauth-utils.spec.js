@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe('OAuth Utils', function () {
 
     var utils = require('../lib/oauth-utils.js');

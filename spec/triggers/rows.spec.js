@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var events = require('events');
 var _ = require('lodash-node');
 var util = require("util");
