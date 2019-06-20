@@ -28,7 +28,7 @@ describe('newSpreadsheetRow', () => {
         refresh_token: process.env.REFRESH_TOKEN,
         scope: 'https://www.googleapis.com/auth/drive.metadata.readonly',
         token_type: 'Bearer',
-        expiry_date: 1560935119429,
+        expiry_date: new Date().getTime() + 1000,
       },
       spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
       worksheetName: 'Sheet4',
@@ -534,5 +534,69 @@ describe('newSpreadsheetRow', () => {
           });
         });
     });
+
+    it('not need to read changes',
+      async () => {
+        const conf = Object.create(configuration);
+        conf.includeHeader = 'no';
+        conf.dimension = 'COLUMNS';
+        conf.worksheetName = 'Sheet1';
+        const snap = {
+          lastEmittedLine: 4,
+          modifiedTime: new Date('2019-06-20T10:15:14.763Z').getTime() + 1000,
+        };
+        nock('https://www.googleapis.com:443', { encodedQueryParams: true })
+          .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
+          .query({ fields: 'id%2Cname%2CmodifiedTime' })
+          .reply(200, {
+            id: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
+            name: 'TestData',
+            modifiedTime: '2019-06-20T10:15:14.763Z',
+          });
+        // nock.recorder.rec();
+
+        await processTrigger.call(context, {}, conf, snap);
+      });
+
+    it('not updated document',
+      async () => {
+        const conf = Object.create(configuration);
+        conf.includeHeader = 'no';
+        conf.dimension = 'COLUMNS';
+        conf.worksheetName = 'Sheet1';
+        const snap = {
+          lastEmittedLine: 11,
+          modifiedTime: new Date('2019-06-20T10:15:14.763Z').getTime() - 1000,
+        };
+        nock('https://www.googleapis.com:443', { encodedQueryParams: true })
+          .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
+          .query({ fields: 'id%2Cname%2CmodifiedTime' })
+          .reply(200, {
+            id: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
+            name: 'TestData',
+            modifiedTime: '2019-06-20T10:15:14.763Z',
+          });
+        nock('https://sheets.googleapis.com:443',
+          { encodedQueryParams: true })
+          .get(
+            '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
+          )
+          .query({
+            ranges: 'Sheet1!L1:ALX18278',
+            majorDimension: 'COLUMNS',
+          })
+          .reply(200, {
+            spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
+            valueRanges: [
+              {
+                range: 'Sheet1!L1:Z982',
+                majorDimension: 'COLUMNS',
+              }],
+          }, ['Content-Type', 'application/json; charset=UTF-8']);
+
+        // nock.recorder.rec();
+
+        await processTrigger.call(context, {}, conf, snap);
+      });
   });
 });
