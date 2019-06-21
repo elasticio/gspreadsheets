@@ -281,7 +281,7 @@ Schema type|Json schema location
 
 Action to create new Google spreadsheet. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/).
 Adding values array to spreadsheet as new row. Data would be inserted in same order as provided in the input array.
-Data inserts to the last empty line, starting from column A.
+Data inserts to the last empty line, starting from first table column.
 Datatype of inserted values would be same to same to json type (string, numeric or boolean) - use "" value to leave cell empty.
 
 #### Input fields:

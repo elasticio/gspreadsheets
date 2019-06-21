@@ -72,6 +72,6 @@ describe('Google client', function () {
 
     const googleOauth2Client = new GoogleOauth2Client(configuration);
     const result = await googleOauth2Client.listOfWorksheets('some_spreadsheet');
-    expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
+    expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
   });
 });
