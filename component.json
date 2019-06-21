@@ -62,7 +62,7 @@
         "fetchAllData": {
           "viewClass": "SelectView",
           "prompt": "Yes/No",
-          "label": "Select All Data after each Spreadsheet update",
+          "label": "Select All Data",
           "model": {
             "yes": "Yes",
             "no": "No"
