@@ -7,7 +7,7 @@ const { expect } = chai;
 
 const log = require('@elastic.io/component-logger')();
 
-const { listSpreadsheets, listWorksheets, process: processTrigger } = require(
+const { process: processTrigger } = require(
   '../../../lib/triggers/newSpreadsheetRow',
 );
 
@@ -23,9 +23,9 @@ describe('newSpreadsheetRow', () => {
   before(() => {
     configuration = {
       oauth: {
-        access_token: process.env.ACCESS_TOKEN,
+        access_token: ACCESS_TOKEN,
         expires_in: 3600,
-        refresh_token: process.env.REFRESH_TOKEN,
+        refresh_token: REFRESH_TOKEN,
         scope: 'https://www.googleapis.com/auth/drive.metadata.readonly',
         token_type: 'Bearer',
         expiry_date: new Date().getTime() + 10000000000,

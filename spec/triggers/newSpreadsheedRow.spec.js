@@ -1,4 +1,3 @@
-const fs = require('fs');
 const sinon = require('sinon');
 const nock = require('nock');
 const chai = require('chai');
@@ -11,13 +10,14 @@ const { listSpreadsheets, listWorksheets, process: processTrigger } = require(
   '../../lib/triggers/newSpreadsheetRow',
 );
 
+process.env.GOOGLE_APP_ID = '708580332494-tbo7u3g58ucof7sni4kklmia2v8thtks.apps.googleusercontent.com';
+process.env.GOOGLE_APP_SECRET = 'JGmWX6XH5p0-0niRV10m8DLb';
+process.env.ACCESS_TOKEN = 'ya29.GlssByV2tMnuAu6EHoAPwiStnXpXDFSOvsPoDzL0h7QNoyI5uMRLWqFZ-tulVtRkUpkkXGtA_lN_LQPVBBebgfcqL34vE4Rqmkq-IDo3gVtscpuzy0SSZ6tMQl8y';
+process.env.REFRESH_TOKEN = '1/-TrS0eh4zSVWaUJ27JDmxog008EDw-s9CrgCTUCvrOQ';
+process.env.TEST_REDIRECT_URL = 'urn:ietf:wg:oauth:2.0:oob';
+
 describe('newSpreadsheetRow', () => {
   let configuration;
-  let snapshot;
-  if (fs.existsSync('.env')) {
-    // eslint-disable-next-line global-require
-    require('dotenv').config({ path: '.env-test' });
-  }
   let context;
 
   before(() => {
