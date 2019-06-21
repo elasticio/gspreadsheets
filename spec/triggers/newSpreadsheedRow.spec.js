@@ -193,7 +193,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: 'Sheet4!A1:ZZZ1001',
+              ranges: 'Sheet4!A1:ZZZ1000',
               majorDimension: 'ROWS',
             })
             .reply(200, {
@@ -252,7 +252,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: 'Sheet4!A5:ZZZ1005',
+              ranges: 'Sheet4!A5:ZZZ1004',
               majorDimension: 'ROWS',
             })
             .reply(200, {
@@ -438,7 +438,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: 'Sheet1!A1:ALM18278',
+              ranges: 'Sheet1!A1:ALL18278',
               majorDimension: 'COLUMNS',
             })
             .reply(200, {
@@ -499,7 +499,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: 'Sheet1!E1:ALQ18278',
+              ranges: 'Sheet1!E1:ALP18278',
               majorDimension: 'COLUMNS',
             })
             .reply(200, {
@@ -576,13 +576,14 @@ describe('newSpreadsheetRow', () => {
             name: 'TestData',
             modifiedTime: '2019-06-20T10:15:14.763Z',
           });
+
         nock('https://sheets.googleapis.com:443',
           { encodedQueryParams: true })
           .get(
             '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
           )
           .query({
-            ranges: 'Sheet1!L1:ALX18278',
+            ranges: 'Sheet1!L1:ALW18278',
             majorDimension: 'COLUMNS',
           })
           .reply(200, {
