@@ -2,6 +2,7 @@ const fs = require('fs');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
+const sinon = require('sinon');
 
 const createSpreadsheet = require('../../lib/actions/createSpreadsheet');
 
@@ -10,6 +11,7 @@ const { expect } = chai;
 
 describe('Add new spreadsheet', function () {
   this.timeout(5000);
+  let emitter;
 
   let configuration;
   before(() => {
@@ -28,6 +30,16 @@ describe('Add new spreadsheet', function () {
     };
   });
 
+  beforeEach(() => {
+    emitter = {
+      emit: sinon.spy(),
+      logger: {
+        trace: sinon.spy(),
+        debug: sinon.spy(),
+      }
+    };
+  });
+
   it('success', async () => {
     nock('https://sheets.googleapis.com')
       .post('/v4/spreadsheets')
@@ -43,7 +55,7 @@ describe('Add new spreadsheet', function () {
       },
     };
 
-    const result = await createSpreadsheet.process(msg, configuration);
+    const result = await createSpreadsheet.process.call(emitter, msg, configuration);
 
     expect(result.body).to.deep.equal({ status: 'OK' });
   });
