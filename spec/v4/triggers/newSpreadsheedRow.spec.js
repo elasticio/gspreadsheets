@@ -11,21 +11,23 @@ const { process: processTrigger } = require(
   '../../../lib/triggers/newSpreadsheetRow',
 );
 
+process.env.GOOGLE_APP_ID = '708580332494-tbo7u3g58ucof7sni4kklmia2v8thtks.apps.googleusercontent.com';
+process.env.GOOGLE_APP_SECRET = 'JGmWX6XH5p0-0niRV10m8DLb';
+process.env.ACCESS_TOKEN = 'ya29.GlssByV2tMnuAu6EHoAPwiStnXpXDFSOvsPoDzL0h7QNoyI5uMRLWqFZ-tulVtRkUpkkXGtA_lN_LQPVBBebgfcqL34vE4Rqmkq-IDo3gVtscpuzy0SSZ6tMQl8y';
+process.env.REFRESH_TOKEN = '1/-TrS0eh4zSVWaUJ27JDmxog008EDw-s9CrgCTUCvrOQ';
+process.env.TEST_REDIRECT_URL = 'urn:ietf:wg:oauth:2.0:oob';
+
 describe('newSpreadsheetRow', () => {
   let configuration;
   let snapshot;
-  if (fs.existsSync('.env')) {
-    // eslint-disable-next-line global-require
-    require('dotenv').config({ path: '.env-test' });
-  }
   let context;
 
   before(() => {
     configuration = {
       oauth: {
-        access_token: ACCESS_TOKEN,
+        access_token: process.env.ACCESS_TOKEN,
         expires_in: 3600,
-        refresh_token: REFRESH_TOKEN,
+        refresh_token: process.env.REFRESH_TOKEN,
         scope: 'https://www.googleapis.com/auth/drive.metadata.readonly',
         token_type: 'Bearer',
         expiry_date: new Date().getTime() + 10000000000,
@@ -62,7 +64,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet4!1:1', 'Sheet4!A2:ZZZ1001'],
+              ranges: ['Sheet4!A1:ZZZ1', 'Sheet4!A2:ZZZ1001'],
               majorDimension: 'ROWS',
             })
             .reply(200, {
@@ -126,7 +128,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet4!1:1', 'Sheet4!A5:ZZZ1004'],
+              ranges: ['Sheet4!A1:ZZZ1', 'Sheet4!A5:ZZZ1004'],
               majorDimension: 'ROWS',
             })
             .reply(200, {
@@ -303,7 +305,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet1!A:A', 'Sheet1!B1:ALM18278'],
+              ranges: ['Sheet1!A1:A18278', 'Sheet1!B1:ALM18278'],
               majorDimension: 'COLUMNS',
             })
             .reply(200, {
@@ -368,7 +370,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet1!A:A', 'Sheet1!E1:ALP18278'],
+              ranges: ['Sheet1!A1:A18278', 'Sheet1!E1:ALP18278'],
               majorDimension: 'COLUMNS',
             })
             .reply(200, {
