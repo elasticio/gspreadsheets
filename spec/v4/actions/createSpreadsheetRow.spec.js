@@ -81,7 +81,7 @@ describe('Add new row', function () {
         ],
       });
 
-    const result = await createSpreadsheetRow.listWorksheets(configuration);
+    const result = await createSpreadsheetRow.listWorksheets.call(emitter, configuration);
     expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
   });
 });
