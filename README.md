@@ -27,6 +27,127 @@ platform to access your Spreadsheets.
 
 ## Triggers
 
+
+### New Spreadsheet Row
+	
+The  **New Spreadsheet Row** *trigger* reads the data in each row of a given Google Spreadsheet
+and passes it to the next stage of your integration flow.
+
+#### The process
+
+In the beginning the system will read all the rows from a given Google
+Spreadsheet and process it further along your designed integration flow. It will
+also create an initial state of your spreadsheet, we call it a ***snapshot***,
+in order to have something to compare after your data is updated.
+
+After the initial read, any further requests for update will be compared to this
+snapshot and if any changes are detected they will be passed along the integration
+flow as well. If `Select All Data` configuration property has value `Yes`, the system will read all the rows from a given Google
+Spreadsheet whenever flow processes message.
+
+
+#### Input fields description
+|Input field|Required|Description|Example|
+|---------------------|--------|---------|---------|
+|Spreadsheet                   |true|Spreadsheet which will be used for data reading|`MyTestSpreadsheet`|
+|Worksheet                     |true|Worksheet of spreadsheet which will be used for data reading|`Sheet1`|
+|Dimension                     |true|The major dimension of the values|`ROWS`, `COLUMNS`|
+|Use first row/column as header|true|You should specify Yes if your data has a header in the first row/column and you want to use these values as json key in the output message. If you specify No, json key will be taken from row/column index according to A1 notation. Se example below |`Yes`|
+|Select All Data               |true|You should specify Yes if you want to fetch all spreadsheet data whenever step starts. If you specify No, a step will be emitting only delta changes (lines which were added after last step runs) |`No`|
+
+`IMPORTANT!:` If integrator uses `Use first row/column as header` feature, Integrator should be sure that header values is unique.
+
+#### Cases with ROWS dimension:
+
+![Table](https://user-images.githubusercontent.com/13310949/59919432-14cf9400-9430-11e9-9522-3d20c3fa2337.png)
+
+After trigger execution, data will be extracted from the table above and will be emitted next messages:
+
+##### 1) Dimension: `ROWS`, Use first row/column as header: `Yes`
+```js
+  {
+    "FirstName": "Tom1",
+    "LastName": "Smith1"
+  }
+  {
+    "FirstName": "Tom2",
+    "LastName": "Smith2"
+  } 
+  -----------------------
+  {
+    "FirstName": "Tom10",
+    "LastName": "Smith10"
+  }
+
+```
+
+##### 2) Dimension: `ROWS`, Use first row/column as header: `No`
+```js
+  {
+    "A": "FirstName",
+    "B": "LastName"
+  }
+  {
+    "A": "Tom1",
+    "B": "Smith1"
+  }
+  {
+    "A": "Tom2",
+    "B": "Smith2"
+  }
+ ---------------------
+  {
+    "A": "Tom10",
+    "B": "Smith10"
+  }
+```
+
+#### Cases with COLUMNS dimension:
+
+![Table](https://user-images.githubusercontent.com/13310949/59920466-45fd9380-9433-11e9-91bc-35e2043b15a4.png)
+
+After trigger execution, data will be extracted from the table above and will be emitted next messages:
+
+##### 1) Dimension: `COLUMNS`, Use first row/column as header: `Yes`
+```js
+  {
+    "FirstName": "Tom1",
+    "LastName": "Smith1"
+  }
+  {
+    "FirstName": "Tom2",
+    "LastName": "Smith2"
+  } 
+  -----------------------
+  {
+    "FirstName": "Tom10",
+    "LastName": "Smith10"
+  }
+
+```
+
+##### 2) Dimension: `COLUMNS`, Use first row/column as header: `No`
+```js
+  {
+    "1": "FirstName",
+    "2": "LastName"
+  }
+  {
+    "1": "Tom1",
+    "2": "Smith1"
+  }
+  {
+    "1": "Tom2",
+    "2": "Smith2"
+  }
+ ---------------------
+  {
+    "1": "Tom10",
+    "2": "Smith10"
+  }
+```
+
+
 ### Rows (Deprecated)
 
 The  **Rows** *trigger* reads the data in each row of a given Google Spreadsheet
@@ -59,10 +180,11 @@ must have:
 #### External and internal ID for each row
 
 When any given row is processed by the system it receives a *unique name* or a
-unique ID so that it can be recognised by the system afterwards if you wish to
+unique ID so that it can be recognized by the system afterwards if you wish to
 make any changes to the values in that specific row.
 
 > In our system the row number in the Google Spreadsheet is taken as a unique ID to process through the integration flow.
+
 
 ## Actions
 
@@ -109,8 +231,7 @@ If you make structural changes to the Google Spreadsheet while it is being used
 it will cause number of Errors and the flow will stop functioning properly.
 
 Decide the structure of your spreadsheet file in advance and avoid making any
-structural changes during the integration. In particular avoid adding or r
-emoving additional columns since you would need to repeat the flow design process
+structural changes during the integration. In particular avoid adding or removing additional columns since you would need to repeat the flow design process
 to properly map or link your changes.
 
 If you still wish to change the structure of your Google Spreadsheet then follow
@@ -126,7 +247,7 @@ these steps:
 **Do NOT insert a row between the records while your flow is active**
 
 If you insert a new row between existing structure the system would fail to
-recognise it as an update. Instead this will cause the system to loose the
+recognize it as an update. Instead this will cause the system to loose the
 connection between the **unique IDs** and the records **since our unique ID is the row number**.
 
 If you wish to insert a row between existing records then you

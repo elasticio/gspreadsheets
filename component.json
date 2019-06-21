@@ -50,10 +50,21 @@
           "required": true,
           "model": "listWorksheets"
         },
+        "dimension": {
+          "viewClass": "SelectView",
+          "prompt": "Select dimension",
+          "label": "Dimension",
+          "required": true,
+          "model": {
+            "ROWS": "ROWS",
+            "COLUMNS": "COLUMNS"
+          }
+        },
         "includeHeader": {
           "viewClass": "SelectView",
           "prompt": "Yes/No",
           "label": "Use first row/column as header",
+          "required": true,
           "model": {
             "yes": "Yes",
             "no": "No"
@@ -63,19 +74,10 @@
           "viewClass": "SelectView",
           "prompt": "Yes/No",
           "label": "Select All Data",
+          "required": true,
           "model": {
             "yes": "Yes",
             "no": "No"
-          }
-        },
-        "dimension": {
-          "viewClass": "SelectView",
-          "prompt": "Select dimension",
-          "label": "Dimension",
-          "required": true,
-          "model": {
-            "ROWS": "ROWS",
-            "COLUMNS": "COLUMNS"
           }
         }
       },
