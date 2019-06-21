@@ -31,21 +31,6 @@
     }
   },
   "triggers": {
-    "rows": {
-      "main": "./lib/triggers/rows.js",
-      "title": "Rows",
-      "type": "polling",
-      "fields": {
-        "spreadsheetURL": {
-          "viewClass": "SelectView",
-          "prompt": "Select your spreadsheet",
-          "label": "Spreadsheet",
-          "required": true,
-          "model": "listSpreadsheets"
-        }
-      },
-      "dynamicMetadata": true
-    },
     "newSpreadsheetRow": {
       "main": "./lib/triggers/newSpreadsheetRow.js",
       "title": "New Spreadsheet Row",
@@ -72,68 +57,93 @@
           "model": {
             "yes": "Yes",
             "no": "No"
+          },
+          "fetchAllData": {
+            "viewClass": "SelectView",
+            "prompt": "Yes/No",
+            "label": "Select All Data after each Spreadsheet update",
+            "model": {
+              "yes": "Yes",
+              "no": "No"
+            }
+          },
+          "dimension": {
+            "viewClass": "SelectView",
+            "prompt": "Select dimension",
+            "label": "Dimension",
+            "required": true,
+            "model": {
+              "ROWS": "ROWS",
+              "COLUMNS": "COLUMNS"
+            }
           }
         },
-        "dimension": {
-          "viewClass": "SelectView",
-          "prompt": "Select dimension",
-          "label": "Dimension",
-          "required": true,
-          "model": {
-            "ROWS": "ROWS",
-            "COLUMNS": "COLUMNS"
+        "dynamicMetadata": true
+      },
+      "rows": {
+        "deprecated": "true",
+        "main": "./lib/triggers/rows.js",
+        "title": "Rows",
+        "type": "polling",
+        "fields": {
+          "spreadsheetURL": {
+            "viewClass": "SelectView",
+            "prompt": "Select your spreadsheet",
+            "label": "Spreadsheet",
+            "required": true,
+            "model": "listSpreadsheets"
           }
-        }
-      },
-      "dynamicMetadata": true
-    }
-  },
-  "actions" : {
-    "addrow" : {
-      "main" : "./lib/actions/addrow.js",
-      "title" : "Add Row",
-      "fields" : {
-        "spreadsheetURL": {
-          "viewClass": "SelectView",
-          "prompt": "Select your spreadsheet",
-          "label": "Spreadsheet",
-          "required": true,
-          "model": "listSpreadsheets"
-        }
-      },
-      "dynamicMetadata": true
-    },
-    "createSpreadsheet":{
-      "main":"./lib/actions/createSpreadsheet.js",
-      "title":"Create new Spreadsheet",
-      "metadata": {
-        "in": "./schemas/createSpreadsheet.in.json",
-        "out": "./schemas/createSpreadsheet.out.json"
+        },
+        "dynamicMetadata": true
       }
     },
-    "createSpreadsheetRow":{
-      "main":"./lib/actions/createSpreadsheetRow.js",
-      "title":"Add Spreadsheet Row",
-      "fields": {
-        "spreadsheetId": {
-          "viewClass": "SelectView",
-          "prompt": "Select your spreadsheet",
-          "label": "Spreadsheet",
-          "required": true,
-          "model": "listSpreadsheets"
-        },
-        "worksheetId": {
-          "viewClass": "SelectView",
-          "prompt": "Select your worksheet (spreadsheet required)",
-          "label": "Worksheet",
-          "required": true,
-          "model": "listWorksheets"
+    "actions": {
+      "createSpreadsheet": {
+        "main": "./lib/actions/createSpreadsheet.js",
+        "title": "Create new Spreadsheet",
+        "metadata": {
+          "in": "./schemas/createSpreadsheet.in.json",
+          "out": "./schemas/createSpreadsheet.out.json"
         }
       },
-      "metadata": {
-        "in": "./schemas/createSpreadsheetRow.in.json",
-        "out": "./schemas/createSpreadsheetRow.out.json"
+      "createSpreadsheetRow": {
+        "main": "./lib/actions/createSpreadsheetRow.js",
+        "title": "Add Spreadsheet Row",
+        "fields": {
+          "spreadsheetId": {
+            "viewClass": "SelectView",
+            "prompt": "Select your spreadsheet",
+            "label": "Spreadsheet",
+            "required": true,
+            "model": "listSpreadsheets"
+          },
+          "worksheetId": {
+            "viewClass": "SelectView",
+            "prompt": "Select your worksheet (spreadsheet required)",
+            "label": "Worksheet",
+            "required": true,
+            "model": "listWorksheets"
+          }
+        },
+        "metadata": {
+          "in": "./schemas/createSpreadsheetRow.in.json",
+          "out": "./schemas/createSpreadsheetRow.out.json"
+        }
+      },
+      "addrow": {
+        "deprecated": true,
+        "main": "./lib/actions/addrow.js",
+        "title": "Add Row",
+        "fields": {
+          "spreadsheetURL": {
+            "viewClass": "SelectView",
+            "prompt": "Select your spreadsheet",
+            "label": "Spreadsheet",
+            "required": true,
+            "model": "listSpreadsheets"
+          }
+        },
+        "dynamicMetadata": true
       }
     }
   }
-}
