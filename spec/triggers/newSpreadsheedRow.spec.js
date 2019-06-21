@@ -70,7 +70,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet4!1:1', 'Sheet4!A2:ZZZ1001'],
+              ranges: ['Sheet4!A1:ZZZ1', 'Sheet4!A2:ZZZ1001'],
               majorDimension: 'ROWS',
             })
             .reply(200, {
@@ -134,7 +134,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet4!1:1', 'Sheet4!A5:ZZZ1004'],
+              ranges: ['Sheet4!A1:ZZZ1', 'Sheet4!A5:ZZZ1004'],
               majorDimension: 'ROWS',
             })
             .reply(200, {
@@ -311,7 +311,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet1!A:A', 'Sheet1!B1:ALM18278'],
+              ranges: ['Sheet1!A1:A18278', 'Sheet1!B1:ALM18278'],
               majorDimension: 'COLUMNS',
             })
             .reply(200, {
@@ -376,7 +376,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['Sheet1!A:A', 'Sheet1!E1:ALP18278'],
+              ranges: ['Sheet1!A1:A18278', 'Sheet1!E1:ALP18278'],
               majorDimension: 'COLUMNS',
             })
             .reply(200, {
