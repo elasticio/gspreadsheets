@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 
-const { GoogleOauth2Client } = require('../lib/client');
+const { GoogleOauth2Client } = require('../../lib/client');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -31,7 +31,8 @@ describe('Google client', function () {
   it('list Of Spreadsheets', async () => {
     nock('https://www.googleapis.com')
       .get(
-        '/drive/v3/files?q=mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27&fields=nextPageToken%2C%20files%28id%2C%20name%29')
+        '/drive/v3/files?q=mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27&fields=nextPageToken%2C%20files%28id%2C%20name%29',
+      )
       .reply(200, {
         files: [
           {
