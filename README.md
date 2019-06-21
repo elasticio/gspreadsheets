@@ -27,7 +27,7 @@ platform to access your Spreadsheets.
 
 ## Triggers
 
-### Rows
+### Rows (Deprecated)
 
 The  **Rows** *trigger* reads the data in each row of a given Google Spreadsheet
 and passes it to the next stage of your integration flow.
@@ -66,7 +66,7 @@ make any changes to the values in that specific row.
 
 ## Actions
 
-### Add Row
+### Add Row (Deprecated)
 
 Your integration flow can also *write* or **add a row** to the given Google
 Spreadsheet as an **action**. In this case your spreadsheet will be the ***target spreadsheet***.
@@ -121,7 +121,7 @@ these steps:
 3.  **Go through the integration design stage again** to ensure that all columns in the modified spreadsheet are properly linked with required fields or values necessary to run your integration flow.
 4.  Activate the flow again.
 
-### Inserting a row
+### Inserting a row (Deprecated)
 
 **Do NOT insert a row between the records while your flow is active**
 
@@ -141,6 +141,36 @@ Avoid inserting a row in between the records during the integration since it
 would look different for the system. This **would trigger an additional data transfer**
 since not only the new inserted row will be regarded as a new record but
 **everything after the inserted row would be considered a new data**.
+
+### Create new Spreadsheet
+
+Action to create new Google spreadsheet. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create).
+To create new spreadsheet action needs json instance of [Spreadsheet](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Spreadsheet) object.
+All data structures and limitations are same to Google API.
+
+#### Json schema locations
+Schema type|Json schema location
+-----------| -------------
+|Input   |[/schemas/createSpreadsheet.in.json](/schemas/createSpreadsheet.in.json)
+|Output   |[/schemas/createSpreadsheet.out.json](/schemas/createSpreadsheet.out.json)
+
+### Add Spreadsheet Row
+
+Action to create new Google spreadsheet. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/).
+Adding values array to spreadsheet as new row. Data would be inserted in same order as provided in the input array.
+Data inserts to the last empty line, starting from column A.
+Datatype of inserted values would be same to same to json type (string, numeric or boolean) - use "" value to leave cell empty.
+
+#### Input fields:
+    
+ - **Spreadsheet** - Spreadsheet name to make changes. 
+ - **Worksheet** - Worksheet name of selected Spreadsheet to make changes. 
+
+#### Json schema locations
+Schema type|Json schema location
+-----------| -------------
+|Input   |[/schemas/createSpreadsheetRow.in.json](/schemas/createSpreadsheetRow.in.json)
+|Output   |[/schemas/createSpreadsheetRow.out.json](/schemas/createSpreadsheetRow.out.json)
 
 ## License
 
