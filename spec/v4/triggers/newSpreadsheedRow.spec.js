@@ -43,14 +43,6 @@ describe('newSpreadsheetRow', () => {
     context = { logger: log, emit: sinon.spy() };
   });
 
-  it('check list of spreadsheets', async () => {
-    await listSpreadsheets(configuration);
-  });
-
-  it('check list of worksheets', async () => {
-    await listWorksheets(configuration);
-  });
-
   describe('process', () => {
     describe('ROWS dimension', () => {
       it('lastEmittedLine: 0, includeHeader: yes',
