@@ -4,7 +4,7 @@
   "description": "Google Spreadsheets component for Elastic.io",
   "main": "index.js",
   "scripts": {
-    "test": "mocha spec/v4"
+    "test": "mocha spec/v4/** --timeout 50000"
   },
   "engines": {
     "node": "8.11.3"

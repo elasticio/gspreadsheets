@@ -8,7 +8,7 @@ const { expect } = chai;
 const log = require('@elastic.io/component-logger')();
 
 const { listSpreadsheets, listWorksheets, process: processTrigger } = require(
-  '../../lib/triggers/newSpreadsheetRow',
+  '../../../lib/triggers/newSpreadsheetRow',
 );
 
 describe('newSpreadsheetRow', () => {
