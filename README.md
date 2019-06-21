@@ -147,6 +147,8 @@ After trigger execution, data will be extracted from the table above and will be
   }
 ```
 
+Trigger uses version 4 of [Google Sheet API](https://developers.google.com/sheets/api/).
+You can find more information in the [Google Sheets API Documentation](https://developers.google.com/sheets/api/samples/reading).
 
 ### Rows (Deprecated)
 
