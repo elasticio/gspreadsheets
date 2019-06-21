@@ -2,6 +2,7 @@ const fs = require('fs');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
+const sinon = require('sinon');
 
 const createSpreadsheetRow = require('../../lib/actions/createSpreadsheetRow');
 
@@ -10,6 +11,7 @@ const { expect } = chai;
 
 describe('Add new row', function () {
   this.timeout(5000);
+  let emitter;
 
   let configuration;
   before(() => {
@@ -30,6 +32,16 @@ describe('Add new row', function () {
     };
   });
 
+  beforeEach(() => {
+    emitter = {
+      emit: sinon.spy(),
+      logger: {
+        trace: sinon.spy(),
+        debug: sinon.spy(),
+      }
+    };
+  });
+
   it('success', async () => {
     const msg = {
       body: {
@@ -45,7 +57,7 @@ describe('Add new row', function () {
       )
       .reply(200, { success: 'OK' });
 
-    const result = await createSpreadsheetRow.process(msg, configuration);
+    const result = await createSpreadsheetRow.process.call(emitter, msg, configuration);
     expect(result.body).to.deep.equal({ success: 'OK' });
   });
 
