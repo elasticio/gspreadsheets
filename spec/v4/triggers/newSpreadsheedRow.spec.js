@@ -1,4 +1,3 @@
-const fs = require('fs');
 const sinon = require('sinon');
 const nock = require('nock');
 const chai = require('chai');

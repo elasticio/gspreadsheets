@@ -3,10 +3,13 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 
+const log = require('@elastic.io/component-logger')();
+
 const { GoogleOauth2Client } = require('../../lib/client');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
+const context = { logger: log};
 
 describe('Google client', function () {
   this.timeout(5000);
@@ -46,7 +49,7 @@ describe('Google client', function () {
         ],
       });
 
-    const googleOauth2Client = new GoogleOauth2Client(configuration);
+    const googleOauth2Client = new GoogleOauth2Client(configuration, context);
     const result = await googleOauth2Client.listOfSpreadsheets();
     expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
   });
@@ -71,7 +74,7 @@ describe('Google client', function () {
         ],
       });
 
-    const googleOauth2Client = new GoogleOauth2Client(configuration);
+    const googleOauth2Client = new GoogleOauth2Client(configuration, context);
     const result = await googleOauth2Client.listOfWorksheets('some_spreadsheet');
     expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
   });

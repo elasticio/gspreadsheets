@@ -4,6 +4,8 @@ const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 const sinon = require('sinon');
 
+const log = require('@elastic.io/component-logger')();
+
 const createSpreadsheetRow = require('../../../lib/actions/createSpreadsheetRow');
 
 chai.use(chaiAsPromised);
@@ -35,10 +37,7 @@ describe('Add new row', function () {
   beforeEach(() => {
     emitter = {
       emit: sinon.spy(),
-      logger: {
-        trace: sinon.spy(),
-        debug: sinon.spy(),
-      }
+      logger: log,
     };
   });
 
