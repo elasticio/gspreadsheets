@@ -35,15 +35,15 @@ and passes it to the next stage of your integration flow.
 
 #### The process
 
-In the beginning the system will read all the rows from a given Google
-Spreadsheet and process it further along your designed integration flow. It will
+First, the system reads all the rows from a given Google
+Spreadsheet and processes it further along with your designed integration flow. It will
 also create an initial state of your spreadsheet, we call it a ***snapshot***,
-in order to have something to compare after your data is updated.
+in order to have something to compare with after your data is updated.
 
 After the initial read, any further requests for update will be compared to this
-snapshot and if any changes are detected they will be passed along the integration
+snapshot and in case any changes are detected they will be passed along with the integration
 flow as well. If `Select All Data` configuration property has value `Yes`, the system will read all the rows from a given Google
-Spreadsheet whenever flow processes message.
+Spreadsheet whenever flow processes the message.
 
 
 #### Input fields description
@@ -55,13 +55,13 @@ Spreadsheet whenever flow processes message.
 |Use first row/column as header|true|You should specify Yes if your data has a header in the first row/column and you want to use these values as json key in the output message. If you specify No, json key will be taken from row/column index according to A1 notation. Se example below |`Yes`|
 |Select All Data               |true|You should specify Yes if you want to fetch all spreadsheet data whenever step starts. If you specify No, a step will be emitting only delta changes (lines which were added after last step runs) |`No`|
 
-`IMPORTANT!:` If integrator uses `Use first row/column as header` feature, Integrator should be sure that header values is unique.
+`IMPORTANT!:` Using `Use first row/column as header` feature, you must be sure that header values are unique.
 
 #### Cases with ROWS dimension:
 
 ![Table](https://user-images.githubusercontent.com/13310949/59919432-14cf9400-9430-11e9-9522-3d20c3fa2337.png)
 
-After trigger execution, data will be extracted from the table above and will be emitted next messages:
+After a trigger execution, data will be extracted from the table above and the following message will be emitted:
 
 ##### 1) Dimension: `ROWS`, Use first row/column as header: `Yes`
 ```js
@@ -106,7 +106,7 @@ After trigger execution, data will be extracted from the table above and will be
 
 ![Table](https://user-images.githubusercontent.com/13310949/59920466-45fd9380-9433-11e9-91bc-35e2043b15a4.png)
 
-After trigger execution, data will be extracted from the table above and will be emitted next messages:
+After a trigger execution, data will be extracted from the table above and the following message will be emitted:
 
 ##### 1) Dimension: `COLUMNS`, Use first row/column as header: `Yes`
 ```js
@@ -182,7 +182,7 @@ must have:
 #### External and internal ID for each row
 
 When any given row is processed by the system it receives a *unique name* or a
-unique ID so that it can be recognized by the system afterwards if you wish to
+unique ID so that it can be recognized by the system afterward if you want to
 make any changes to the values in that specific row.
 
 > In our system the row number in the Google Spreadsheet is taken as a unique ID to process through the integration flow.
@@ -267,8 +267,8 @@ since not only the new inserted row will be regarded as a new record but
 
 ### Create new Spreadsheet
 
-Action to create new Google spreadsheet. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create).
-To create new spreadsheet action needs json instance of [Spreadsheet](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Spreadsheet) object.
+Action to create a new Google spreadsheet. This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create).
+The action needs a JSON instance of a [Spreadsheet](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Spreadsheet) object in order to create a new spreadsheet.
 All data structures and limitations are same to Google API.
 
 #### Json schema locations
@@ -280,9 +280,9 @@ Schema type|Json schema location
 ### Add Spreadsheet Row
 
 Action to create new Google spreadsheet. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/).
-Adding values array to spreadsheet as new row. Data would be inserted in same order as provided in the input array.
-Data inserts to the last empty line, starting from first table column.
-Datatype of inserted values would be same to same to json type (string, numeric or boolean) - use "" value to leave cell empty.
+Adds an array of given values to a spreadsheet as a new row. Data would be inserted in the same order as provided in the input array.
+Data will be inserted into the last empty line, starting from the first table column.
+A datatype of inserted values will be the same as for JSON type (string, numeric or boolean). Use "" value to make cell empty.
 
 #### Input fields:
     
