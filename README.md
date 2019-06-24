@@ -150,7 +150,7 @@ After a trigger execution, data will be extracted from the table above and the f
 Trigger uses version 4 of [Google Sheet API](https://developers.google.com/sheets/api/).
 You can find more information in the [Google Sheets API Documentation](https://developers.google.com/sheets/api/samples/reading).
 
-### Rows (Deprecated)
+### Rows (Deprecated - better use [New Spreadsheet Row](New Spreadsheet Row))
 
 The  **Rows** *trigger* reads the data in each row of a given Google Spreadsheet
 and passes it to the next stage of your integration flow.
@@ -244,7 +244,7 @@ these steps:
 3.  **Go through the integration design stage again** to ensure that all columns in the modified spreadsheet are properly linked with required fields or values necessary to run your integration flow.
 4.  Activate the flow again.
 
-### Inserting a row (Deprecated)
+### Inserting a row (Deprecated - better use [Add Spreadsheet Row](Add Spreadsheet Row))
 
 **Do NOT insert a row between the records while your flow is active**
 
