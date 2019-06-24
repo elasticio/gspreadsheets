@@ -101,6 +101,21 @@
     }
   },
   "actions": {
+    "addrow": {
+      "deprecated": true,
+      "main": "./lib/actions/addrow.js",
+      "title": "Add Row",
+      "fields": {
+        "spreadsheetURL": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        }
+      },
+      "dynamicMetadata": true
+    },
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
@@ -132,21 +147,6 @@
         "in": "./schemas/createSpreadsheetRow.in.json",
         "out": "./schemas/createSpreadsheetRow.out.json"
       }
-    },
-    "addrow": {
-      "deprecated": true,
-      "main": "./lib/actions/addrow.js",
-      "title": "Add Row",
-      "fields": {
-        "spreadsheetURL": {
-          "viewClass": "SelectView",
-          "prompt": "Select your spreadsheet",
-          "label": "Spreadsheet",
-          "required": true,
-          "model": "listSpreadsheets"
-        }
-      },
-      "dynamicMetadata": true
     }
   }
 }
