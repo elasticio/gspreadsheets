@@ -11,8 +11,7 @@ const createSpreadsheetRow = require('../../../lib/actions/createSpreadsheetRow'
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('Add new row', function () {
-  this.timeout(5000);
+describe('Add new row', () => {
   let emitter;
 
   let configuration;

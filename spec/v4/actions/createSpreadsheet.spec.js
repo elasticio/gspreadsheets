@@ -9,8 +9,7 @@ const createSpreadsheet = require('../../../lib/actions/createSpreadsheet');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('Add new spreadsheet', function () {
-  this.timeout(5000);
+describe('Add new spreadsheet', () => {
   let emitter;
 
   let configuration;
@@ -36,7 +35,7 @@ describe('Add new spreadsheet', function () {
       logger: {
         trace: sinon.spy(),
         debug: sinon.spy(),
-      }
+      },
     };
   });
 

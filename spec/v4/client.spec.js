@@ -1,19 +1,18 @@
 const fs = require('fs');
 const chai = require('chai');
+const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 
-const log = require('@elastic.io/component-logger')();
+const logger = require('@elastic.io/component-logger')();
 
 const { GoogleOauth2Client } = require('../../lib/client');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
-const context = { logger: log};
+let context;
 
-describe('Google client', function () {
-  this.timeout(5000);
-
+describe('Google client', () => {
   let configuration;
   before(() => {
     if (fs.existsSync('.env')) {
@@ -29,6 +28,10 @@ describe('Google client', function () {
         token_type: 'Bearer',
       },
     };
+  });
+
+  beforeEach(() => {
+    context = { logger, emit: sinon.spy() };
   });
 
   it('list Of Spreadsheets', async () => {

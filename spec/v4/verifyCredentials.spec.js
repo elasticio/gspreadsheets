@@ -2,17 +2,12 @@ const fs = require('fs');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
-const sinon = require('sinon');
 
 const verify = require('../../verifyCredentials');
 
 chai.use(chaiAsPromised);
-const { expect } = chai;
 
-describe('Verify Credentials', function () {
-  this.timeout(5000);
-  let emitter;
-
+describe('Verify Credentials', () => {
   let configuration;
   before(() => {
     if (fs.existsSync('.env')) {
@@ -30,18 +25,8 @@ describe('Verify Credentials', function () {
     };
   });
 
-  beforeEach(() => {
-    emitter = {
-      emit: sinon.spy(),
-      logger: {
-        trace: sinon.spy(),
-        debug: sinon.spy(),
-      }
-    };
-  });
 
   it(' successful update on mocked list Of Spreadsheets', async () => {
-
     nock('https://www.googleapis.com')
       .get(
         '/drive/v3/files?q=mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27&fields=nextPageToken%2C%20files%28id%2C%20name%29',
