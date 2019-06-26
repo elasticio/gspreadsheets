@@ -28,6 +28,7 @@
   "dependencies": {
     "@elastic.io/component-logger": "0.0.1",
     "axios": "^0.19.0",
+    "debug": "^3.1.0",
     "elasticio-node": "0.0.9",
     "elasticio-sailor-nodejs": "2.4.0",
     "googleapis": "39.2.0",
