@@ -497,29 +497,6 @@ describe('newSpreadsheetRow', () => {
         });
     });
 
-    it('not need to read changes',
-      async () => {
-        const conf = Object.create(configuration);
-        conf.includeHeader = 'no';
-        conf.dimension = 'COLUMNS';
-        conf.worksheetName = 'Sheet1';
-        const snap = {
-          lastEmittedLine: 4,
-          modifiedTime: new Date('2019-06-20T10:15:14.763Z').getTime() + 1000,
-        };
-        nock('https://www.googleapis.com:443', { encodedQueryParams: true })
-          .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
-          .query({ fields: 'id%2Cname%2CmodifiedTime' })
-          .reply(200, {
-            id: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
-            name: 'TestData',
-            modifiedTime: '2019-06-20T10:15:14.763Z',
-          });
-        // nock.recorder.rec();
-
-        await processTrigger.call(context, {}, conf, snap);
-      });
-
     it('not updated document',
       async () => {
         const conf = Object.create(configuration);
