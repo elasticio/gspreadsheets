@@ -147,6 +147,10 @@ After a trigger execution, data will be extracted from the table above and the f
   }
 ```
 
+#### Limitations
+
+Trigger can emit maximum 1000 messages per one execution.
+
 Trigger uses version 4 of [Google Sheet API](https://developers.google.com/sheets/api/).
 You can find more information in the [Google Sheets API Documentation](https://developers.google.com/sheets/api/samples/reading).
 
