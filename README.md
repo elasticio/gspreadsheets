@@ -210,7 +210,7 @@ Schema type|Json schema location
 
 ### Add Spreadsheet Row
 
-Action to create new Google spreadsheet. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/).
+Action to create a new Google spreadsheet row. This action based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/).
 Adds an array of given values to a spreadsheet as a new row. Data would be inserted in the same order as provided in the input array.
 Data will be inserted into the last empty line, starting from the first table column.
 A datatype of inserted values will be the same as for JSON type (string, numeric or boolean). Use "" value to make cell empty.
