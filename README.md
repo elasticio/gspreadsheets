@@ -2,7 +2,7 @@
 
 ## Description
 
-[elastic.io](http://www.elastic.io;) iPaaS component to read and write to Google Spreadsheet.
+[elastic.io](http://www.elastic.io;) iPaaS component to read and write to Google Spreadsheets
 
 ## Requirements
 
