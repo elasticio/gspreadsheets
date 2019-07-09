@@ -28,9 +28,10 @@ platform to access your Spreadsheets.
 ## Triggers
 
 
-### New Spreadsheet Row
+### Get Spreadsheet Row
 	
-Trigger to read the data in each row of a given Google Spreadsheet and passes it to the next step of your integration flow.
+The  **New Spreadsheet Row** *trigger* reads the data in each row of a given Google Spreadsheet
+and passes it to the next stage of your integration flow.
 
 #### The process
 
