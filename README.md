@@ -15,8 +15,12 @@ Following environment are required:
 
  - `GOOGLE_APP_ID` - oauth App ID
  - `GOOGLE_APP_SECRET` - oauth App Secret
-
-To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
+ 
+ To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
+ 
+ Recommended environment variable:
+ 
+ - `EIO_REQUIRED_RAM_MB` - recommended value of allocated memory is `512` MB
 
 ## Credentials
 
