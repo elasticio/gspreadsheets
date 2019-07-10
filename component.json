@@ -32,7 +32,8 @@
   "triggers": {
     "newSpreadsheetRow": {
       "main": "./lib/triggers/newSpreadsheetRow.js",
-      "title": "New Spreadsheet Row",
+      "title": "Get Spreadsheet Row",
+      "description":"Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
       "type": "polling",
       "fields": {
         "spreadsheetId": {
@@ -55,14 +56,14 @@
           "label": "Dimension",
           "required": true,
           "model": {
-            "ROWS": "ROWS",
-            "COLUMNS": "COLUMNS"
+            "ROWS": "Rows",
+            "COLUMNS": "Columns"
           }
         },
         "includeHeader": {
           "viewClass": "SelectView",
           "prompt": "Yes/No",
-          "label": "Use first row/column as header",
+          "label": "Use first row or column as a header",
           "required": true,
           "model": {
             "yes": "Yes",
@@ -86,6 +87,7 @@
       "deprecated": "true",
       "main": "./lib/triggers/rows.js",
       "title": "Rows",
+      "description":"This is a deprecated trigger. Please use Get Spreadsheet Row Trigger instead."
       "type": "polling",
       "fields": {
         "spreadsheetURL": {
@@ -104,6 +106,7 @@
       "deprecated": true,
       "main": "./lib/actions/addrow.js",
       "title": "Add Row",
+      "description":"This action is deprecated. Please use Add Spreadsheet Row."
       "fields": {
         "spreadsheetURL": {
           "viewClass": "SelectView",
@@ -118,6 +121,7 @@
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
+      "description":"Action to create a new Google spreadsheet."
       "metadata": {
         "in": "./schemas/createSpreadsheet.in.json",
         "out": "./schemas/createSpreadsheet.out.json"
