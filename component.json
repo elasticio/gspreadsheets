@@ -80,8 +80,7 @@
             "no": "No"
           }
         }
-      },
-      "dynamicMetadata": true
+      }
     },
     "rows": {
       "deprecated": "true",
