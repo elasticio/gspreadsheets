@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/elasticio/gspreadsheets.svg?style=svg)](https://circleci.com/gh/elasticio/gspreadsheets)
 # Google Spreadsheets component
 
 ## Description
