@@ -1,8 +1,9 @@
+[![CircleCI](https://circleci.com/gh/elasticio/gspreadsheets.svg?style=svg)](https://circleci.com/gh/elasticio/gspreadsheets)
 # Google Spreadsheets component
 
 ## Description
 
-[elastic.io](http://www.elastic.io;) iPaaS component to read and write to Google Spreadsheets
+[elastic.io](http://www.elastic.io) iPaaS component to read and write to Google Spreadsheets
 
 ## Requirements
 
