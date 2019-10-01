@@ -65,6 +65,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: ['ROWS Dimension!A1:GJH1', 'ROWS Dimension!A2:GJH1001'],
               majorDimension: 'ROWS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -78,14 +79,14 @@ describe('newSpreadsheetRow', () => {
                   range: '\'ROWS Dimension\'!A2:AA942',
                   majorDimension: 'ROWS',
                   values: [
-                    ['Tom1', 'Smith1'],
-                    ['Tom2', 'Smith2'],
-                    ['Tom3', 'Smith3'],
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom1', 0],
+                    ['Tom2', true],
+                    ['Tom3', false],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -119,6 +120,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: ['ROWS Dimension!A1:GJH1', 'ROWS Dimension!A5:GJH1004'],
               majorDimension: 'ROWS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -132,11 +134,11 @@ describe('newSpreadsheetRow', () => {
                   range: '\'ROWS Dimension\'!A5:AA942',
                   majorDimension: 'ROWS',
                   values: [
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -149,7 +151,7 @@ describe('newSpreadsheetRow', () => {
           expect(context.emit.lastCall.args[1].lastEmittedLine).to.be.equal(11);
           expect(context.emit.firstCall.args[1].body).to.deep.equal({
             FirstName: 'Tom4',
-            LastName: 'Smith4',
+            LastName: 1,
           });
         });
 
@@ -175,6 +177,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: 'ROWS Dimension!A1:GJH1000',
               majorDimension: 'ROWS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -184,14 +187,14 @@ describe('newSpreadsheetRow', () => {
                   majorDimension: 'ROWS',
                   values: [
                     ['FirstName', 'LastName'],
-                    ['Tom1', 'Smith1'],
-                    ['Tom2', 'Smith2'],
-                    ['Tom3', 'Smith3'],
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom1', 0],
+                    ['Tom2', true],
+                    ['Tom3', false],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -231,6 +234,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: 'ROWS Dimension!A5:GJH1004',
               majorDimension: 'ROWS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -239,11 +243,11 @@ describe('newSpreadsheetRow', () => {
                   range: '\'ROWS Dimension\'!A5:AA942',
                   majorDimension: 'ROWS',
                   values: [
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -257,7 +261,7 @@ describe('newSpreadsheetRow', () => {
           expect(context.emit.lastCall.args[1].lastEmittedLine).to.be.equal(11);
           expect(context.emit.firstCall.args[1].body).to.deep.equal({
             A: 'Tom4',
-            B: 'Smith4',
+            B: 1,
           });
         });
     });
@@ -287,6 +291,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: ['COLUMNS Dimension!A1:A5000', 'COLUMNS Dimension!B1:ALM5000'],
               majorDimension: 'COLUMNS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -295,19 +300,20 @@ describe('newSpreadsheetRow', () => {
                   range: '\'COLUMNS Dimension\'!A1:A982',
                   majorDimension: 'COLUMNS',
                   values: [['FirstName', 'LastName']],
+                  valueRenderOption: 'UNFORMATTED_VALUE',
                 },
                 {
                   range: '\'COLUMNS Dimension\'!B1:AB982',
                   majorDimension: 'COLUMNS',
                   values: [
-                    ['Tom1', 'Smith1'],
-                    ['Tom2', 'Smith2'],
-                    ['Tom3', 'Smith3'],
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom1', 0],
+                    ['Tom2', true],
+                    ['Tom3', false],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -321,7 +327,7 @@ describe('newSpreadsheetRow', () => {
           expect(context.emit.lastCall.args[1].lastEmittedLine).to.be.equal(11);
           expect(context.emit.firstCall.args[1].body).to.deep.equal({
             FirstName: 'Tom1',
-            LastName: 'Smith1',
+            LastName: 0,
           });
         });
 
@@ -349,6 +355,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: ['COLUMNS Dimension!A1:A5000', 'COLUMNS Dimension!E1:ALP5000'],
               majorDimension: 'COLUMNS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -362,11 +369,11 @@ describe('newSpreadsheetRow', () => {
                   range: '\'COLUMNS Dimension\'!E1:AB982',
                   majorDimension: 'COLUMNS',
                   values: [
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -380,7 +387,7 @@ describe('newSpreadsheetRow', () => {
           expect(context.emit.lastCall.args[1].lastEmittedLine).to.be.equal(11);
           expect(context.emit.firstCall.args[1].body).to.deep.equal({
             FirstName: 'Tom4',
-            LastName: 'Smith4',
+            LastName: 1,
           });
         });
 
@@ -408,6 +415,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: 'COLUMNS Dimension!A1:ALL5000',
               majorDimension: 'COLUMNS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -417,14 +425,14 @@ describe('newSpreadsheetRow', () => {
                   majorDimension: 'COLUMNS',
                   values: [
                     ['FirstName', 'LastName'],
-                    ['Tom1', 'Smith1'],
-                    ['Tom2', 'Smith2'],
-                    ['Tom3', 'Smith3'],
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom1', 0],
+                    ['Tom2', true],
+                    ['Tom3', false],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -466,6 +474,7 @@ describe('newSpreadsheetRow', () => {
             .query({
               ranges: 'COLUMNS Dimension!E1:ALP5000',
               majorDimension: 'COLUMNS',
+              valueRenderOption: 'UNFORMATTED_VALUE',
             })
             .reply(200, {
               spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
@@ -474,11 +483,11 @@ describe('newSpreadsheetRow', () => {
                   range: '\'COLUMNS Dimension\'!E1:AB982',
                   majorDimension: 'COLUMNS',
                   values: [
-                    ['Tom4', 'Smith4'],
-                    ['Tom5', 'Smith5'],
-                    ['Tom6', 'Smith6'],
-                    ['Tom7', 'Smith7'],
-                    ['Tom8', 'Smith8'],
+                    ['Tom4', 1],
+                    ['Tom5', -1],
+                    ['Tom6', 3.1415],
+                    ['Tom7', -123.456],
+                    ['Tom8', -3.1415],
                     ['Tom9', 'Smith9'],
                     ['Tom10', 'Smith10']],
                 }],
@@ -492,7 +501,7 @@ describe('newSpreadsheetRow', () => {
           expect(context.emit.lastCall.args[1].lastEmittedLine).to.be.equal(11);
           expect(context.emit.firstCall.args[1].body).to.deep.equal({
             1: 'Tom4',
-            2: 'Smith4',
+            2: 1,
           });
         });
     });
@@ -524,6 +533,7 @@ describe('newSpreadsheetRow', () => {
           .query({
             ranges: 'Sheet1!L1:ALW5000',
             majorDimension: 'COLUMNS',
+            valueRenderOption: 'UNFORMATTED_VALUE',
           })
           .reply(200, {
             spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
