@@ -4,6 +4,7 @@
 ## Description
 
 [elastic.io](http://www.elastic.io) iPaaS component to read and write to Google Spreadsheets
+Component Completeness [Matrix](https://docs.google.com/spreadsheets/d/1usD_k7NxyiplSEXgttAT9dmpgDNADCED7z4UCoRaAfs)
 
 ## Requirements
 
@@ -61,6 +62,8 @@ Spreadsheet whenever flow processes the message.
 |Select All Data               |true|You should specify Yes if you want to fetch all spreadsheet data whenever step starts. If you specify No, a step will be emitting only delta changes (lines which were added after last step runs) |`No`|
 
 **IMPORTANT:** Using `Use first row/column as header` feature, you must be sure that header values are unique.
+
+Values from spreadsheets return as 'UNFORMATTED_VALUE' [type](https://developers.google.com/sheets/api/reference/rest/v4/ValueRenderOption)
 
 #### Cases with ROWS dimension:
 
