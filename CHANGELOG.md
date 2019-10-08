@@ -1,3 +1,7 @@
+## 1.1.1 (October 1, 2019)
+
+* Change `New Spreadsheet Row` trigger response types to `UNFORMATTED_VALUE`
+
 ## 1.1.0 (June 24, 2019)
 
 * Add `Create new Spreadsheet` action

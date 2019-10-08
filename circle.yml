@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/node:8-stretch
+      - image: circleci/node:12-stretch
     steps:
       - checkout
       - restore_cache:
@@ -17,8 +17,28 @@ jobs:
       - run:
           name: Running Mocha Tests
           command: npm test
+  docs:
+    docker:
+      - image: circleci/node:12-stretch
+    steps:
+      - checkout
+      - run:
+          name: Download Script
+          command: mkdir $HOME/script && curl -o $HOME/script/create_pr.bash https://raw.githubusercontent.com/elasticio/elasticio.github.io/master/scripts/create_pr.bash
+      - run:
+          shell: /bin/bash
+          name: Create PR
+          command: bash $HOME/script/create_pr.bash -p $PWD -n utility-component
+
 workflows:
   version: 2
   build_and_test:
     jobs:
       - test
+  deploy_docs:
+    jobs:
+      - docs:
+          filters:
+            branches:
+              only:
+                - master
