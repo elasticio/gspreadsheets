@@ -28,7 +28,7 @@ jobs:
       - run:
           shell: /bin/bash
           name: Create PR
-          command: bash $HOME/script/create_pr.bash -p $PWD -n utility-component
+          command: bash $HOME/script/create_pr.bash -p $PWD -n gspreadsheets
 
 workflows:
   version: 2
