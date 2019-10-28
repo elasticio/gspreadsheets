@@ -1,3 +1,7 @@
+## 1.1.2 (October 28, 2019)
+
+* Change Oauth values naming
+
 ## 1.1.1 (October 1, 2019)
 
 * Change `New Spreadsheet Row` trigger response types to `UNFORMATTED_VALUE`
