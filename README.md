@@ -17,6 +17,7 @@ Following environment are required:
 
  - `OAUTH_CLIENT_ID` - oauth App ID
  - `OAUTH_CLIENT_SECRET` - oauth App Secret
+ - `TENANT_DOMAIN` - your Google API tenant domain
  
  To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
  
