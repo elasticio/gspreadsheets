@@ -5,8 +5,8 @@ describe('OAuth Utils', function () {
     var utils = require('../lib/oauth-utils.js');
     var request = require("request");
 
-    process.env.GOOGLE_APP_ID = "app-id";
-    process.env.GOOGLE_APP_SECRET = "app-secret";
+    process.env.OAUTH_CLIENT_ID = "app-id";
+    process.env.OAUTH_CLIENT_SECRET = "app-secret";
 
     var cfg, expectedOpts;
 

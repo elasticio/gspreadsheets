@@ -3,9 +3,10 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "https://github.com/elasticio/gspreadsheets",
   "url": "http://www.google.com/spreadsheets/",
+  "useOAuthClient": true,
   "env": [
-    "GOOGLE_APP_ID",
-    "GOOGLE_APP_SECRET",
+    "OAUTH_CLIENT_ID",
+    "OAUTH_CLIENT_SECRET",
     "TENANT_DOMAIN"
   ],
   "credentials": {
@@ -17,8 +18,8 @@
       }
     },
     "oauth2": {
-      "client_id": "{{GOOGLE_APP_ID}}",
-      "client_secret": "{{GOOGLE_APP_SECRET}}",
+      "client_id": "{{OAUTH_CLIENT_ID}}",
+      "client_secret": "{{OAUTH_CLIENT_SECRET}}",
       "auth_uri": "https://accounts.google.com/o/oauth2/v2/auth",
       "token_uri": "https://www.googleapis.com/oauth2/v4/token",
       "scopes": [

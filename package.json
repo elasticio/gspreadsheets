@@ -1,6 +1,6 @@
 {
   "name": "gspreadsheets",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Google Spreadsheets component for Elastic.io",
   "main": "index.js",
   "scripts": {
