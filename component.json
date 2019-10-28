@@ -4,11 +4,20 @@
   "docsUrl": "https://github.com/elasticio/gspreadsheets",
   "url": "http://www.google.com/spreadsheets/",
   "useOAuthClient": true,
-  "env": [
-    "OAUTH_CLIENT_ID",
-    "OAUTH_CLIENT_SECRET",
-    "TENANT_DOMAIN"
-  ],
+  "env": {
+    "OAUTH_CLIENT_ID": {
+      "required": true,
+      "description": "Your OAuth client key"
+    },
+    "OAUTH_CLIENT_SECRET": {
+      "required": true,
+      "description": "Your OAuth client secret"
+    },
+    "TENANT_DOMAIN": {
+      "required": true,
+      "description": "Tenant domain"
+    }
+  },
   "credentials": {
     "fields": {
       "oauth": {
@@ -34,7 +43,7 @@
     "newSpreadsheetRow": {
       "main": "./lib/triggers/newSpreadsheetRow.js",
       "title": "Get Spreadsheet Row",
-      "description":"Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
+      "description": "Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
       "type": "polling",
       "fields": {
         "spreadsheetId": {
@@ -87,7 +96,7 @@
       "deprecated": "true",
       "main": "./lib/triggers/rows.js",
       "title": "Rows",
-      "description":"This is a deprecated trigger. Please use Get Spreadsheet Row Trigger instead.",
+      "description": "This is a deprecated trigger. Please use Get Spreadsheet Row Trigger instead.",
       "type": "polling",
       "fields": {
         "spreadsheetURL": {
@@ -106,7 +115,7 @@
       "deprecated": true,
       "main": "./lib/actions/addrow.js",
       "title": "Add Row",
-      "description":"This action is deprecated. Please use Add Spreadsheet Row.",
+      "description": "This action is deprecated. Please use Add Spreadsheet Row.",
       "fields": {
         "spreadsheetURL": {
           "viewClass": "SelectView",
@@ -121,7 +130,7 @@
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
-      "description":"Action to create a new Google spreadsheet.",
+      "description": "Action to create a new Google spreadsheet.",
       "metadata": {
         "in": "./schemas/createSpreadsheet.in.json",
         "out": "./schemas/createSpreadsheet.out.json"
