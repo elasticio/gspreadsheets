@@ -4,11 +4,13 @@ const { GoogleOauth2Client } = require('./lib/client');
 async function verify(credentials) {
   // for now sailor hasn't opportunity emit something from verify credentials context
   const context = {
-    logger, emit: (emitType) => {
+    logger,
+    emit: (emitType) => {
       logger.warn(`Can not call ${emitType} from verify credentials context.`);
-    }
+    },
   };
 
+  // eslint-disable-next-line no-use-before-define
   checkOauth2EnvarsPresence();
 
   const googleOauth2Client = new GoogleOauth2Client(credentials, context);
@@ -21,7 +23,7 @@ async function verify(credentials) {
   }
 }
 
-function checkOauth2EnvarsPresence(cfg) {
+function checkOauth2EnvarsPresence() {
   if (!process.env.OAUTH_CLIENT_ID) {
     if (!process.env.OAUTH_CLIENT_SECRET) {
       throw new Error('Environment variables are missed: OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET');
