@@ -1,6 +1,7 @@
 {
   "title": "Google Spreadsheets",
   "description": "Spreadsheets from Google",
+  "buildType": "docker",
   "docsUrl": "https://github.com/elasticio/gspreadsheets",
   "url": "http://www.google.com/spreadsheets/",
   "env": [
