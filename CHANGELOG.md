@@ -1,3 +1,8 @@
+## 1.2.0 (May 28, 2020)
+
+* Update sailor to 2.6.9
+* Update metadata for add row action
+
 ## 1.1.2 (December 30, 2019)
 
 * Update sailor version to 2.5.4
