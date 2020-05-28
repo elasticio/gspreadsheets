@@ -167,6 +167,10 @@
           "prompt" : "Choose input mode. Default: First Row As Headers.",
           "required" : false,
           "label": "Input Mode",
+          "help" : {
+            "description" : "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
+            "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
+          },
           "model": {
             "header" : "First Row As Headers",
             "array" : "Array Based"
