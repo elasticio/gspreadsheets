@@ -1,5 +1,7 @@
-## 1.1.3 (June  6, 2020)
+## 1.2.0 (June 5, 2020)
 
+* Update sailor to 2.6.9
+* Update metadata for add row action
 * Remove update docs on deploy script
 
 ## 1.1.2 (December 30, 2019)

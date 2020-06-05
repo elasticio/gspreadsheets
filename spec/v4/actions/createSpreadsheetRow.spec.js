@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 const fs = require('fs');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -23,6 +24,7 @@ describe('Add new row', () => {
     configuration = {
       spreadsheetId: 'some_id',
       worksheetId: 'some_worksheet',
+      mode: 'array',
       oauth: {
         access_token: 'some_token',
         expiry_date: 5000000000000,
@@ -81,5 +83,64 @@ describe('Add new row', () => {
 
     const result = await createSpreadsheetRow.listWorksheets.call(emitter, configuration);
     expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
+  });
+
+  it('Generates metadata for array mode', async () => {
+    configuration.mode = 'array';
+    const result = await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
+    expect(result.in).to.exist;
+    expect(result.out).to.exist;
+    expect(result.in.properties.values).to.be.exist;
+  });
+  it('Generates metadata for first header mode', async () => {
+    configuration.mode = 'header';
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
+      .reply(200, {
+        values: [['header1', 'header 2'], ['value1', 'value2']],
+      });
+    const result = await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
+    expect(result.in).to.exist;
+    expect(result.out).to.exist;
+    expect(result.in.properties.header1).to.be.exist;
+    expect(result.in.properties.header2).to.be.exist;
+  });
+  it('Header mode error if values not present in first row', async () => {
+    configuration.mode = 'header';
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
+      .reply(200, {
+        values: [[], ['value1', 'value2']],
+      });
+    try {
+      await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
+      expect(true, 'should fail').to.be.false;
+    } catch (e) {
+      expect(e.message).to.be.eql('Input Mode: "First Row As Headers" requires first row to have at least one cell with value. Check: Common Errors section in docs.');
+    }
+  });
+  it('Header mode throw error if values not unique', async () => {
+    configuration.mode = 'header';
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
+      .reply(200, {
+        values: [['header1', 'header1'], ['value1', 'value2']],
+      });
+    try {
+      await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
+      expect(true, 'should fail').to.be.false;
+    } catch (e) {
+      expect(e.message).to.be.eql('Input Mode: "First Row As Headers" requires cells in first row to be unique. Check: Common Errors section in docs.');
+    }
+  });
+  it('Header mode throw errors if values is blank in first mode', async () => {
+    configuration.mode = 'header';
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
+      .reply(200, {
+        values: [['header1', '', 'header3'], ['value1', 'value2']],
+      });
+    try {
+      await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
+      expect(true, 'should fail').to.be.false;
+    } catch (e) {
+      expect(e.message).to.be.eql('Input Mode: "First Row As Headers" requires cells in first row to be not empty. Check: Common Errors section in docs.');
+    }
   });
 });

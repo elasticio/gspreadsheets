@@ -2,7 +2,7 @@
   "title": "Google Spreadsheets",
   "description": "Spreadsheets from Google",
   "buildType": "docker",
-  "docsUrl": "https://github.com/elasticio/gspreadsheets",
+  "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
   "env": [
     "GOOGLE_APP_ID",
@@ -34,7 +34,10 @@
     "newSpreadsheetRow": {
       "main": "./lib/triggers/newSpreadsheetRow.js",
       "title": "Get Spreadsheet Row",
-      "description":"Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
+      "help": {
+        "description":"Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
+        "link" : "/components/gspreadsheet/triggers#get-spreadsheet-row"
+      },
       "type": "polling",
       "fields": {
         "spreadsheetId": {
@@ -87,7 +90,11 @@
       "deprecated": "true",
       "main": "./lib/triggers/rows.js",
       "title": "Rows",
-      "description":"This is a deprecated trigger. Please use Get Spreadsheet Row Trigger instead.",
+      "help": {
+        "description":"This is a deprecated trigger. Please use Get Spreadsheet Row Trigger instead.",
+        "link" : "/components/gspreadsheet/triggers#rowsdeprecated"
+      },
+
       "type": "polling",
       "fields": {
         "spreadsheetURL": {
@@ -106,7 +113,10 @@
       "deprecated": true,
       "main": "./lib/actions/addrow.js",
       "title": "Add Row",
-      "description":"This action is deprecated. Please use Add Spreadsheet Row.",
+      "help" : {
+        "description":"This action is deprecated. Please use Add Spreadsheet Row.",
+        "link" : "/components/gspreadsheet/actions#add-rowdeprecated"
+      },
       "fields": {
         "spreadsheetURL": {
           "viewClass": "SelectView",
@@ -121,7 +131,10 @@
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
-      "description":"Action to create a new Google spreadsheet.",
+      "help" : {
+        "description":"Action to create a new Google spreadsheet.",
+        "link" : "/components/gspreadsheet/actions#create-new-spreadsheet"
+      },
       "metadata": {
         "in": "./schemas/createSpreadsheet.in.json",
         "out": "./schemas/createSpreadsheet.out.json"
@@ -130,6 +143,10 @@
     "createSpreadsheetRow": {
       "main": "./lib/actions/createSpreadsheetRow.js",
       "title": "Add Spreadsheet Row",
+      "help" : {
+        "description" : "Action appends new row to spreadsheet",
+        "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
+      },
       "fields": {
         "spreadsheetId": {
           "viewClass": "SelectView",
@@ -144,12 +161,23 @@
           "label": "Worksheet",
           "required": true,
           "model": "listWorksheets"
+        },
+        "mode": {
+          "viewClass" : "SelectView",
+          "prompt" : "Choose input mode. Default: First Row As Headers.",
+          "required" : false,
+          "label": "Input Mode",
+          "help" : {
+            "description" : "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
+            "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
+          },
+          "model": {
+            "header" : "First Row As Headers",
+            "array" : "Array Based"
+          }
         }
       },
-      "metadata": {
-        "in": "./schemas/createSpreadsheetRow.in.json",
-        "out": "./schemas/createSpreadsheetRow.out.json"
-      }
+      "dynamicMetadata": true
     }
   }
 }
