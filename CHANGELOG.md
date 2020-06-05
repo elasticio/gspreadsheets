@@ -1,13 +1,15 @@
-## 1.2.0 (May 28, 2020)
+## 1.2.0 (June 5, 2020)
 
 * Update sailor to 2.6.9
 * Update metadata for add row action
+* Remove update docs on deploy script
 
 ## 1.1.2 (December 30, 2019)
 
 * Update sailor version to 2.5.4
 * Refactor console log to built in sailor logger
 * Change build type to `docker`
+
 ## 1.1.1 (October 1, 2019)
 
 * Change `New Spreadsheet Row` trigger response types to `UNFORMATTED_VALUE`
