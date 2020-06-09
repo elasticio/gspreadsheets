@@ -17,8 +17,8 @@ describe('Adding row action', function () {
     var verify = require('../../lib/actions/addrow.js');
 
     beforeEach(function () {
-        process.env.GOOGLE_APP_ID = 'app-id';
-        process.env.GOOGLE_APP_SECRET = 'app-secret';
+        process.env.OAUTH_CLIENT_ID = 'app-id';
+        process.env.OAUTH_CLIENT_SECRET = 'app-secret';
         cfg = {
             oauth: {refresh_token: 'some-refresh-token', access_token: 'some-access-id'},
             spreadsheetURL: 'https://elastic.io/foo'

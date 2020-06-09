@@ -15,8 +15,8 @@ the Google API:
 
 Following environment are required:
 
- - `GOOGLE_APP_ID` - oauth App ID
- - `GOOGLE_APP_SECRET` - oauth App Secret
+ - `OAUTH_CLIENT_ID` - oauth App ID
+ - `OAUTH_CLIENT_SECRET` - oauth App Secret
  - `LOG_LEVEL` - `trace` | `debug` | `info` | `warning` | `error` controls logger level
  
  To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
