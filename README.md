@@ -8,6 +8,16 @@ Component Completeness [Matrix](https://docs.google.com/spreadsheets/d/1usD_k7Nx
 
 ## Requirements
 
+### Google preparations
+
+Before building any integration flow you must at first configure the app from inside the Google Developers Console.
+1. In order to do this you, go to the `API & Service` page and enable the following:
+- Google Drive API
+- Google Sheets API
+2. Go to the `Credentials` section and create a new credential of type  `OAuth client ID`.
+- Set Application type to `Web application`
+- Add Authorized redirect URI as: https://{your-tenant-address}/callback/oauth2 
+
 ### Environment variables
 
 Here are the environment variables to configure for the component to connect with
