@@ -1,3 +1,8 @@
+## 1.2.1 (June 16, 2020)
+
+* Change OAuth variables naming
+* Improve documentation
+
 ## 1.2.0 (June 5, 2020)
 
 * Update sailor to 2.6.9
