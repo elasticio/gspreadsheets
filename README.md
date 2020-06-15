@@ -28,6 +28,7 @@ Following environment are required:
  - `OAUTH_CLIENT_ID` - oauth App ID
  - `OAUTH_CLIENT_SECRET` - oauth App Secret
  - `TENANT_DOMAIN` - your Google API tenant domain
+ - `LOG_LEVEL` - `trace` | `debug` | `info` | `warning` | `error` controls logger level
  
  To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
  
@@ -236,13 +237,23 @@ A datatype of inserted values will be the same as for JSON type (string, numeric
 
 #### Input fields:
     
- - **Spreadsheet** - Spreadsheet name to make changes. 
- - **Worksheet** - Worksheet name of selected Spreadsheet to make changes. 
+ 1. **Spreadsheet** - Spreadsheet name to make changes. 
+ 2. **Worksheet** - Worksheet name of selected Spreadsheet to make changes. 
+ 3. **Input Mode** - Options: First Row As Headers, Array Based. Default is First Row As Headers
+    * First Row As Headers (Default): generates input metadata based on values in first row cells. 
+    This method has few limitations:
+        * There should be at least one value in first row;
+        * Values in first row cells must be distinct; 
+        * There should be no empty cells in first row;
+    * Array Based: generates input for array of `values`. Array mapped to `values` is going to be inserted as first row. [schema](/schemas/createSpreadsheetRow.in.json)
 
+#### Common Errors
+1. Input Mode: "First Row As Headers" requires first row to have at least one cell with value. - check there are at least one non-empty cell in first row.
+2. Input Mode: "First Row As Headers" requires cells in first row to be not empty. - check there are no empty cells in between in first row. 
+3. Input Mode: "First Row As Headers" requires cells in first row to be unique. - check values in first row are distinct. 
 #### Json schema locations
 Schema type|Json schema location
 -----------| -------------
-|Input   |[/schemas/createSpreadsheetRow.in.json](/schemas/createSpreadsheetRow.in.json)
 |Output   |[/schemas/createSpreadsheetRow.out.json](/schemas/createSpreadsheetRow.out.json)
 
 ### Add Row 

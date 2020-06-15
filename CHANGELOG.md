@@ -1,6 +1,19 @@
-## 1.1.2 (October 28, 2019)
+## 1.2.1 (June 16, 2020)
 
-* Change Oauth values naming
+* Change OAuth variables naming
+* Improve documentation
+
+## 1.2.0 (June 5, 2020)
+
+* Update sailor to 2.6.9
+* Update metadata for add row action
+* Remove update docs on deploy script
+
+## 1.1.2 (December 30, 2019)
+
+* Update sailor version to 2.5.4
+* Refactor console log to built in sailor logger
+* Change build type to `docker`
 
 ## 1.1.1 (October 1, 2019)
 
