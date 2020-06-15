@@ -16,7 +16,11 @@ Before building any integration flow you must at first configure the app from in
 - Google Sheets API
 2. Go to the `Credentials` section and create a new credential of type  `OAuth client ID`.
 - Set Application type to `Web application`
-- Add Authorized redirect URI as: https://{your-tenant-address}/callback/oauth2 
+- Add Authorized redirect URI as: `https://{your-tenant-address}/callback/oauth2`
+
+In case of new domain you may get message like `This app isn't verified`. Please refer to this doc to check how to proceed: 
+https://support.google.com/cloud/answer/7454865?hl=en
+
 
 ### Environment variables
 
