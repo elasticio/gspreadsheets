@@ -27,17 +27,17 @@ https://support.google.com/cloud/answer/7454865?hl=en
 Here are the environment variables to configure for the component to connect with
 the Google API:
 
-Following environment are required:
+Following environment variables are required:
 
  - `OAUTH_CLIENT_ID` - oauth App ID
  - `OAUTH_CLIENT_SECRET` - oauth App Secret
- - `TENANT_DOMAIN` - your Google API tenant domain
  - `LOG_LEVEL` - `trace` | `debug` | `info` | `warning` | `error` controls logger level
  
  To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
  
- Recommended environment variable:
+ Additional environment variables:
  
+ - `TENANT_DOMAIN` - your Google API tenant domain. Defaults to `app.elastic.io` if not provided
  - `EIO_REQUIRED_RAM_MB` - recommended value of allocated memory is `512` MB
 
 ## Credentials
