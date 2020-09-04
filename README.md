@@ -33,7 +33,8 @@ Following environment variables are required:
  - `OAUTH_CLIENT_SECRET` - oauth App Secret
  - `LOG_LEVEL` - `trace` | `debug` | `info` | `warning` | `error` controls logger level
  - `REQUEST_TIMEOUT_PERIOD` - If you want to slow down requests to your API you can set delay value (in ms) and the component will delay calling the next request after the previous request.
- Time for the delay is calculated as `REQUEST_TIMEOUT_PERIOD`/ `REQUEST_TIMEOUT_QUOTA` and shouldn't be more than 1140 seconds (19 minutes due to platform limitation). 
+ Time for the delay is calculated as `REQUEST_TIMEOUT_PERIOD`/ `REQUEST_TIMEOUT_QUOTA` and shouldn't be more than 1140 seconds (19 minutes due to platform limitation).
+ The current values of this variables can be found in Google [documentation](https://developers.google.com/sheets/api/limits).
  The `REQUEST_TIMEOUT_PERIOD` value by default is 100000 (100 sec).
  - `REQUEST_TIMEOUT_QUOTA` - the field can be used in pair with `REQUEST_TIMEOUT_PERIOD`, default to 300.
  
