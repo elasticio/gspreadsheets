@@ -33,7 +33,7 @@
     "elasticio-sailor-nodejs": "2.6.9",
     "googleapis": "39.2.0",
     "hbs": "1.0.5",
-    "lodash": "3.5.0",
+    "lodash": "4.17.19",
     "lodash-node": "2.4.1",
     "q": "1.0.0",
     "q-io": "1.11.3",
