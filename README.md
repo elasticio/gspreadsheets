@@ -36,7 +36,9 @@ Following environment variables are required:
  Time for the delay is calculated as `REQUEST_TIMEOUT_PERIOD`/ `REQUEST_TIMEOUT_QUOTA` and shouldn't be more than 1140 seconds (19 minutes due to platform limitation).
  The current values of this variables can be found in Google [documentation](https://developers.google.com/sheets/api/limits).
  The `REQUEST_TIMEOUT_PERIOD` value by default is 100000 (100 sec).
- - `REQUEST_TIMEOUT_QUOTA` - the field can be used in pair with `REQUEST_TIMEOUT_PERIOD`, default to 300.
+ - `REQUEST_TIMEOUT_QUOTA` - the field can be used in pair with `REQUEST_TIMEOUT_PERIOD`, default to 500.
+ 
+ Note: if result quota restriction will be less than 1 request/min component `Retrieve Sample` task won't be complete
  
  To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
  
