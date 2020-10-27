@@ -25,7 +25,7 @@ async function getMetadataForOperation() {
       { responseType: 'json' },
     );
   } catch (e) {
-    that.logger.error(e);
+    that.logger.error('Metadata request failed');
   }
 
   const { methods } = response.data.resources.spreadsheets;
@@ -42,7 +42,7 @@ async function getMetadataForOperation() {
     }
 
     const metadata = { in: inMeta, out: outMeta };
-    that.logger.info(JSON.stringify(metadata, null, 2));
+    that.logger.info('Metadata successfully generated');
 
     fs.writeFileSync(`schemas/${method}.json`, JSON.stringify(metadata, null, 2));
   });
@@ -64,7 +64,6 @@ async function getMetadataForOperation() {
     if (json.type === 'object') {
       if (json.properties) {
         Object.keys(json.properties).forEach((k) => {
-          that.logger.info(`${k}  ${JSON.stringify(json.properties[k])}`);
           makeSchemaInline(json.properties[k]);
         });
       }

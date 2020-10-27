@@ -1,3 +1,7 @@
+## 1.2.3 (October 30, 2020)
+
+* Upgrade to sailor 2.6.18
+
 ## 1.2.2 (September 6, 2020)
 
 * Add request rate limits handling
