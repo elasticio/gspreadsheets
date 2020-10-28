@@ -18,7 +18,7 @@ async function verify(credentials) {
     await googleOauth2Client.listOfSpreadsheets();
     logger.info('Credentials was successfully verified');
   } catch (e) {
-    logger.error('Error while request to Google API');
+    logger.error('Credentials verification failed');
     throw e;
   }
 }
