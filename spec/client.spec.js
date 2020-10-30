@@ -6,7 +6,7 @@ const nock = require('nock');
 
 const logger = require('@elastic.io/component-logger')();
 
-const { GoogleOauth2Client } = require('../../lib/client');
+const { GoogleOauth2Client } = require('../lib/client');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

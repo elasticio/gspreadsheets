@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 
-const verify = require('../../verifyCredentials');
+const verify = require('../verifyCredentials');
 
 chai.use(chaiAsPromised);
 

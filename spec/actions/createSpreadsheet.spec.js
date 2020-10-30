@@ -4,7 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 const sinon = require('sinon');
 
-const createSpreadsheet = require('../../../lib/actions/createSpreadsheet');
+const createSpreadsheet = require('../../lib/actions/createSpreadsheet');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

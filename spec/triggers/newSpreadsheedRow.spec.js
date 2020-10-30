@@ -7,7 +7,7 @@ const { expect } = chai;
 const log = require('@elastic.io/component-logger')();
 
 const { process: processTrigger } = require(
-  '../../../lib/triggers/newSpreadsheetRow',
+  '../../lib/triggers/newSpreadsheetRow',
 );
 
 process.env.OAUTH_CLIENT_ID = '708580332494-tbo7u3g58ucof7sni4kklmia2v8thtks.apps.googleusercontent.com';
