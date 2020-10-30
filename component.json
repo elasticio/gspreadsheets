@@ -62,7 +62,8 @@
           "prompt": "Select your worksheet",
           "label": "Worksheet",
           "required": true,
-          "model": "listWorksheets"
+          "model": "listWorksheets",
+          "require": ["spreadsheetId"]
         },
         "dimension": {
           "viewClass": "SelectView",
@@ -130,7 +131,8 @@
           "prompt": "Select your worksheet (spreadsheet required)",
           "label": "Worksheet",
           "required": true,
-          "model": "listWorksheets"
+          "model": "listWorksheets",
+          "require": ["spreadsheetId"]
         },
         "mode": {
           "viewClass" : "SelectView",
