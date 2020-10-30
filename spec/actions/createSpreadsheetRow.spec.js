@@ -7,7 +7,7 @@ const sinon = require('sinon');
 
 const log = require('@elastic.io/component-logger')();
 
-const createSpreadsheetRow = require('../../../lib/actions/createSpreadsheetRow');
+const createSpreadsheetRow = require('../../lib/actions/createSpreadsheetRow');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

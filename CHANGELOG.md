@@ -1,6 +1,8 @@
-## 1.2.3 (October 30, 2020)
+## 2.0.0 (October 30, 2020)
 
+* Remove deprecated actions
 * Upgrade to sailor 2.6.18
+* Annual audit of the component code to check if it exposes a sensitive data in the logs
 
 ## 1.2.2 (September 6, 2020)
 

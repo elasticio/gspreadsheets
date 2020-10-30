@@ -95,48 +95,9 @@
           }
         }
       }
-    },
-    "rows": {
-      "deprecated": "true",
-      "main": "./lib/triggers/rows.js",
-      "title": "Rows",
-      "help": {
-        "description":"This is a deprecated trigger. Please use Get Spreadsheet Row Trigger instead.",
-        "link" : "/components/gspreadsheet/triggers#rowsdeprecated"
-      },
-      "type": "polling",
-      "fields": {
-        "spreadsheetURL": {
-          "viewClass": "SelectView",
-          "prompt": "Select your spreadsheet",
-          "label": "Spreadsheet",
-          "required": true,
-          "model": "listSpreadsheets"
-        }
-      },
-      "dynamicMetadata": true
     }
   },
   "actions": {
-    "addrow": {
-      "deprecated": true,
-      "main": "./lib/actions/addrow.js",
-      "title": "Add Row",
-      "help" : {
-        "description":"This action is deprecated. Please use Add Spreadsheet Row.",
-        "link" : "/components/gspreadsheet/actions#add-rowdeprecated"
-      },
-      "fields": {
-        "spreadsheetURL": {
-          "viewClass": "SelectView",
-          "prompt": "Select your spreadsheet",
-          "label": "Spreadsheet",
-          "required": true,
-          "model": "listSpreadsheets"
-        }
-      },
-      "dynamicMetadata": true
-    },
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",

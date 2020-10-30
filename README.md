@@ -185,44 +185,6 @@ Trigger can emit maximum 1000 messages per one execution.
 Trigger uses version 4 of [Google Sheet API](https://developers.google.com/sheets/api/).
 You can find more information in the [Google Sheets API Documentation](https://developers.google.com/sheets/api/samples/reading).
 
-### Rows 
-**Deprecated** - please use [New Spreadsheet Row](#new-spreadsheet-row) trigger.
-
-The  **Rows** *trigger* reads the data in each row of a given Google Spreadsheet
-and passes it to the next stage of your integration flow.
-
-#### The process
-
-In the beginning, the system will read all the rows from a given Google
-Spreadsheet and process it further along with your designed integration flow. It will
-also create an initial state of your spreadsheet, we call it a ***snapshot***,
-in order to have something to compare after your data is updated.
-
-After the initial read, any further requests for an update will be compared to this
-snapshot and if any changes are detected they will be passed along the integration
-flow as well. It is, therefore, imperative to provide a **readable spreadsheet**
-for smooth integration.
-
-#### What is a readable spreadsheet?
-
-The nature of API that the platform uses to read the rows in Google Spreadsheets
-dictates the use of certain rules that it is useful to follow for a smooth
-integration of your data. In addition to the **Minimum Requirements** your spreadsheet
-must have:
-
-1.  **No empty spaces** - This means no empty columns, no empty rows, and no spaces or newlines after each record. The **reading process stops if it encounters empty columns or rows** since there is no way to know if there are new or more records afterward.
-2.  **Only `STRING` values** - Your data will be processed as a `STRING` data type.
-3.  **No formula** - If you calculate the value of any field using a formula the system will only read the `VALUE` of that field and convert it into a `STRING` data type.
-4.  **One sheet only** - Your Google Spreadsheet must contain **only one sheet**. Even if you insert a second one, it will be ignored by the system.
-
-#### External and internal ID for each row
-
-When any given row is processed by the system it receives a *unique name* or a
-unique ID so that it can be recognized by the system afterward if you want to
-make any changes to the values in that specific row.
-
-> In our system the row number in the Google Spreadsheet is taken as a unique ID to process through the integration flow.
-
 
 ## Actions
 
@@ -267,18 +229,6 @@ Schema type|Json schema location
 -----------| -------------
 |Output   |[/schemas/createSpreadsheetRow.out.json](/schemas/createSpreadsheetRow.out.json)
 
-### Add Row 
-**Deprecated** - please use [Add Spreadsheet Row](#add-spreadsheet-row) action.
-
-Your integration flow can also *write* or **add a row** to the given Google
-Spreadsheet as an **action**. In this case, your spreadsheet will be the ***target spreadsheet***.
-
-To use **add row** action the Google Spreadsheet file which will be receiving
-new data must already be mapped using the Data Mapper. This means the target
-spreadsheet columns need to be assigned to the specific `values` which are
-expected from the components within the same integration flow that is sending the information.
-
-> Please note that the system will write a new record using only a `STRING` data type.
 
 ## Recommendations
 
