@@ -1,6 +1,5 @@
 {
   "name": "gspreadsheets",
-  "version": "2.0.0",
   "description": "Google Spreadsheets component for Elastic.io",
   "main": "index.js",
   "scripts": {
@@ -30,7 +29,7 @@
     "@elastic.io/component-logger": "0.0.1",
     "axios": "0.21.0",
     "elasticio-node": "0.0.9",
-    "elasticio-sailor-nodejs": "2.6.18",
+    "elasticio-sailor-nodejs": "2.6.26",
     "googleapis": "62.0.0",
     "request": "2.88.0"
   },

@@ -1,3 +1,7 @@
+## 2.0.1 (November 26, 2021)
+
+* Upgrade sailor version to 2.6.26
+
 ## 2.0.0 (October 30, 2020)
 
 * Remove deprecated actions

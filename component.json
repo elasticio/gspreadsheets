@@ -1,5 +1,6 @@
 {
   "title": "Google Spreadsheets",
+  "version": "2.0.1",
   "description": "Spreadsheets from Google",
   "buildType": "docker",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
