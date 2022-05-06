@@ -27,10 +27,10 @@
   "homepage": "https://github.com/elasticio/gspreadsheets#readme",
   "dependencies": {
     "@elastic.io/component-logger": "0.0.1",
-    "axios": "0.21.0",
+    "axios": "0.26.1",
     "elasticio-node": "0.0.9",
-    "elasticio-sailor-nodejs": "2.6.26",
-    "googleapis": "62.0.0",
+    "elasticio-sailor-nodejs": "2.6.27",
+    "googleapis": "100.0.0",
     "request": "2.88.0"
   },
   "devDependencies": {

@@ -1,8 +1,7 @@
 {
   "title": "Google Spreadsheets",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Spreadsheets from Google",
-  "buildType": "docker",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
   "useOAuthClient": true,
@@ -46,8 +45,8 @@
       "main": "./lib/triggers/newSpreadsheetRow.js",
       "title": "Get Spreadsheet Row",
       "help": {
-        "description":"Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
-        "link" : "/components/gspreadsheet/triggers#get-spreadsheet-row"
+        "description": "Trigger to read the data in each row of a given Google Spreadsheet and pass it to the next step of your integration flow.",
+        "link": "/components/gspreadsheet/triggers#get-spreadsheet-row"
       },
       "type": "polling",
       "fields": {
@@ -64,7 +63,9 @@
           "label": "Worksheet",
           "required": true,
           "model": "listWorksheets",
-          "require": ["spreadsheetId"]
+          "require": [
+            "spreadsheetId"
+          ]
         },
         "dimension": {
           "viewClass": "SelectView",
@@ -103,9 +104,9 @@
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
-      "help" : {
-        "description":"Action to create a new Google spreadsheet.",
-        "link" : "/components/gspreadsheet/actions#create-new-spreadsheet"
+      "help": {
+        "description": "Action to create a new Google spreadsheet.",
+        "link": "/components/gspreadsheet/actions#create-new-spreadsheet"
       },
       "metadata": {
         "in": "./schemas/createSpreadsheet.in.json",
@@ -115,8 +116,8 @@
     "createSpreadsheetRow": {
       "main": "./lib/actions/createSpreadsheetRow.js",
       "title": "Add Spreadsheet Row",
-      "help" : {
-        "description" : "Action appends new row to spreadsheet",
+      "help": {
+        "description": "Action appends new row to spreadsheet",
         "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
       },
       "fields": {
@@ -133,20 +134,22 @@
           "label": "Worksheet",
           "required": true,
           "model": "listWorksheets",
-          "require": ["spreadsheetId"]
+          "require": [
+            "spreadsheetId"
+          ]
         },
         "mode": {
-          "viewClass" : "SelectView",
-          "prompt" : "Choose input mode. Default: First Row As Headers.",
-          "required" : false,
+          "viewClass": "SelectView",
+          "prompt": "Choose input mode. Default: First Row As Headers.",
+          "required": false,
           "label": "Input Mode",
-          "help" : {
-            "description" : "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
+          "help": {
+            "description": "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
             "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
           },
           "model": {
-            "header" : "First Row As Headers",
-            "array" : "Array Based"
+            "header": "First Row As Headers",
+            "array": "Array Based"
           }
         }
       },

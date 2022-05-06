@@ -1,25 +1,125 @@
-version: 2
+version: 2.1
+parameters:
+  node-version:
+    type: string
+    default: "16.13.2"
+orbs:
+  node: circleci/node@5.0.0
+  slack: circleci/slack@4.5.3
+commands:
+  notify_on_failure:
+    steps:
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": ":red_circle: *$CIRCLE_PROJECT_REPONAME*:*$CIRCLE_TAG* build failed"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+  notify_on_pass:
+    steps:
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": ":tada: *$CIRCLE_PROJECT_REPONAME*:*$CIRCLE_TAG* was successfully built and published"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
 jobs:
   test:
-    docker:
-      - image: circleci/node:14-stretch
+    docker: # run the steps with Docker
+      - image: cimg/base:stable
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      - node/install:
+          node-version: << pipeline.parameters.node-version >>
+      - node/install-packages:
+          cache-path: ./node_modules
+          override-ci-command: npm install
       - run:
-          name: Installing Dependencies
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+          name: Audit Dependencies
+          command: npm audit --production --audit-level=high
       - run:
-          name: Running Mocha Tests
+          name: test
           command: npm test
-
+  build:
+    docker:
+      - image: cimg/base:stable
+        user: root
+    steps:
+      - checkout
+      - node/install:
+          node-version: << pipeline.parameters.node-version >>
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      # build and push Docker image
+      - run:
+          name: Install component-build-helper lib
+          command: npm install -g @elastic.io/component-build-helper
+      - run:
+          name: Build and publish docker image
+          command: build_component_docker
+      - notify_on_failure
+      - notify_on_pass
 workflows:
-  version: 2
-  build_and_test:
+  test:
     jobs:
-      - test
+      - test:
+          name: "Running tests"
+          filters:
+            tags:
+              ignore: /.*/
+  publish_release:
+    jobs:
+      - build:
+          name: "Build and publish docker image"
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/
