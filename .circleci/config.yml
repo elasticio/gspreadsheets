@@ -80,9 +80,9 @@ jobs:
       - node/install-packages:
           cache-path: ./node_modules
           override-ci-command: npm install
-      - run:
-          name: Audit Dependencies
-          command: npm audit --production --audit-level=high
+      # - run:
+      #     name: Audit Dependencies
+      #     command: npm audit --production --audit-level=high
       - run:
           name: test
           command: npm test
