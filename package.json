@@ -3,7 +3,6 @@
   "description": "Google Spreadsheets component for Elastic.io",
   "main": "index.js",
   "scripts": {
-    "pretest": "node_modules/.bin/eslint verifyCredentials.js lib spec --fix",
     "test": "mocha spec/** --timeout 50000"
   },
   "engines": {
