@@ -49,8 +49,15 @@ platform to access your Spreadsheets.
 
 - Enter number of retries (Default: 5)
 
-Google applies quotas and limitations to their services. You can check the actual values here: https://developers.google.com/sheets/api/limits
-In case an API call throws a quota limit exceeded exception, the component will retry the call based on [Exponential backoff algorithm](https://developers.google.com/sheets/api/limits#exponential) number of times configured in this field. The default value is 5.
+**IMPORTANT!!**
+Please note that Google applies quotas and limitations to their services. You can check the actual values here: https://developers.google.com/sheets/api/limits
+
+In case an API call throws a quota limit exceeded exception (or any other exception, e.g. a connectivity problem, etc.), the component will retry the call based on [Exponential backoff algorithm](https://developers.google.com/sheets/api/limits#exponential) (factor = 2) number of times configured in this field. The default value is 5.
+
+E.g. Setting this to 1 means do a normal call once, then if failed - retry it once.
+
+Please note that you should carefully calculate and plan a strategy to handle an expected load to the component.
+Note also that Google's quota applies to credentials, not to a step in a flow. This means that if there is a default limit to 60 requests per minute per user per project and there is a component that makes exactly 60 requests per minute, adding a second component with the same user credentials would cause a quota exceeding. This is where careful calculating of number of retries and delay between calls is are very important. 
 
 - Max number of calls per second (Default: 5)
 
