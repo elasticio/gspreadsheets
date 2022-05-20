@@ -1,9 +1,9 @@
 {
   "title": "Google Spreadsheets",
-  "version": "2.0.2",
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
+  "version": "2.0.3",
   "useOAuthClient": true,
   "env": {
     "OAUTH_CLIENT_ID": {
@@ -25,6 +25,27 @@
         "label": "Authentication",
         "viewClass": "OAuthFieldView",
         "required": true
+      },
+      "retries": {
+        "label": "Enter number of retries (Default: 5)",
+        "viewClass": "SelectView",
+        "prompt": "Enter number of retries",
+        "required": false,
+        "model": {
+          "one": "1",
+          "two": "2",
+          "three": "3",
+          "four": "4",
+          "five": "5",
+          "six": "6",
+          "seven": "7",
+          "eight": "8"
+        }
+      },
+      "maxNumberOfCallsPerSecond": {
+        "label": "Max number of calls per second (Default: 5)",
+        "viewClass": "TextFieldView",
+        "required": false
       }
     },
     "oauth2": {

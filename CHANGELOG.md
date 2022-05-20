@@ -1,3 +1,8 @@
+## 2.0.3 (May 20, 2022)
+
+* Moved a delay between calls value from env vars to credentials
+* Added a number of retry attempts field to credentials 
+
 ## 2.0.2 (May 10, 2022)
 
 * Update Sailor version to 2.6.27

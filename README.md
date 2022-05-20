@@ -31,16 +31,8 @@ Following environment variables are required:
 
  - `OAUTH_CLIENT_ID` - oauth App ID
  - `OAUTH_CLIENT_SECRET` - oauth App Secret
- - `LOG_LEVEL` - `trace` | `debug` | `info` | `warning` | `error` controls logger level
- - `REQUEST_TIMEOUT_PERIOD` - If you want to slow down requests to your API you can set delay value (in ms) and the component will delay calling the next request after the previous request.
- Time for the delay is calculated as `REQUEST_TIMEOUT_PERIOD`/ `REQUEST_TIMEOUT_QUOTA` and shouldn't be more than 1140 seconds (19 minutes due to platform limitation).
- The current values of this variables can be found in Google [documentation](https://developers.google.com/sheets/api/limits).
- The `REQUEST_TIMEOUT_PERIOD` value by default is 100000 (100 sec).
- - `REQUEST_TIMEOUT_QUOTA` - the field can be used in pair with `REQUEST_TIMEOUT_PERIOD`, default to 500.
  
- Note: if result quota restriction will be less than 1 request/min component `Retrieve Sample` task won't be complete
- 
- To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
+To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
  
  Additional environment variables:
  
@@ -53,6 +45,27 @@ Google Spreadsheet works with OAuth2 app configured at your Google Developer Con
 To Authenticate the component you only need to press the button *Authentication*
 and the process would take you to Google to log-in and give permissions to the
 platform to access your Spreadsheets.
+
+- Enter number of retries (Default: 5)
+
+**IMPORTANT!!**
+Please note that Google applies quotas and limitations to their services. You can check the actual values here: https://developers.google.com/sheets/api/limits
+
+In case an API call throws a quota limit exceeded exception (or any other exception, e.g. a connectivity problem, etc.), the component will retry the call based on [Exponential backoff algorithm](https://developers.google.com/sheets/api/limits#exponential) (factor = 2) number of times configured in this field. The default value is 5.
+
+E.g. Setting this to 1 means do a normal call once, then if failed - retry it once.
+
+Please note that you should carefully calculate and plan a strategy to handle an expected load to the component.
+Note also that Google's quota applies to credentials, not to a step in a flow. This means that if there is a default limit to 60 requests per minute per user per project and there is a component that makes exactly 60 requests per minute, adding a second component with the same user credentials would cause a quota exceeding. This is where careful calculating of number of retries and delay between calls is are very important. 
+
+- Max number of calls per second (Default: 5)
+
+If you want to slow down requests to your API you can set a number of requests per second and the component will delay calling the next request after the previous request (`1 / number of requests per second * 1000 ms` ).
+The calculated delay value can not be more than 1140 seconds (19 minutes due to platform limitations).
+
+Note: if result quota restriction will be less than 1 request/min the component `Retrieve Sample` task won't succeed
+
+
 
 ## Triggers
 
