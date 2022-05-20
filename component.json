@@ -3,7 +3,7 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
-  "version": "2.0.3-dev.3",
+  "version": "2.0.3",
   "useOAuthClient": true,
   "env": {
     "OAUTH_CLIENT_ID": {
