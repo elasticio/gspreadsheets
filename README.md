@@ -65,6 +65,7 @@ The calculated delay value can not be more than 1140 seconds (19 minutes due to 
 
 Note: if result quota restriction will be less than 1 request/min the component `Retrieve Sample` task won't succeed
 
+Note: If you don't set a value to either `Enter number of retries` or `Max number of calls per second` fields, they will remain empty. The component will consider them as the default values (5 in both cases).
 
 
 ## Triggers
