@@ -3,62 +3,17 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
-  "version": "2.0.4-dev.1",
-  "useOAuthClient": true,
-  "env": {
-    "OAUTH_CLIENT_ID": {
-      "required": true,
-      "description": "Your OAuth client key"
-    },
-    "OAUTH_CLIENT_SECRET": {
-      "required": true,
-      "description": "Your OAuth client secret"
-    },
-    "TENANT_DOMAIN": {
-      "required": true,
-      "description": "Tenant domain"
-    }
-  },
+  "version": "2.0.4-dev.2",
+  "authClientTypes": [
+    "oauth2"
+  ],
   "credentials": {
     "fields": {
       "oauth": {
         "label": "Authentication",
         "viewClass": "OAuthFieldView",
         "required": true
-      },
-      "retries": {
-        "label": "Enter number of retries (Default: 5)",
-        "viewClass": "SelectView",
-        "prompt": "Enter number of retries",
-        "required": false,
-        "model": {
-          "one": "1",
-          "two": "2",
-          "three": "3",
-          "four": "4",
-          "five": "5",
-          "six": "6",
-          "seven": "7",
-          "eight": "8"
-        }
-      },
-      "maxNumberOfCallsPerSecond": {
-        "label": "Max number of calls per second (Default: 5)",
-        "viewClass": "TextFieldView",
-        "required": false
       }
-    },
-    "oauth2": {
-      "client_id": "{{OAUTH_CLIENT_ID}}",
-      "client_secret": "{{OAUTH_CLIENT_SECRET}}",
-      "auth_uri": "https://accounts.google.com/o/oauth2/v2/auth",
-      "token_uri": "https://www.googleapis.com/oauth2/v4/token",
-      "scopes": [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive.metadata.readonly"
-      ],
-      "access_type": "offline",
-      "prompt": "consent"
     }
   },
   "triggers": {
