@@ -13,19 +13,27 @@ describe('Add new spreadsheet', () => {
   let emitter;
 
   let configuration;
+  process.env.ELASTICIO_API_URI = 'https://app.example.io';
+  process.env.ELASTICIO_API_USERNAME = 'user';
+  process.env.ELASTICIO_API_KEY = 'apiKey';
+  process.env.ELASTICIO_WORKSPACE_ID = 'workspaceId';
+  const secret = {
+    data: {
+      attributes: {
+        credentials: {
+          access_token: 'accessToken',
+        },
+      },
+    },
+  };
+  const secretId = 'secretId';
   before(() => {
     if (fs.existsSync('.env')) {
       // eslint-disable-next-line global-require
       require('dotenv').config();
     }
     configuration = {
-      oauth: {
-        access_token: 'some_token',
-        expiry_date: 5000000000000,
-        refresh_token: 'some_refresh_token',
-        scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',
-        token_type: 'Bearer',
-      },
+      secretId,
     };
   });
 
@@ -37,6 +45,13 @@ describe('Add new spreadsheet', () => {
         debug: sinon.spy(),
       },
     };
+    nock(process.env.ELASTICIO_API_URI)
+      .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
+      .reply(200, secret);
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   it('success', async () => {

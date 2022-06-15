@@ -13,6 +13,23 @@ const { expect } = chai;
 let context;
 
 describe('Google client', () => {
+  process.env.ELASTICIO_API_URI = 'https://app.example.io';
+  process.env.ELASTICIO_API_USERNAME = 'user';
+  process.env.ELASTICIO_API_KEY = 'apiKey';
+  process.env.ELASTICIO_WORKSPACE_ID = 'workspaceId';
+  const secret = {
+    data: {
+      attributes: {
+        credentials: {
+          access_token: 'accessToken',
+        },
+      },
+    },
+  };
+  const secretId = 'secretId';
+  afterEach(() => {
+    nock.cleanAll();
+  });
   let configuration;
   before(() => {
     if (fs.existsSync('.env')) {
@@ -20,18 +37,15 @@ describe('Google client', () => {
       require('dotenv').config();
     }
     configuration = {
-      oauth: {
-        access_token: 'some_token',
-        expiry_date: 5000000000000,
-        refresh_token: 'some_refresh_token',
-        scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',
-        token_type: 'Bearer',
-      },
+      secretId,
     };
   });
 
   beforeEach(() => {
     context = { logger, emit: sinon.spy() };
+    nock(process.env.ELASTICIO_API_URI)
+      .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
+      .reply(200, secret);
   });
 
   it('list Of Spreadsheets', async () => {

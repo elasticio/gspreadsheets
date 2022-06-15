@@ -7,6 +7,7 @@ async function verify(credentials) {
   try {
     const result = await googleOauth2Client.listOfSpreadsheets();
     this.logger.info('Credentials was successfully verified, result %j', result);
+    return result;
   } catch (e) {
     this.logger.error('Credentials verification failed');
     throw e;
