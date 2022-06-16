@@ -21,7 +21,25 @@ describe('Add new spreadsheet', () => {
     data: {
       attributes: {
         credentials: {
-          access_token: 'accessToken',
+          access_token: 'ya29.a0ARrdaM_xOkTIY4_fIUz7ADjQlJEhoQHhUADBxE8AIVKRUPHrHYc0jopPkHHlnwCAJiYz6VXgXXOYUgjyVO7-Rc6pCKi9FvGQW4KsuxJuWRLxtzr2LRIFROo27NN24QKoStWnKNI-kVY1R7rnwHCZbhMBAsGREA',
+          refresh_token: '1//09WI1Zi8VyLvjCgYIARAAGAkSNwF-L9IrePqeSkTldvtzb3xQ4TuB0MnK-DEaGkkla6_Nss5zqG2N2lb4kLdCpQr07obEus7w4kk',
+          expires_in: 3599,
+          scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
+          additional_params: '{"access_type":"offline","prompt":"consent"}',
+        },
+      },
+    },
+  };
+
+  const wrongSecret = {
+    data: {
+      attributes: {
+        credentials: {
+          access_token: 'wrong',
+          refresh_token: '1//09WI1Zi8VyLvjCgYIARAAGAkSNwF-L9IrePqeSkTldvtzb3xQ4TuB0MnK-DEaGkkla6_Nss5zqG2N2lb4kLdCpQr07obEus7w4kk',
+          expires_in: 3599,
+          scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
+          additional_params: '{"access_type":"offline","prompt":"consent"}',
         },
       },
     },
@@ -34,6 +52,7 @@ describe('Add new spreadsheet', () => {
     }
     configuration = {
       secretId,
+      retries: 'one',
     };
   });
 
@@ -44,6 +63,8 @@ describe('Add new spreadsheet', () => {
     };
     nock(process.env.ELASTICIO_API_URI)
       .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
+      .reply(200, wrongSecret)
+      .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
       .reply(200, secret);
   });
 
@@ -53,6 +74,8 @@ describe('Add new spreadsheet', () => {
 
   it('success', async () => {
     nock('https://sheets.googleapis.com')
+      .post('/v4/spreadsheets')
+      .reply(401, { status: 'OK' })
       .post('/v4/spreadsheets')
       .reply(200, { status: 'OK' });
 

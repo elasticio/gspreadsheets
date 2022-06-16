@@ -11,25 +11,22 @@ const { expect } = chai;
 let context;
 
 describe('Verify Credentials', () => {
-  process.env.ELASTICIO_API_URI = 'https://app.example.io';
-  process.env.ELASTICIO_API_USERNAME = 'user';
-  process.env.ELASTICIO_API_KEY = 'apiKey';
-  process.env.ELASTICIO_WORKSPACE_ID = 'workspaceId';
-  const secret = {
-    data: {
-      attributes: {
-        credentials: {
-          access_token: 'accessToken',
-        },
-      },
-    },
-  };
-  const secretId = 'secretId';
   afterEach(() => {
     nock.cleanAll();
   });
   const configuration = {
-    secretId,
+    oauth: {
+      type: 'OAuth2',
+      oauth2: {
+        keys: {
+          access_token: 'access_token',
+          expires_in: 3599,
+          refresh_token: 'refresh_token',
+          scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
+          additional_params: '{"access_type":"offline","prompt":"consent"}',
+        },
+      },
+    },
   };
   beforeEach(() => {
     context = { logger, emit: sinon.spy() };
@@ -37,12 +34,6 @@ describe('Verify Credentials', () => {
 
 
   it(' successful update on mocked list Of Spreadsheets', async () => {
-    nock(process.env.ELASTICIO_API_URI)
-      .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
-      .reply(200, secret);
-    nock(process.env.ELASTICIO_API_URI)
-      .post(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}/refresh`)
-      .reply(200, secret);
     nock('https://www.googleapis.com')
       .get(
         '/drive/v3/files?q=mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27&fields=nextPageToken%2C%20files%28id%2C%20name%29',
