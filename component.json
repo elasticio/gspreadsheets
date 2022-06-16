@@ -3,7 +3,7 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
-  "version": "2.0.4-dev.2",
+  "version": "2.0.4-dev.3",
   "authClientTypes": [
     "oauth2"
   ],
@@ -11,7 +11,7 @@
     "fields": {
       "oauth": {
         "label": "Authentication",
-        "viewClass": "OAuthFieldView",
+        "viewClass": "HTTPAuthView",
         "required": true
       }
     }
