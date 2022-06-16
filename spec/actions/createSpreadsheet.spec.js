@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 const sinon = require('sinon');
-
+const logger = require('@elastic.io/component-logger')();
 const createSpreadsheet = require('../../lib/actions/createSpreadsheet');
 
 chai.use(chaiAsPromised);
@@ -40,10 +40,7 @@ describe('Add new spreadsheet', () => {
   beforeEach(() => {
     emitter = {
       emit: sinon.spy(),
-      logger: {
-        trace: sinon.spy(),
-        debug: sinon.spy(),
-      },
+      logger,
     };
     nock(process.env.ELASTICIO_API_URI)
       .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
