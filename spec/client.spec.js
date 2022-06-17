@@ -78,6 +78,7 @@ describe('Google client', () => {
         .reply(200, replyListSpreadseets);
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
+      googleOauth2Client.resetSecret();
       const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
       expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
       expect(secretNock.isDone()).to.equal(true);
