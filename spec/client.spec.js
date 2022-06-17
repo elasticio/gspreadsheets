@@ -67,7 +67,7 @@ describe('Google client', () => {
       });
 
     const googleOauth2Client = new GoogleOauth2Client(configuration, context);
-    const result = await googleOauth2Client.listOfSpreadsheets();
+    const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
     expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
   });
 
@@ -92,7 +92,7 @@ describe('Google client', () => {
       });
 
     const googleOauth2Client = new GoogleOauth2Client(configuration, context);
-    const result = await googleOauth2Client.listOfWorksheets('some_spreadsheet');
+    const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfWorksheets, 'some_spreadsheet');
     expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
   });
 });
