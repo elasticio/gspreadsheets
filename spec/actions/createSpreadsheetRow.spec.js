@@ -24,8 +24,8 @@ describe('Add new row', () => {
     data: {
       attributes: {
         credentials: {
-          access_token: 'ya29.a0ARrdaM8mU9TYw8QD-JB3lS4yWVnR5j8hdpf4oHaroVdyK7po1jYWq6hFgoDEmAdCjAf8en3THbVCEPnVbGUL48D4PR6tYNGYt9NUBW7AAp8J6qfFqz2Q2uenNxvEV0OhTKrZNILsKIF3_Hy-otPkvLolwDF2Gw',
-          refresh_token: '1//09WI1Zi8VyLvjCgYIARAAGAkSNwF-L9IrePqeSkTldvtzb3xQ4TuB0MnK-DEaGkkla6_Nss5zqG2N2lb4kLdCpQr07obEus7w4kk',
+          access_token: 'access_token',
+          refresh_token: 'refresh_token',
           expires_in: 3599,
           scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
           additional_params: '{"access_type":"offline","prompt":"consent"}',

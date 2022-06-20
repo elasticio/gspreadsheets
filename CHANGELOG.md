@@ -1,3 +1,7 @@
+## 3.0.0 (June 20, 2022)
+
+* Use Faceless service for authentication 
+ 
 ## 2.0.3 (May 20, 2022)
 
 * Moved a delay between calls value from env vars to credentials

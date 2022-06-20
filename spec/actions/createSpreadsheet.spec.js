@@ -21,8 +21,8 @@ describe('Add new spreadsheet', () => {
     data: {
       attributes: {
         credentials: {
-          access_token: 'ya29.a0ARrdaM_xOkTIY4_fIUz7ADjQlJEhoQHhUADBxE8AIVKRUPHrHYc0jopPkHHlnwCAJiYz6VXgXXOYUgjyVO7-Rc6pCKi9FvGQW4KsuxJuWRLxtzr2LRIFROo27NN24QKoStWnKNI-kVY1R7rnwHCZbhMBAsGREA',
-          refresh_token: '1//09WI1Zi8VyLvjCgYIARAAGAkSNwF-L9IrePqeSkTldvtzb3xQ4TuB0MnK-DEaGkkla6_Nss5zqG2N2lb4kLdCpQr07obEus7w4kk',
+          access_token: 'access_token',
+          refresh_token: 'refresh_token',
           expires_in: 3599,
           scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
           additional_params: '{"access_type":"offline","prompt":"consent"}',
@@ -36,7 +36,7 @@ describe('Add new spreadsheet', () => {
       attributes: {
         credentials: {
           access_token: 'wrong',
-          refresh_token: '1//09WI1Zi8VyLvjCgYIARAAGAkSNwF-L9IrePqeSkTldvtzb3xQ4TuB0MnK-DEaGkkla6_Nss5zqG2N2lb4kLdCpQr07obEus7w4kk',
+          refresh_token: 'refresh_token',
           expires_in: 3599,
           scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
           additional_params: '{"access_type":"offline","prompt":"consent"}',
