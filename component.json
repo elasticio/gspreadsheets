@@ -13,6 +13,27 @@
         "label": "Authentication",
         "viewClass": "HTTPAuthView",
         "required": true
+      },
+      "retries": {
+        "label": "Enter number of retries (Default: 5)",
+        "viewClass": "SelectView",
+        "prompt": "Enter number of retries",
+        "required": false,
+        "model": {
+          "one": "1",
+          "two": "2",
+          "three": "3",
+          "four": "4",
+          "five": "5",
+          "six": "6",
+          "seven": "7",
+          "eight": "8"
+        }
+      },
+      "maxNumberOfCallsPerSecond": {
+        "label": "Max number of calls per second (Default: 5)",
+        "viewClass": "TextFieldView",
+        "required": false
       }
     }
   },
