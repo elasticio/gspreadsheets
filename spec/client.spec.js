@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const fs = require('fs');
 const chai = require('chai');
 const sinon = require('sinon');
@@ -23,6 +24,8 @@ const replyListSpreadseets = {
     },
   ],
 };
+const spreadsheetId = '1U6lUeRnBzyUiWNQwbNIG18oKLYbjTQddGe-W7AiT2tA';
+const worksheetId = 'Sheet A';
 
 describe('Google client', () => {
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
@@ -47,7 +50,7 @@ describe('Google client', () => {
       },
     },
   };
-  const secretId = 'secretId';
+  const secretId = '62aad9dbdd84a800122493f9';
   afterEach(() => {
     nock.cleanAll();
   });
@@ -195,7 +198,7 @@ describe('Google client', () => {
 
     it('list Of worksheets', async () => {
       nock('https://sheets.googleapis.com')
-        .get('/v4/spreadsheets/some_spreadsheet')
+        .get(`/v4/spreadsheets/${spreadsheetId}`)
         .reply(200, {
           sheets: [
             {
@@ -214,8 +217,70 @@ describe('Google client', () => {
         });
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
-      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfWorksheets, 'some_spreadsheet');
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfWorksheets, spreadsheetId);
       expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
+    });
+
+    it('createSpreadsheets', async () => {
+      const spreadsheetData = {
+        properties: { title: 'Some name' },
+        sheets: [
+          { properties: { title: 'Sheet A' } },
+          { properties: { title: 'Sheet B' } },
+        ],
+      };
+      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+        .post('/v4/spreadsheets', spreadsheetData)
+        .reply(200, ['done'], []);
+      const client = new GoogleOauth2Client(configuration, context);
+      const result = await client.callFunction(client.createSpreadsheet, spreadsheetData);
+      expect(result.data).to.deep.equal(['done']);
+    });
+
+    it('getSpreadsheet', async () => {
+      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetId)}`)
+        .reply(200, ['done'], []);
+      const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
+      const result = await client.callFunction(client.getSpreadsheet);
+      expect(result.data).to.deep.equal(['done']);
+    });
+
+    it('writeToSpreadsheet', async () => {
+      const values = [1, -6.8, 'string_line', true];
+      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+        .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetId)}:append`, { majorDimension: 'ROWS', values: [values] })
+        .query({ valueInputOption: 'RAW' })
+        .reply(200, ['done'], []);
+      const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
+      const result = await client.callFunction(client.writeToSpreadsheet, values);
+      expect(result.data).to.deep.equal(['done']);
+    });
+
+    it('getDrive', async () => {
+      nock('https://www.googleapis.com:443', { encodedQueryParams: true })
+        .get(`/drive/v3/files/${spreadsheetId}`)
+        .query({ fields: 'id%2Cname%2CmodifiedTime' })
+        .reply(200, ['done'], []);
+      const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
+      const result = await client.callFunction(client.getDrive);
+      expect(result.data).to.deep.equal(['done']);
+    });
+
+    it('batchGetRows', async () => {
+      const params = {
+        spreadsheetId,
+        ranges: ['Sheet A!L1:ALW5000'],
+        majorDimension: 'COLUMNS',
+        valueRenderOption: 'UNFORMATTED_VALUE',
+      };
+      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+        .get('/v4/spreadsheets/1U6lUeRnBzyUiWNQwbNIG18oKLYbjTQddGe-W7AiT2tA/values:batchGet')
+        .query({ ranges: 'Sheet%20A%21L1%3AALW5000', majorDimension: 'COLUMNS', valueRenderOption: 'UNFORMATTED_VALUE' })
+        .reply(200, ['done']);
+      const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
+      const result = await client.callFunction(client.batchGetRows, params);
+      expect(result.data).to.deep.equal(['done']);
     });
   });
 });
