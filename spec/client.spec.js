@@ -79,7 +79,7 @@ describe('Google client', () => {
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
       googleOauth2Client.resetSecret();
-      const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfSpreadsheets);
       expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
       expect(secretNock.isDone()).to.equal(true);
       expect(googleApisNock.isDone()).to.equal(true);
@@ -103,7 +103,7 @@ describe('Google client', () => {
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
       googleOauth2Client.resetSecret();
-      const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfSpreadsheets);
       expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
       expect(secretNock.isDone()).to.equal(true);
       expect(googleApisNock.isDone()).to.equal(true);
@@ -127,7 +127,7 @@ describe('Google client', () => {
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
       googleOauth2Client.resetSecret();
-      const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfSpreadsheets);
       expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
       expect(secretNock.isDone()).to.equal(true);
       expect(googleApisNock.isDone()).to.equal(true);
@@ -156,7 +156,7 @@ describe('Google client', () => {
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
       googleOauth2Client.resetSecret();
-      const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfSpreadsheets);
       expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
       expect(secretNock.isDone()).to.equal(true);
       expect(secretRefreshNock.isDone()).to.equal(true);
@@ -189,7 +189,7 @@ describe('Google client', () => {
         });
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
-      const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfSpreadsheets);
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfSpreadsheets);
       expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
     });
 
@@ -214,7 +214,7 @@ describe('Google client', () => {
         });
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
-      const result = await googleOauth2Client.runFunction(googleOauth2Client.listOfWorksheets, 'some_spreadsheet');
+      const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfWorksheets, 'some_spreadsheet');
       expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
     });
   });
