@@ -151,6 +151,58 @@
         }
       },
       "dynamicMetadata": true
+    },
+    "upsertSpreadsheetRow": {
+      "main": "./lib/actions/upsertSpreadsheetRow.js",
+      "title": "Create/Upsert/Update Spreadsheet Row",
+      "help": {
+        "description": "Action appends new row to spreadsheet or update it",
+        "link": "/components/gspreadsheet/actions#upsert-spreadsheet-row"
+      },
+      "fields": {
+        "spreadsheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        },
+        "worksheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your worksheet (spreadsheet required)",
+          "label": "Worksheet",
+          "required": true,
+          "model": "listWorksheets",
+          "require": [
+            "spreadsheetId"
+          ]
+        },
+        "dimension": {
+          "viewClass": "SelectView",
+          "prompt": "Select dimension",
+          "label": "Dimension",
+          "required": true,
+          "model": {
+            "ROWS": "Rows",
+            "COLUMNS": "Columns"
+          }
+        },
+        "mode": {
+          "viewClass": "SelectView",
+          "prompt": "Choose input mode. Default: First Row As Headers.",
+          "required": false,
+          "label": "Input Mode",
+          "help": {
+            "description": "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
+            "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
+          },
+          "model": {
+            "header": "First Row As Headers",
+            "array": "Array Based"
+          }
+        }
+      },
+      "dynamicMetadata": true
     }
   }
 }
