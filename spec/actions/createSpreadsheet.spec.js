@@ -52,7 +52,7 @@ describe('Add new spreadsheet', () => {
     }
     configuration = {
       secretId,
-      retries: 'one',
+      retries: 5,
     };
   });
 
