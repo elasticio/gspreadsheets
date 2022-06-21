@@ -7,7 +7,7 @@
     "test": "mocha spec/** --timeout 50000"
   },
   "engines": {
-    "node": "14"
+    "node": "16.x"
   },
   "repository": {
     "type": "git",

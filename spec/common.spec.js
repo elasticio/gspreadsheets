@@ -7,10 +7,10 @@ const { expect } = chai;
 
 describe('common test', () => {
   describe('getRetriesFromConfig test', () => {
-    it('should return 4', async () => {
+    it('should return 3', async () => {
       const configuration = { retries: 3 };
       const result = common.getRetriesFromConfig(configuration);
-      expect(result).to.equal(4);
+      expect(result).to.equal(3);
     });
 
     it('should return 5, empty cfg', async () => {
@@ -19,22 +19,13 @@ describe('common test', () => {
       expect(result).to.equal(5);
     });
 
-    it('should return 5, more than 10', async () => {
+    it('should throw error', async () => {
       const configuration = { retries: 15 };
-      const result = common.getRetriesFromConfig(configuration);
-      expect(result).to.equal(5);
-    });
-
-    it('should return 5, less than 1', async () => {
-      const configuration = { retries: 0 };
-      const result = common.getRetriesFromConfig(configuration);
-      expect(result).to.equal(5);
-    });
-
-    it('should return 5, not a number', async () => {
-      const configuration = { retries: 'one' };
-      const result = common.getRetriesFromConfig(configuration);
-      expect(result).to.equal(5);
+      try {
+        common.getRetriesFromConfig(configuration);
+      } catch (e) {
+        expect(e.message).to.equal('Number of retries must be from 0 to 10');
+      }
     });
   });
 });
