@@ -41,10 +41,27 @@ To get these please use the [Google Developers Console](https://console.develope
 
 ## Credentials
 
-Google Spreadsheet works with OAuth2 app configured at your Google Developer Console.
-To Authenticate the component you only need to press the button *Authentication*
-and the process would take you to Google to log-in and give permissions to the
-platform to access your Spreadsheets.
+To get `Client ID` and `Client Secret` please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
+During credentials creation you would need to:
+- select existing Auth Client from drop-down list ``Choose Auth Client`` or create the new one.
+  For creating Auth Client you should specify following fields:
+
+Field name|Mandatory| Description                                                                       |
+|----|---------|-----------------------------------------------------------------------------------|
+|Name| true | your Auth Client's name                                                           |
+|Client ID| true | your OAuth client key                                                             |
+|Client Secret| true | your OAuth client secret                                                          |
+|Authorization Endpoint| true | your OAuth authorization endpoint: `https://accounts.google.com/o/oauth2/v2/auth` |
+|Token Endpoint| true | your OAuth Token endpoint for refreshing access token: `https://www.googleapis.com/oauth2/v4/token`|
+
+- fill field ``Name Your Credential``
+- fill field ``Scopes (Comma-separated list)`` as `https://www.googleapis.com/auth/spreadsheets, https://www.googleapis.com/auth/drive.metadata.readonly`
+- fill field ``Additional parameters (Comma-separated list)`` as `access_type:offline,prompt:consent`
+- click on ``Authenticate`` button - the process would take you to Google to log-in and give permissions to the platform to access your Spreadsheets.
+- optional fill field `Enter number of retries`
+- optional fill field `Max number of calls per second`
+- click on ``Verify`` button for verifying your credentials
+- click on ``Save`` button for saving your credentials
 
 - Enter number of retries (Default: 5)
 
