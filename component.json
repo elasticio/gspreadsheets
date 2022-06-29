@@ -3,7 +3,6 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
-  "version": "3.0.1-dev.3",
   "authClientTypes": [
     "oauth2"
   ],
@@ -88,6 +87,53 @@
     }
   },
   "actions": {
+    "readSpreadsheet": {
+      "main": "./lib/actions/readSpreadsheet.js",
+      "title": "Read Spreadsheet",
+      "help": {
+        "description": "Action to read spreadsheet.",
+        "link": "/components/gspreadsheet/actions#read-spreadsheet"
+      },
+      "fields": {
+        "spreadsheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "model": "listSpreadsheets"
+        },
+        "dimension": {
+          "viewClass": "SelectView",
+          "prompt": "Select dimension",
+          "label": "Dimension",
+          "required": true,
+          "model": {
+            "ROWS": "Rows",
+            "COLUMNS": "Columns"
+          }
+        },
+        "includeHeader": {
+          "viewClass": "SelectView",
+          "prompt": "Yes/No",
+          "label": "Use first row or column as a header",
+          "required": true,
+          "model": {
+            "yes": "Yes",
+            "no": "No"
+          }
+        },
+        "emitBehaviour": {
+          "label": "Emit Behaviour",
+          "viewClass": "SelectView",
+          "required": true,
+          "model": {
+            "emitIndividually": "Emit Individually",
+            "fetchAll": "Fetch All"
+          }
+        }
+      },
+      "dynamicMetadata": true
+    },
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
