@@ -7,15 +7,14 @@ const sinon = require('sinon');
 
 const log = require('@elastic.io/component-logger')();
 
-const createSpreadsheetRow = require('../../lib/actions/createSpreadsheetRow');
+const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-xdescribe('Read spreadsheet', () => {
-  let emitter;
+describe('Read spreadsheet', () => {
+  let context;
 
-  let configuration;
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
   process.env.ELASTICIO_API_USERNAME = 'user';
   process.env.ELASTICIO_API_KEY = 'apiKey';
@@ -42,16 +41,10 @@ xdescribe('Read spreadsheet', () => {
       // eslint-disable-next-line global-require
       require('dotenv').config();
     }
-    configuration = {
-      spreadsheetId: 'some_id',
-      worksheetId: 'some_worksheet',
-      mode: 'array',
-      secretId,
-    };
   });
 
   beforeEach(() => {
-    emitter = {
+    context = {
       emit: sinon.spy(),
       logger: log,
     };
@@ -61,104 +54,75 @@ xdescribe('Read spreadsheet', () => {
   });
 
   it('success', async () => {
-    const msg = {
-      body: {
-        values: [1, -6.8, 'string_line', true],
-      },
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'ROWS',
+      includeHeader: 'no',
+      emitBehaviour: 'fetchAll',
     };
+    const msg = { body: {} };
 
-    nock('https://sheets.googleapis.com')
-      .persist()
-      .post(
-        `/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}:append?valueInputOption=RAW`,
-        { majorDimension: 'ROWS', values: [[1, -6.8, 'string_line', true]] },
-      )
-      .reply(200, { success: 'OK' });
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .reply(200, { values: [[1, 2], [3, 4]] });
 
-    const result = await createSpreadsheetRow.process.call(emitter, msg, configuration);
-    expect(result.body).to.deep.equal({ success: 'OK' });
+    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(body).to.deep.equal([[1, 2], [3, 4]]);
   });
+  it('success emit items individually', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'ROWS',
+      includeHeader: 'no',
+      emitBehaviour: 'emitIndividually',
+    };
+    const msg = { body: {} };
 
-  it('list Worksheets', async () => {
-    nock('https://sheets.googleapis.com')
-      .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
-      .reply(200, {
-        sheets: [
-          {
-            properties: {
-              sheetId: 1,
-              title: 'Sheet1',
-            },
-          },
-          {
-            properties: {
-              sheetId: 2,
-              title: 'Sheet2',
-            },
-          },
-        ],
-      });
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .reply(200, { values: [[1, 2], [3, 4]] });
 
-    const result = await createSpreadsheetRow.listWorksheets.call(emitter, configuration);
-    expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
+    await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(context.emit.callCount).to.be.equal(2);
+    const firstEmit = context.emit.getCall(0).args[1].body;
+    expect(firstEmit).to.deep.equal([1, 2]);
+    const secondEmit = context.emit.getCall(1).args[1].body;
+    expect(secondEmit).to.deep.equal([3, 4]);
   });
+  it('success skip first item, includeHeader: yes', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'ROWS',
+      includeHeader: 'yes',
+      emitBehaviour: 'fetchAll',
+    };
+    const msg = { body: {} };
 
-  it('Generates metadata for array mode', async () => {
-    configuration.mode = 'array';
-    const result = await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
-    expect(result.in).to.exist;
-    expect(result.out).to.exist;
-    expect(result.in.properties.values).to.be.exist;
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .reply(200, { values: [[1, 2], [3, 4]] });
+
+    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(body).to.deep.equal([[3, 4]]);
   });
-  it('Generates metadata for first header mode', async () => {
-    configuration.mode = 'header';
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
-      .reply(200, {
-        values: [['header1', 'header 2'], ['value1', 'value2']],
-      });
-    const result = await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
-    expect(result.in).to.exist;
-    expect(result.out).to.exist;
-    expect(result.in.properties.header1).to.be.exist;
-    expect(result.in.properties.header2).to.be.exist;
-  });
-  it('Header mode error if values not present in first row', async () => {
-    configuration.mode = 'header';
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
-      .reply(200, {
-        values: [[], ['value1', 'value2']],
-      });
-    try {
-      await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
-      expect(true, 'should fail').to.be.false;
-    } catch (e) {
-      expect(e.message).to.be.eql('Input Mode: "First Row As Headers" requires first row to have at least one cell with value. Check: Common Errors section in docs.');
-    }
-  });
-  it('Header mode throw error if values not unique', async () => {
-    configuration.mode = 'header';
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
-      .reply(200, {
-        values: [['header1', 'header1'], ['value1', 'value2']],
-      });
-    try {
-      await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
-      expect(true, 'should fail').to.be.false;
-    } catch (e) {
-      expect(e.message).to.be.eql('Input Mode: "First Row As Headers" requires cells in first row to be unique. Check: Common Errors section in docs.');
-    }
-  });
-  it('Header mode throw errors if values is blank in first mode', async () => {
-    configuration.mode = 'header';
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${configuration.worksheetId}`)
-      .reply(200, {
-        values: [['header1', '', 'header3'], ['value1', 'value2']],
-      });
-    try {
-      await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
-      expect(true, 'should fail').to.be.false;
-    } catch (e) {
-      expect(e.message).to.be.eql('Input Mode: "First Row As Headers" requires cells in first row to be not empty. Check: Common Errors section in docs.');
-    }
+  it('success, dimension: COLUMNS ', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'COLUMNS',
+      includeHeader: 'no',
+      emitBehaviour: 'fetchAll',
+    };
+    const msg = { body: {} };
+
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
+      .reply(200, { values: [[1, 3], [2, 4]] });
+
+    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(body).to.deep.equal([[1, 3], [2, 4]]);
   });
 });
