@@ -716,7 +716,7 @@ describe('create/update/upsert row/column action test', async () => {
             });
           configuration.dimension = 'COLUMNS';
           configuration.mode = 'array';
-          configuration.upsertCriteria = 2;
+          configuration.upsertCriteria = '2';
           const msg = {
             body: {
               1: 'ValueRow1',
@@ -776,7 +776,7 @@ describe('create/update/upsert row/column action test', async () => {
             });
           configuration.dimension = 'COLUMNS';
           configuration.mode = 'array';
-          configuration.upsertCriteria = 2;
+          configuration.upsertCriteria = '2';
           const msg = {
             body: {
               1: 'ValueRow1',
@@ -823,7 +823,7 @@ describe('create/update/upsert row/column action test', async () => {
             });
           configuration.dimension = 'COLUMNS';
           configuration.mode = 'array';
-          configuration.upsertCriteria = 2;
+          configuration.upsertCriteria = '2';
           const msg = {
             body: {
               1: 'ValueRow1',
