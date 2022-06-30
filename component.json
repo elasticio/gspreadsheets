@@ -101,13 +101,26 @@
           "prompt": "Select your spreadsheet",
           "label": "Spreadsheet",
           "required": true,
+          "order": 10,
           "model": "listSpreadsheets"
+        },
+        "worksheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your worksheet (spreadsheet required)",
+          "label": "Worksheet",
+          "required": true,
+          "order": 8,
+          "model": "listWorksheets",
+          "require": [
+            "spreadsheetId"
+          ]
         },
         "dimension": {
           "viewClass": "SelectView",
           "prompt": "Select dimension",
           "label": "Dimension",
           "required": true,
+          "order": 6,
           "model": {
             "ROWS": "Rows",
             "COLUMNS": "Columns"
@@ -118,6 +131,7 @@
           "prompt": "Yes/No",
           "label": "Use first row or column as a header",
           "required": true,
+          "order": 4,
           "model": {
             "yes": "Yes",
             "no": "No"
@@ -127,20 +141,11 @@
           "label": "Emit Behaviour",
           "viewClass": "SelectView",
           "required": true,
+          "order": 2,
           "model": {
             "emitIndividually": "Emit Individually",
             "fetchAll": "Fetch All"
           }
-        },
-        "worksheetId": {
-          "viewClass": "SelectView",
-          "prompt": "Select your worksheet (spreadsheet required)",
-          "label": "Worksheet",
-          "required": true,
-          "model": "listWorksheets",
-          "require": [
-            "spreadsheetId"
-          ]
         }
       },
       "metadata": {
