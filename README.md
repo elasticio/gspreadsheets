@@ -4,14 +4,17 @@
 ## Table of Contents
 
 * [Description](#description)
+* [Google preparations](#google-preparations)
 * [Environment variables](#environment-variables)
 * [Credentials](#credentials)
-* [Actions](#actions) 
- * [Upsert Object](#upsert-object) 
- * [Make Raw Request](#make-raw-request)
- * [Lookup Objects (plural)](#lookup-objects-plural) 
 * [Triggers](#triggers)
-* [Known Limitations](#known-limitations)
+ * [Get Spreadsheet Row](#get-spreadsheet-row) 
+* [Actions](#actions) 
+ * [Read Spreadsheet](#read-spreadsheet) 
+ * [Create new Spreadsheet](#create-new-spreadsheet) 
+ * [Add Spreadsheet Row](#add-spreadsheet-row)
+* [Recommendations](#recommendations)
+* [License](#license)
 
 ## Description
 
@@ -88,7 +91,6 @@ Note: If you don't set a value to either `Enter number of retries` or `Max numbe
 
 
 ## Triggers
-
 
 ### Get Spreadsheet Row
 	
@@ -220,6 +222,27 @@ You can find more information in the [Google Sheets API Documentation](https://d
 
 
 ## Actions
+
+### Read Spreadsheet
+
+Action read spreadsheet. This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get). All data structures and limitations are the same to Google API.
+
+#### Configuration Fields
+
+* **Spreadsheet** - (dropdown, required): Spreadsheet name selected from dropdown.
+* **Worksheet** - (dropdown, required): Worksheet to read.
+* **Dimension** - (dropdown, required): The major dimension of the values. `ROWS` or `COLUMNS`.
+* **Use first row or column as a header** - (dropdown, required): If `yes` first row or column will be skipped.
+* **Emit Behavior** - (dropdown, required): A way to emit items. `Emit Individually` or `Fetch All`.
+
+#### Input Metadata
+
+N/A
+
+#### Output Metadata
+
+If `Emit Behavior` = `Fetch All`: array of items.
+If `Emit Behavior` = `Emit Individually`: each item emitted individually.
 
 ### Create new Spreadsheet
 
