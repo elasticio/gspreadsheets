@@ -251,17 +251,71 @@ describe('create/update/upsert row/column process', async () => {
       });
     });
 
-    xdescribe('mode = array', async () => {
+    describe('mode = array', async () => {
       it('no matches are found, going to create new row, mode = array', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'ColumnA',
+                'ColumnB',
+                'ColumnC',
+                'ColumnD',
+              ],
+              [
+                'valueA2',
+                'valueB2',
+                'valueC2',
+                'valueD2',
+              ],
+              [
+                'valueA3',
+                'valueB3',
+                'valueC3',
+                'valueD3',
+              ],
+              [
+                'valueA4',
+                'valueB4',
+                'valueC4',
+                'valueD4',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}:append`, {
+            majorDimension: 'ROWS',
+            values: [[
+              'NewColumnA',
+              'NewColumnB',
+              'NewColumnC',
+              'NewColumnD',
+            ]],
+          })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            tableRange: 'Sheet1!A1:D4',
+            updates: {
+              spreadsheetId,
+              updatedRange: 'Sheet1!A5:D5',
+              updatedRows: 1,
+              updatedColumns: 4,
+              updatedCells: 4,
+            },
+          });
         configuration.dimension = 'ROWS';
         configuration.mode = 'array';
         configuration.upsertCriteria = 'C';
         const msg = {
           body: {
-            A: 'New Value',
-            B: 'friendsColumn',
-            C: `enemiesColumn ${Date.now()}`,
-            D: 'acquaintancesColumn1',
+            A: 'NewColumnA',
+            B: 'NewColumnB',
+            C: 'NewColumnC',
+            D: 'NewColumnD',
           },
         };
         const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
@@ -272,6 +326,38 @@ describe('create/update/upsert row/column process', async () => {
       });
 
       it('more than one match is found, throw an error, mode = array', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'ColumnA',
+                'ColumnB',
+                'ColumnC',
+                'ColumnD',
+              ],
+              [
+                'valueA2',
+                'valueB2',
+                'valueC2',
+                'valueD2',
+              ],
+              [
+                'valueA3',
+                'valueB3',
+                'valueC2',
+                'valueD3',
+              ],
+              [
+                'valueA4',
+                'valueB4',
+                'valueC4',
+                'valueD4',
+              ],
+            ],
+          });
         configuration.dimension = 'ROWS';
         configuration.mode = 'array';
         configuration.upsertCriteria = 'C';
@@ -279,7 +365,7 @@ describe('create/update/upsert row/column process', async () => {
           body: {
             A: 'New Value',
             B: 'friendsColumn',
-            C: 'enemiesColumn',
+            C: 'valueC2',
             D: 'acquaintancesColumn1',
           },
         };
@@ -287,14 +373,67 @@ describe('create/update/upsert row/column process', async () => {
       });
 
       it('exactly one match is found, mode = array', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'ColumnA',
+                'ColumnB',
+                'ColumnC',
+                'ColumnD',
+              ],
+              [
+                'valueA2',
+                'valueB2',
+                'valueC2',
+                'valueD2',
+              ],
+              [
+                'valueA3',
+                'valueB3',
+                'valueC3',
+                'valueD3',
+              ],
+              [
+                'valueA4',
+                'valueB4',
+                'valueC4',
+                'valueD4',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21A2%3AD2?valueInputOption=RAW`,
+            {
+              majorDimension: 'ROWS',
+              values: [
+                [
+                  'NewColumnA',
+                  'NewColumnB',
+                  'valueC2',
+                  'NewColumnD',
+                ],
+              ],
+            })
+          .reply(200, {
+            spreadsheetId,
+            updatedRange: 'Sheet1!A5:D5',
+            updatedRows: 1,
+            updatedColumns: 4,
+            updatedCells: 4,
+          });
         configuration.dimension = 'ROWS';
         configuration.mode = 'array';
         configuration.upsertCriteria = 'C';
         const msg = {
           body: {
-            A: 'New Value',
-            C: '9',
-            D: null,
+            A: 'NewColumnA',
+            B: 'NewColumnB',
+            C: 'valueC2',
+            D: 'NewColumnD',
           },
         };
         const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
@@ -306,118 +445,342 @@ describe('create/update/upsert row/column process', async () => {
     });
   });
 
-  xdescribe('dimension = COLUMNS', async () => {
+  describe('dimension = COLUMNS', async () => {
     describe('mode = header', async () => {
       it('no matches are found, going to create new column', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'Row1',
+                'valueB1',
+                'valueC1',
+              ],
+              [
+                'Row2',
+                'valueB2',
+                'valueC2',
+              ],
+              [
+                'Row3',
+                'valueB3',
+                'valueC3',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            majorDimension: 'COLUMNS',
+            values: [
+              ['ValueRow1',
+                'ValueRow2',
+                'ValueRow3']],
+          })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            updates: {
+              spreadsheetId,
+              updatedRange: 'Sheet1!E1:E3',
+              updatedRows: 3,
+              updatedColumns: 1,
+              updatedCells: 3,
+            },
+          });
         configuration.dimension = 'COLUMNS';
         configuration.mode = 'header';
-        configuration.upsertCriteria = 'California';
+        configuration.upsertCriteria = 'Row2';
         const msg = {
           body: {
-            'Common field': 'New Value',
-            'New York': 'New York Row',
-            California: `California ${Date.now()}`,
-            RowsArray: 'RowsArray',
-            Kyiv: 'Kyiv',
+            Row1: 'ValueRow1',
+            Row2: 'ValueRow2',
+            Row3: 'ValueRow3',
           },
         };
         const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
         expect(result.body.updates.spreadsheetId).to.equal(spreadsheetId);
-        expect(result.body.updates.updatedRows).to.equal(5);
+        expect(result.body.updates.updatedRows).to.equal(3);
         expect(result.body.updates.updatedColumns).to.equal(1);
-        expect(result.body.updates.updatedCells).to.equal(5);
+        expect(result.body.updates.updatedCells).to.equal(3);
       });
 
       it('more than one match column is found, throw an error', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'Row1',
+                'valueB1',
+                'valueC1',
+              ],
+              [
+                'Row2',
+                'valueB2',
+                'valueB2',
+              ],
+              [
+                'Row3',
+                'valueB3',
+                'valueC3',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            majorDimension: 'COLUMNS',
+            values: [
+              ['ValueRow1',
+                'ValueRow2',
+                'ValueRow3']],
+          })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            updates: {
+              spreadsheetId,
+              updatedRange: 'Sheet1!E1:E3',
+              updatedRows: 3,
+              updatedColumns: 1,
+              updatedCells: 3,
+            },
+          });
         configuration.dimension = 'COLUMNS';
         configuration.mode = 'header';
-        configuration.upsertCriteria = 'California';
+        configuration.upsertCriteria = 'Row2';
         const msg = {
           body: {
-            'Common field': 'New Value',
-            'New York': 'New York Row',
-            California: 11,
-            RowsArray: 'RowsArray',
-            Kyiv: 'Kyiv',
+            Row1: 'ValueRow1',
+            Row2: 'valueB2',
+            Row3: 'ValueRow3',
           },
         };
         await expect(upsertSpreadsheetRow.process.call(emitter, msg, configuration)).be.rejectedWith('More than one rows found');
       });
 
       it('exactly one match column is found', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'Row1',
+                'valueB1',
+                'valueC1',
+              ],
+              [
+                'Row2',
+                'valueB2',
+                'valueC2',
+              ],
+              [
+                'Row3',
+                'valueB3',
+                'valueC3',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21B1%3AB3`, { majorDimension: 'COLUMNS', values: [['ValueRow1', 'valueB2', 'ValueRow3']] })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            updatedRange: 'Sheet1!B1:B3',
+            updatedRows: 3,
+            updatedColumns: 1,
+            updatedCells: 3,
+          });
         configuration.dimension = 'COLUMNS';
         configuration.mode = 'header';
-        configuration.upsertCriteria = 'California';
+        configuration.upsertCriteria = 'Row2';
         const msg = {
           body: {
-            'Common field': 'New Value',
-            California: 3,
-            RowsArray: null,
-            Kyiv: 'Kyiv',
+            Row1: 'ValueRow1',
+            Row2: 'valueB2',
+            Row3: 'ValueRow3',
           },
         };
         const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
         expect(result.body.spreadsheetId).to.equal(spreadsheetId);
-        expect(result.body.updatedRows).to.equal(5);
+        expect(result.body.updatedRows).to.equal(3);
         expect(result.body.updatedColumns).to.equal(1);
-        expect(result.body.updatedCells).to.equal(5);
+        expect(result.body.updatedCells).to.equal(3);
       });
     });
 
-    xdescribe('mode = array', async () => {
+    describe('mode = array', async () => {
       it('no matches are found, going to create new column, mode = array', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'Row1',
+                'valueB1',
+                'valueC1',
+              ],
+              [
+                'Row2',
+                'valueB2',
+                'valueC2',
+              ],
+              [
+                'Row3',
+                'valueB3',
+                'valueC3',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            majorDimension: 'COLUMNS',
+            values: [
+              ['ValueRow1',
+                'ValueRow2',
+                'ValueRow3']],
+          })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            updates: {
+              spreadsheetId,
+              updatedRange: 'Sheet1!E1:E3',
+              updatedRows: 3,
+              updatedColumns: 1,
+              updatedCells: 3,
+            },
+          });
         configuration.dimension = 'COLUMNS';
         configuration.mode = 'array';
-        configuration.upsertCriteria = 3;
+        configuration.upsertCriteria = 2;
         const msg = {
           body: {
-            1: 'New Value',
-            2: 'New York Row',
-            3: `California ${Date.now()}`,
-            4: 'RowsArray',
-            5: 'Kyiv',
+            1: 'ValueRow1',
+            2: 'ValueRow2',
+            3: 'ValueRow3',
           },
         };
         const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
         expect(result.body.updates.spreadsheetId).to.equal(spreadsheetId);
-        expect(result.body.updates.updatedRows).to.equal(5);
+        expect(result.body.updates.updatedRows).to.equal(3);
         expect(result.body.updates.updatedColumns).to.equal(1);
-        expect(result.body.updates.updatedCells).to.equal(5);
+        expect(result.body.updates.updatedCells).to.equal(3);
       });
 
       it('more than one match column is found, throw an error, mode = array', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'Row1',
+                'valueB1',
+                'valueC1',
+              ],
+              [
+                'Row2',
+                'valueB2',
+                'valueB2',
+              ],
+              [
+                'Row3',
+                'valueB3',
+                'valueC3',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            majorDimension: 'COLUMNS',
+            values: [
+              ['ValueRow1',
+                'ValueRow2',
+                'ValueRow3']],
+          })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            updates: {
+              spreadsheetId,
+              updatedRange: 'Sheet1!E1:E3',
+              updatedRows: 3,
+              updatedColumns: 1,
+              updatedCells: 3,
+            },
+          });
         configuration.dimension = 'COLUMNS';
         configuration.mode = 'array';
-        configuration.upsertCriteria = 3;
+        configuration.upsertCriteria = 2;
         const msg = {
           body: {
-            1: 'New Value',
-            2: 'New York Row',
-            3: 11,
-            4: 'RowsArray',
-            5: 'Kyiv',
+            1: 'ValueRow1',
+            2: 'valueB2',
+            3: 'ValueRow3',
           },
         };
         await expect(upsertSpreadsheetRow.process.call(emitter, msg, configuration)).be.rejectedWith('More than one rows found');
       });
 
       it('exactly one match column is found, mode = array', async () => {
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .reply(200, {
+            range: 'Sheet1!A1:AB1001',
+            majorDimension: 'ROWS',
+            values: [
+              [
+                'Row1',
+                'valueB1',
+                'valueC1',
+              ],
+              [
+                'Row2',
+                'valueB2',
+                'valueC2',
+              ],
+              [
+                'Row3',
+                'valueB3',
+                'valueC3',
+              ],
+            ],
+          });
+        nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+          .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21B1%3AB3`, { majorDimension: 'COLUMNS', values: [['ValueRow1', 'valueB2', 'ValueRow3']] })
+          .query({ valueInputOption: 'RAW' })
+          .reply(200, {
+            spreadsheetId,
+            updatedRange: 'Sheet1!B1:B3',
+            updatedRows: 3,
+            updatedColumns: 1,
+            updatedCells: 3,
+          });
         configuration.dimension = 'COLUMNS';
         configuration.mode = 'array';
-        configuration.upsertCriteria = 3;
+        configuration.upsertCriteria = 2;
         const msg = {
           body: {
-            1: 'New Value',
-            3: 3,
-            4: null,
-            5: 'Kyiv',
+            1: 'ValueRow1',
+            2: 'valueB2',
+            3: 'ValueRow3',
           },
         };
         const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
         expect(result.body.spreadsheetId).to.equal(spreadsheetId);
-        expect(result.body.updatedRows).to.equal(5);
+        expect(result.body.updatedRows).to.equal(3);
         expect(result.body.updatedColumns).to.equal(1);
-        expect(result.body.updatedCells).to.equal(5);
+        expect(result.body.updatedCells).to.equal(3);
       });
     });
   });
