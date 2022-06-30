@@ -142,7 +142,10 @@
           ]
         }
       },
-      "dynamicMetadata": true
+      "metadata": {
+        "in": {},
+        "out": {}
+      }
     },
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",

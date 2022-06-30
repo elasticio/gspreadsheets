@@ -1,12 +1,22 @@
 [![CircleCI](https://circleci.com/gh/elasticio/gspreadsheets.svg?style=svg)](https://circleci.com/gh/elasticio/gspreadsheets)
 # Google Spreadsheets component
 
+## Table of Contents
+
+* [Description](#description)
+* [Environment variables](#environment-variables)
+* [Credentials](#credentials)
+* [Actions](#actions) 
+ * [Upsert Object](#upsert-object) 
+ * [Make Raw Request](#make-raw-request)
+ * [Lookup Objects (plural)](#lookup-objects-plural) 
+* [Triggers](#triggers)
+* [Known Limitations](#known-limitations)
+
 ## Description
 
 [elastic.io](http://www.elastic.io) iPaaS component to read and write to Google Spreadsheets
 Component Completeness [Matrix](https://docs.google.com/spreadsheets/d/1usD_k7NxyiplSEXgttAT9dmpgDNADCED7z4UCoRaAfs)
-
-## Requirements
 
 ### Google preparations
 
