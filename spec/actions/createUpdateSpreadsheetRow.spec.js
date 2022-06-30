@@ -250,6 +250,76 @@ describe('create/update/upsert row/column action test', async () => {
           expect(result.body.updatedColumns).to.equal(4);
           expect(result.body.updatedCells).to.equal(4);
         });
+
+        xit('exactly one match is found, empty header', async () => {
+          nock.recorder.rec();
+          nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .reply(200, {
+              range: 'Sheet1!A1:AB1001',
+              majorDimension: 'ROWS',
+              values: [
+                [
+                  'ColumnA',
+                  'ColumnB',
+                  'ColumnC',
+                  'ColumnD',
+                ],
+                [
+                  'valueA2',
+                  'valueB2',
+                  'valueC2',
+                  'valueD2',
+                ],
+                [
+                  'valueA3',
+                  'valueB3',
+                  'valueC3',
+                  'valueD3',
+                ],
+                [
+                  'valueA4',
+                  'valueB4',
+                  'valueC4',
+                  'valueD4',
+                ],
+              ],
+            });
+          nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+            .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21A2%3AD2?valueInputOption=RAW`,
+              {
+                values: [
+                  [
+                    'NewColumnA',
+                    'NewColumnB',
+                    'valueC2',
+                    'NewColumnD',
+                  ],
+                ],
+              })
+            .reply(200, {
+              spreadsheetId,
+              updatedRange: 'Sheet1!A5:D5',
+              updatedRows: 1,
+              updatedColumns: 4,
+              updatedCells: 4,
+            });
+          configuration.dimension = 'ROWS';
+          configuration.mode = 'header';
+          configuration.upsertCriteria = 'noHeader';
+          const msg = {
+            body: {
+              noHeader: 'NewColumnA',
+              ColumnB1: 'valueB1',
+              ColumnC1: 'valueC1',
+            },
+          };
+          const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
+          expect(result.body.spreadsheetId).to.equal(spreadsheetId);
+          expect(result.body.updatedRows).to.equal(1);
+          expect(result.body.updatedColumns).to.equal(4);
+          expect(result.body.updatedCells).to.equal(4);
+        });
       });
 
       describe('mode = array', async () => {
