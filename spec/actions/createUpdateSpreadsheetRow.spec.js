@@ -127,10 +127,10 @@ describe('create/update/upsert row/column action test', async () => {
             },
           };
           const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
-          expect(result.body.updates.spreadsheetId).to.equal(spreadsheetId);
-          expect(result.body.updates.updatedRows).to.equal(1);
-          expect(result.body.updates.updatedColumns).to.equal(4);
-          expect(result.body.updates.updatedCells).to.equal(4);
+          expect(result.body.spreadsheetId).to.equal(spreadsheetId);
+          expect(result.body.updatedRows).to.equal(1);
+          expect(result.body.updatedColumns).to.equal(4);
+          expect(result.body.updatedCells).to.equal(4);
         });
 
         it('more than one match is found, throw an error', async () => {
@@ -300,9 +300,9 @@ describe('create/update/upsert row/column action test', async () => {
           };
           const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
           expect(result.body.spreadsheetId).to.equal(spreadsheetId);
-          expect(result.body.updates.updatedRows).to.equal(1);
-          expect(result.body.updates.updatedColumns).to.equal(3);
-          expect(result.body.updates.updatedCells).to.equal(3);
+          expect(result.body.updatedRows).to.equal(1);
+          expect(result.body.updatedColumns).to.equal(3);
+          expect(result.body.updatedCells).to.equal(3);
         });
       });
 
@@ -374,10 +374,10 @@ describe('create/update/upsert row/column action test', async () => {
             },
           };
           const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
-          expect(result.body.updates.spreadsheetId).to.equal(spreadsheetId);
-          expect(result.body.updates.updatedRows).to.equal(1);
-          expect(result.body.updates.updatedColumns).to.equal(4);
-          expect(result.body.updates.updatedCells).to.equal(4);
+          expect(result.body.spreadsheetId).to.equal(spreadsheetId);
+          expect(result.body.updatedRows).to.equal(1);
+          expect(result.body.updatedColumns).to.equal(4);
+          expect(result.body.updatedCells).to.equal(4);
         });
 
         it('more than one match is found, throw an error, mode = array', async () => {
@@ -556,10 +556,10 @@ describe('create/update/upsert row/column action test', async () => {
             },
           };
           const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
-          expect(result.body.updates.spreadsheetId).to.equal(spreadsheetId);
-          expect(result.body.updates.updatedRows).to.equal(3);
-          expect(result.body.updates.updatedColumns).to.equal(1);
-          expect(result.body.updates.updatedCells).to.equal(3);
+          expect(result.body.spreadsheetId).to.equal(spreadsheetId);
+          expect(result.body.updatedRows).to.equal(3);
+          expect(result.body.updatedColumns).to.equal(1);
+          expect(result.body.updatedCells).to.equal(3);
         });
 
         it('more than one match column is found, throw an error', async () => {
@@ -725,10 +725,10 @@ describe('create/update/upsert row/column action test', async () => {
             },
           };
           const result = await upsertSpreadsheetRow.process.call(emitter, msg, configuration);
-          expect(result.body.updates.spreadsheetId).to.equal(spreadsheetId);
-          expect(result.body.updates.updatedRows).to.equal(3);
-          expect(result.body.updates.updatedColumns).to.equal(1);
-          expect(result.body.updates.updatedCells).to.equal(3);
+          expect(result.body.spreadsheetId).to.equal(spreadsheetId);
+          expect(result.body.updatedRows).to.equal(3);
+          expect(result.body.updatedColumns).to.equal(1);
+          expect(result.body.updatedCells).to.equal(3);
         });
 
         it('more than one match column is found, throw an error, mode = array', async () => {
