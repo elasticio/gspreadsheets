@@ -253,7 +253,7 @@ describe('Google client', () => {
         .query({ valueInputOption: 'RAW' })
         .reply(200, ['done'], []);
       const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
-      const result = await client.callFunction(client.writeToSpreadsheet, values);
+      const result = await client.callFunction(client.writeToSpreadsheet, { values });
       expect(result.data).to.deep.equal(['done']);
     });
 
