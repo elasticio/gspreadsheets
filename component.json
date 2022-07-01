@@ -155,12 +155,14 @@
           "prompt": "Select your spreadsheet",
           "label": "Spreadsheet",
           "required": true,
+          "order": 5,
           "model": "listSpreadsheets"
         },
         "worksheetId": {
           "viewClass": "SelectView",
-          "prompt": "Select your worksheet (spreadsheet required)",
+          "prompt": "Select your worksheet",
           "label": "Worksheet",
+          "order": 4,
           "required": true,
           "model": "listWorksheets",
           "require": [
@@ -172,6 +174,7 @@
           "prompt": "Select dimension",
           "label": "Dimension",
           "required": true,
+          "order": 3,
           "model": {
             "ROWS": "Rows",
             "COLUMNS": "Columns"
@@ -182,6 +185,7 @@
           "prompt": "Choose input mode. Default: First Row As Headers.",
           "required": false,
           "label": "Input Mode",
+          "order": 2,
           "help": {
             "description": "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
             "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
@@ -195,6 +199,7 @@
           "viewClass": "SelectView",
           "prompt": "Select your Upsert Criteria",
           "label": "Upsert Criteria",
+          "order": 1,
           "required": true,
           "model": "getUpsertCriteria",
           "require": [

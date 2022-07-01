@@ -282,37 +282,14 @@ One input field for each row/column, all inputs optional except for the field id
 
 #### Output Metadata
 
-```json
-{
-    "type": "object",
-    "properties": {
-      "spreadsheetId": {
-        "type": "string",
-        "required": true
-      },
-      "tableRange": {
-        "type": "string",
-        "required": true
-      },
-      "updatedRange": {
-        "type": "string",
-        "required": true
-      },
-      "updatedRows": {
-        "type": "numeric",
-        "required": true
-      },
-      "updatedColumns": {
-        "type": "numeric",
-        "required": true
-      },
-      "updatedCells": {
-        "type": "numeric",
-        "required": true
-      }
-    }
-  }
-```
+| Field          | Type   | Required | Description                          |
+|----------------|--------|----------|--------------------------------------|
+| spreadsheetId  | string | true     | Unique identifier of the spreadsheet |
+| tableRange     | string | true     | Range of Table                       |
+| updateRange    | string | true     | Updated Range                        |
+| updatedRows    | number | true     | Count of updated rows                |
+| updatedColumns | number | true     | Count of updated columns             |
+| updatedCells   | number | true     | Count of updated cells               |
 
 ## Recommendations
 
