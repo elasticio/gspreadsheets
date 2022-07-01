@@ -1,0 +1,44 @@
+[
+  [
+    "Name",
+    "Email",
+    "Slack ID",
+    "Region ID (refer next Sheet)"
+  ],
+  [
+    "Olexandr Motsak",
+    "olexandr@elastic.io",
+    "U023R181AN5",
+    "31"
+  ],
+  [
+    "Pavel Voropaiev",
+    "pavel.voropaiev@elastic.io",
+    "U8UM2TV7D",
+    "31"
+  ],
+  [
+    "Olha Virolainen",
+    "olga.virolainen@elastic.io",
+    "UC3AR3XT4",
+    "31"
+  ],
+  [
+    "Illya Soroka",
+    "Illya.Soroka@elastic.io",
+    "U01R8G3Q82X",
+    "31"
+  ],
+  [
+    "Stanislav Fomenko",
+    "stanislav.fomenko@elastic.io",
+    "U9711KAD7",
+    "31"
+  ],
+  [
+    "Oleg Oshurkov",
+    "oleg.oshurkov@elastic.io",
+    "U01QS1KFEJF",
+    "14"
+  ]
+]

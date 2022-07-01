@@ -4,15 +4,15 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 const sinon = require('sinon');
-
 const log = require('@elastic.io/component-logger')();
+const usersRows = require('../assets/usersRows.json');
 
 const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('Read spreadsheet', () => {
+xdescribe('Read spreadsheet', () => {
   let context;
 
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
@@ -124,5 +124,25 @@ describe('Read spreadsheet', () => {
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
     expect(body).to.deep.equal([[1, 3], [2, 4]]);
+  });
+  describe('real table', () => {
+    it('success', async () => {
+      const cfg = {
+        spreadsheetId: 'spreadsheetId',
+        worksheetId: 'worksheetId',
+        dimension: 'ROWS',
+        includeHeader: 'no',
+        emitBehaviour: 'fetchAll',
+      };
+      const msg = { body: {} };
+
+      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+        .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+        .reply(200, { values: usersRows });
+
+      await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+      // console.log(body);
+      // expect(body).to.deep.equal([[1, 2], [3, 4]]);
+    });
   });
 });
