@@ -6,6 +6,7 @@ const nock = require('nock');
 const sinon = require('sinon');
 const log = require('@elastic.io/component-logger')();
 const usersRows = require('../assets/usersRows.json');
+const usersColumns = require('../assets/usersColumns.json');
 
 const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
@@ -125,7 +126,7 @@ xdescribe('Read spreadsheet', () => {
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
     expect(body).to.deep.equal([[1, 3], [2, 4]]);
   });
-  describe('real table', () => {
+  describe.only('real table', () => {
     it('success', async () => {
       const cfg = {
         spreadsheetId: 'spreadsheetId',
@@ -142,6 +143,24 @@ xdescribe('Read spreadsheet', () => {
 
       await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
       // console.log(body);
+      // expect(body).to.deep.equal([[1, 2], [3, 4]]);
+    });
+    it.only('success', async () => {
+      const cfg = {
+        spreadsheetId: 'spreadsheetId',
+        worksheetId: 'worksheetId',
+        dimension: 'COLUMNS',
+        includeHeader: 'no',
+        emitBehaviour: 'fetchAll',
+      };
+      const msg = { body: {} };
+
+      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+        .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
+        .reply(200, { values: usersColumns });
+
+      const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+      console.log(body);
       // expect(body).to.deep.equal([[1, 2], [3, 4]]);
     });
   });
