@@ -252,6 +252,67 @@ Schema type|Json schema location
 -----------| -------------
 |Output   |[/schemas/createSpreadsheetRow.out.json](/schemas/createSpreadsheetRow.out.json)
 
+### Create/Upsert/Update Spreadsheet Row
+
+Action search the row/column identified by Upsert Criteria and find rows/columns where the value in the sheet matches the value in the incoming message:
+ * If more than one match is found, throw an error.
+ * If no matches are found, add a new row to the bottom of the sheet.
+ * If exactly one match is found, re-write this row/column with the values provided in the incoming message:
+    * If a value is provided in the message, replace the existing cell
+    * If the null value is provided in the message, clear the contents of the existing cell
+    * If the value provided in the message is undefined or the empty string, leave the contents of the cell as is.
+
+#### Configuration Fields
+
+* **Spreadsheet** - (dropdown, required): Spreadsheet name to make changes
+* **Worksheet** - (dropdown, required): Worksheet name of selected Spreadsheet to make changes
+* **Dimension** - (dropdown, required): The major dimension of the values, allowed values: `ROWS`, `COLUMNS`
+* **Input Mode** - (dropdown, non required): Options: `First Row As Headers`, `Array Based`. Default is `First Row As Headers`
+    * First Row As Headers (Default): generates input metadata based on values in first row or column cells (depend on dimension field)
+      This method has few limitations:
+        * There should be at least one value in first row/column;
+        * Values in first row cells must be distinct;
+        * There can be at most one empty cell in first row/column;
+    * Array Based: generates input as the sheet rows/column identifiers (A, B, C, 1, 2, 3, etc);
+* **Upsert Criteria** - (dropdown, required): List of available row/column headers (based on selected dimension)
+
+#### Input Metadata
+
+One input field for each row/column, all inputs optional except for the field identified by Upsert Criteria which is required.
+
+#### Output Metadata
+
+```json
+{
+    "type": "object",
+    "properties": {
+      "spreadsheetId": {
+        "type": "string",
+        "required": true
+      },
+      "tableRange": {
+        "type": "string",
+        "required": true
+      },
+      "updatedRange": {
+        "type": "string",
+        "required": true
+      },
+      "updatedRows": {
+        "type": "numeric",
+        "required": true
+      },
+      "updatedColumns": {
+        "type": "numeric",
+        "required": true
+      },
+      "updatedCells": {
+        "type": "numeric",
+        "required": true
+      }
+    }
+  }
+```
 
 ## Recommendations
 
