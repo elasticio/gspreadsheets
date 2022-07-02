@@ -7,13 +7,15 @@ const sinon = require('sinon');
 const log = require('@elastic.io/component-logger')();
 const usersRows = require('../assets/usersRows.json');
 const usersColumns = require('../assets/usersColumns.json');
+const usersColumnsNoHeader = require('../assets/usersColumnsNoHeader.json');
+const usersRowsNoHeader = require('../assets/usersRowsNoHeader.json');
 
 const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-xdescribe('Read spreadsheet', () => {
+describe('Read spreadsheet', () => {
   let context;
 
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
@@ -54,114 +56,118 @@ xdescribe('Read spreadsheet', () => {
       .reply(200, secret);
   });
 
-  it('success', async () => {
+  it('success, rows', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
       worksheetId: 'worksheetId',
       dimension: 'ROWS',
-      includeHeader: 'no',
+      useFirstRowAsHeader: 'yes',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
       .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
-      .reply(200, { values: [[1, 2], [3, 4]] });
+      .reply(200, { values: usersRows });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([[1, 2], [3, 4]]);
+    expect(body).to.deep.equal([
+      {
+        Name: 'name1',
+        Email: 'name1@email',
+        'Slack ID': 'UE48hdaD93name1',
+        'Region ID (refer next Sheet)': '31',
+      },
+      {
+        Name: 'name2',
+        Email: 'name2@email',
+        'Slack ID': 'UE48hdaD93name2',
+        'Region ID (refer next Sheet)': '32',
+      },
+      {
+        Name: 'name3',
+        Email: 'name3@email',
+        'Slack ID': 'UE48hdaD93name3',
+        'Region ID (refer next Sheet)': '33',
+      },
+    ]);
   });
-  it('success emit items individually', async () => {
-    const cfg = {
-      spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
-      dimension: 'ROWS',
-      includeHeader: 'no',
-      emitBehaviour: 'emitIndividually',
-    };
-    const msg = { body: {} };
-
-    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
-      .reply(200, { values: [[1, 2], [3, 4]] });
-
-    await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(context.emit.callCount).to.be.equal(2);
-    const firstEmit = context.emit.getCall(0).args[1].body;
-    expect(firstEmit).to.deep.equal([1, 2]);
-    const secondEmit = context.emit.getCall(1).args[1].body;
-    expect(secondEmit).to.deep.equal([3, 4]);
-  });
-  it('success skip first item, includeHeader: yes', async () => {
-    const cfg = {
-      spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
-      dimension: 'ROWS',
-      includeHeader: 'yes',
-      emitBehaviour: 'fetchAll',
-    };
-    const msg = { body: {} };
-
-    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
-      .reply(200, { values: [[1, 2], [3, 4]] });
-
-    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([[3, 4]]);
-  });
-  it('success, dimension: COLUMNS ', async () => {
+  it('success, columns', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
       worksheetId: 'worksheetId',
       dimension: 'COLUMNS',
-      includeHeader: 'no',
+      useFirstRowAsHeader: 'yes',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
       .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
-      .reply(200, { values: [[1, 3], [2, 4]] });
+      .reply(200, { values: usersColumns });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([[1, 3], [2, 4]]);
+    expect(body).to.deep.equal([
+      { Name: 'name1', Email: 'name1@email', Age: '33' },
+      { Name: 'name2', Email: 'name2@email', Age: '44' },
+      { Name: 'name3', Email: 'name3@email', Age: '5' },
+    ]);
   });
-  describe.only('real table', () => {
-    it('success', async () => {
-      const cfg = {
-        spreadsheetId: 'spreadsheetId',
-        worksheetId: 'worksheetId',
-        dimension: 'ROWS',
-        includeHeader: 'no',
-        emitBehaviour: 'fetchAll',
-      };
-      const msg = { body: {} };
+  it('success, columns, not use custom header', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'COLUMNS',
+      useFirstRowAsHeader: 'no',
+      emitBehaviour: 'fetchAll',
+    };
+    const msg = { body: {} };
 
-      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
-        .reply(200, { values: usersRows });
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
+      .reply(200, { values: usersColumnsNoHeader });
 
-      await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-      // console.log(body);
-      // expect(body).to.deep.equal([[1, 2], [3, 4]]);
-    });
-    it.only('success', async () => {
-      const cfg = {
-        spreadsheetId: 'spreadsheetId',
-        worksheetId: 'worksheetId',
-        dimension: 'COLUMNS',
-        includeHeader: 'no',
-        emitBehaviour: 'fetchAll',
-      };
-      const msg = { body: {} };
+    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(body).to.deep.equal([
+      { A: 'name1', B: 'name1@email', C: '33' },
+      { A: 'name2', B: 'name2@email', C: '44' },
+      { A: 'name3', B: 'name3@email', C: '5' },
+    ]);
+  });
+  it('success, rows, not use custom header', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'ROWS',
+      useFirstRowAsHeader: 'no',
+      emitBehaviour: 'fetchAll',
+    };
+    const msg = { body: {} };
 
-      nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
-        .reply(200, { values: usersColumns });
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .reply(200, { values: usersRowsNoHeader });
 
-      const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-      console.log(body);
-      // expect(body).to.deep.equal([[1, 2], [3, 4]]);
-    });
+    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(body).to.deep.equal([
+      {
+        1: 'name1',
+        2: 'name1@email',
+        3: 'UE48hdaD93name1',
+        4: '31',
+      },
+      {
+        1: 'name2',
+        2: 'name2@email',
+        3: 'UE48hdaD93name2',
+        4: '32',
+      },
+      {
+        1: 'name3',
+        2: 'name3@email',
+        3: 'UE48hdaD93name3',
+        4: '33',
+      },
+    ]);
   });
 });

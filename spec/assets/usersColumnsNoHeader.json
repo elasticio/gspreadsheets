@@ -1,10 +1,5 @@
 [
   [
-    "Name",
-    "Email",
-    "Age"
-  ],
-  [
     "name1",
     "name1@email",
     "33"

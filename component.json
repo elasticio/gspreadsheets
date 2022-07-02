@@ -126,7 +126,7 @@
             "COLUMNS": "Columns"
           }
         },
-        "includeHeader": {
+        "useFirstRowAsHeader": {
           "viewClass": "SelectView",
           "prompt": "Yes/No",
           "label": "Use first row or column as a header",
