@@ -225,7 +225,7 @@ You can find more information in the [Google Sheets API Documentation](https://d
 
 ### Read Spreadsheet
 
-Action read spreadsheet. This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get). All data structures and limitations are the same to Google API.
+This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get). All data structures and limitations are the same to Google API.
 
 #### Configuration Fields
 
