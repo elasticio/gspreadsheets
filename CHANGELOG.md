@@ -1,7 +1,10 @@
+## 3.1.0 (July 15, 2022)
+* Added `Read Spreadsheet` action
+
 ## 3.0.0 (June 20, 2022)
 
 * Use Faceless service for authentication 
-* Added `Read Spreadsheet` action
+* Add `Create/Upsert/Update Spreadsheet Row` action
  
 ## 2.0.3 (May 20, 2022)
 
