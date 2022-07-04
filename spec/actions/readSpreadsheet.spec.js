@@ -9,6 +9,7 @@ const usersRows = require('../assets/usersRows.json');
 const usersColumns = require('../assets/usersColumns.json');
 const usersColumnsNoHeader = require('../assets/usersColumnsNoHeader.json');
 const usersRowsNoHeader = require('../assets/usersRowsNoHeader.json');
+const { numToLetters } = require('../../lib/helpers/utils');
 
 const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
@@ -36,9 +37,7 @@ describe('Read spreadsheet', () => {
     },
   };
   const secretId = 'secretId';
-  afterEach(() => {
-    nock.cleanAll();
-  });
+  afterEach(nock.cleanAll);
   before(() => {
     if (fs.existsSync('.env')) {
       // eslint-disable-next-line global-require
@@ -169,5 +168,56 @@ describe('Read spreadsheet', () => {
         4: '33',
       },
     ]);
+  });
+  it('success, rows, not use custom header, emitIndividually', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'ROWS',
+      useFirstRowAsHeader: 'no',
+      emitBehaviour: 'emitIndividually',
+    };
+    const msg = { body: {} };
+
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .reply(200, { values: usersRowsNoHeader });
+
+    await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(context.emit.callCount).to.be.equal(3);
+    const firstEmit = context.emit.getCall(0).args[1].body;
+    expect(firstEmit).to.deep.equal({
+      1: 'name1',
+      2: 'name1@email',
+      3: 'UE48hdaD93name1',
+      4: '31',
+    });
+    const secondEmit = context.emit.getCall(1).args[1].body;
+    expect(secondEmit).to.deep.equal({
+      1: 'name2',
+      2: 'name2@email',
+      3: 'UE48hdaD93name2',
+      4: '32',
+    });
+    const thirdEmit = context.emit.getCall(2).args[1].body;
+    expect(thirdEmit).to.deep.equal({
+      1: 'name3',
+      2: 'name3@email',
+      3: 'UE48hdaD93name3',
+      4: '33',
+    });
+  });
+
+  describe('numToLetters', () => {
+    it('numToLetters', () => {
+      expect(numToLetters(0)).to.be.equal(undefined);
+      expect(numToLetters(1)).to.be.equal('A');
+      expect(numToLetters(2)).to.be.equal('B');
+      expect(numToLetters(26)).to.be.equal('Z');
+      expect(numToLetters(27)).to.be.equal('AA');
+      expect(numToLetters(28)).to.be.equal('AB');
+      expect(numToLetters(345)).to.be.equal('MG');
+      expect(numToLetters(1234)).to.be.equal('AUL');
+    });
   });
 });
