@@ -5,7 +5,7 @@ module.exports = {
     'mocha': true
   },
   'rules': {
-    'max-len': ['error', { 'code': 180 }],
+    'max-len': ['error', { 'code': 220 }],
     'no-plusplus': 'off',
   },
 };

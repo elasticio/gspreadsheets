@@ -9,7 +9,7 @@ const usersRows = require('../assets/usersRows.json');
 const usersColumns = require('../assets/usersColumns.json');
 const usersColumnsNoHeader = require('../assets/usersColumnsNoHeader.json');
 const usersRowsNoHeader = require('../assets/usersRowsNoHeader.json');
-const { numToLetters } = require('../../lib/helpers/utils');
+const { columnToLetter } = require('../../lib/helpers/utils');
 
 const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
@@ -208,16 +208,16 @@ describe('Read spreadsheet', () => {
     });
   });
 
-  describe('numToLetters', () => {
-    it('numToLetters', () => {
-      expect(numToLetters(0)).to.be.equal(undefined);
-      expect(numToLetters(1)).to.be.equal('A');
-      expect(numToLetters(2)).to.be.equal('B');
-      expect(numToLetters(26)).to.be.equal('Z');
-      expect(numToLetters(27)).to.be.equal('AA');
-      expect(numToLetters(28)).to.be.equal('AB');
-      expect(numToLetters(345)).to.be.equal('MG');
-      expect(numToLetters(1234)).to.be.equal('AUL');
+  describe('columnToLetter', () => {
+    it('columnToLetter', () => {
+      expect(columnToLetter(0)).to.be.equal('');
+      expect(columnToLetter(1)).to.be.equal('A');
+      expect(columnToLetter(2)).to.be.equal('B');
+      expect(columnToLetter(26)).to.be.equal('Z');
+      expect(columnToLetter(27)).to.be.equal('AA');
+      expect(columnToLetter(28)).to.be.equal('AB');
+      expect(columnToLetter(345)).to.be.equal('MG');
+      expect(columnToLetter(1234)).to.be.equal('AUL');
     });
   });
 });
