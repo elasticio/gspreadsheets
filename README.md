@@ -227,7 +227,7 @@ You can find more information in the [Google Sheets API Documentation](https://d
 
 Action read spreadsheet. This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get). All data structures and limitations are the same to Google API.
 
-*Note*: Place your table it top left corner to data be processed in right way. 
+*Important!*: Place (start) your table in the top left corner (cell) for data to be processed in the right way. 
 
 #### Configuration Fields
 
