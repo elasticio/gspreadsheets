@@ -9,7 +9,7 @@ const usersRows = require('../assets/usersRows.json');
 const usersColumns = require('../assets/usersColumns.json');
 const usersColumnsNoHeader = require('../assets/usersColumnsNoHeader.json');
 const usersRowsNoHeader = require('../assets/usersRowsNoHeader.json');
-const { columnToLetter } = require('../../lib/helpers/utils');
+const { columnToLetter } = require('../../lib/common');
 
 const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 
