@@ -219,7 +219,7 @@ describe('Read spreadsheet', () => {
 
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
       .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
-      .reply(200, { values: [] });
+      .reply(200, {});
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
     expect(body).to.be.deep.equal([]);
