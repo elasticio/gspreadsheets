@@ -151,7 +151,15 @@
       },
       "metadata": {
         "in": {},
-        "out": {}
+        "out": {
+          "type": "object",
+          "properties": {
+            "result": {
+              "type": "array",
+              "items": {}
+            }
+          }
+        }
       }
     },
     "createSpreadsheet": {

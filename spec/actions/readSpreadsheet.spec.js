@@ -70,7 +70,7 @@ describe('Read spreadsheet', () => {
       .reply(200, { values: usersRows });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([
+    expect(body.result).to.deep.equal([
       {
         Name: 'name1',
         Email: 'name1@email',
@@ -106,7 +106,7 @@ describe('Read spreadsheet', () => {
       .reply(200, { values: usersColumns });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([
+    expect(body.result).to.deep.equal([
       { Name: 'name1', Email: 'name1@email', Age: '33' },
       { Name: 'name2', Email: 'name2@email', Age: '44' },
       { Name: 'name3', Email: 'name3@email', Age: '5' },
@@ -127,7 +127,7 @@ describe('Read spreadsheet', () => {
       .reply(200, { values: usersColumnsNoHeader });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([
+    expect(body.result).to.deep.equal([
       { A: 'name1', B: 'name1@email', C: '33' },
       { A: 'name2', B: 'name2@email', C: '44' },
       { A: 'name3', B: 'name3@email', C: '5' },
@@ -148,7 +148,7 @@ describe('Read spreadsheet', () => {
       .reply(200, { values: usersRowsNoHeader });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.deep.equal([
+    expect(body.result).to.deep.equal([
       {
         1: 'name1',
         2: 'name1@email',
@@ -185,21 +185,21 @@ describe('Read spreadsheet', () => {
 
     await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
     expect(context.emit.callCount).to.be.equal(3);
-    const firstEmit = context.emit.getCall(0).args[1].body;
+    const firstEmit = context.emit.getCall(0).args[1].body.result;
     expect(firstEmit).to.deep.equal({
       1: 'name1',
       2: 'name1@email',
       3: 'UE48hdaD93name1',
       4: '31',
     });
-    const secondEmit = context.emit.getCall(1).args[1].body;
+    const secondEmit = context.emit.getCall(1).args[1].body.result;
     expect(secondEmit).to.deep.equal({
       1: 'name2',
       2: 'name2@email',
       3: 'UE48hdaD93name2',
       4: '32',
     });
-    const thirdEmit = context.emit.getCall(2).args[1].body;
+    const thirdEmit = context.emit.getCall(2).args[1].body.result;
     expect(thirdEmit).to.deep.equal({
       1: 'name3',
       2: 'name3@email',
@@ -222,7 +222,7 @@ describe('Read spreadsheet', () => {
       .reply(200, {});
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
-    expect(body).to.be.deep.equal([]);
+    expect(body.result).to.be.deep.equal([]);
   });
 
   describe('columnToLetter', () => {

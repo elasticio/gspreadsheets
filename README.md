@@ -243,8 +243,8 @@ N/A
 
 #### Output Metadata
 
-If `Emit Behavior` = `Fetch All`: array of items.
-If `Emit Behavior` = `Emit Individually`: each item emitted individually.
+If `Emit Behavior` = `Fetch All`: object with key `result` - array of items.
+If `Emit Behavior` = `Emit Individually`:  object with key `result` - each item emitted individually.
 
 ### Create new Spreadsheet
 
