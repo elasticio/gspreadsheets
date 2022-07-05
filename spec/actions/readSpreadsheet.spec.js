@@ -207,6 +207,23 @@ describe('Read spreadsheet', () => {
       4: '33',
     });
   });
+  it('should empty array (empty table)', async () => {
+    const cfg = {
+      spreadsheetId: 'spreadsheetId',
+      worksheetId: 'worksheetId',
+      dimension: 'ROWS',
+      useFirstRowAsHeader: 'no',
+      emitBehaviour: 'fetchAll',
+    };
+    const msg = { body: {} };
+
+    nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .reply(200, { values: [] });
+
+    const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
+    expect(body).to.be.deep.equal([]);
+  });
 
   describe('columnToLetter', () => {
     it('columnToLetter', () => {
