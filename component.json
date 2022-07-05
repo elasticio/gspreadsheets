@@ -3,7 +3,7 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
-  "version": "3.0.1-dev.6",
+  "version": "3.0.1-dev.7",
   "authClientTypes": [
     "oauth2"
   ],
@@ -140,6 +140,7 @@
         "emitBehaviour": {
           "label": "Emit Behaviour",
           "viewClass": "SelectView",
+          "prompt": "Select Behavior",
           "required": true,
           "order": 2,
           "model": {
