@@ -25,7 +25,7 @@ const listWorksheetsReply = {
   ],
 };
 
-describe('Add new row', () => {
+xdescribe('Add new row', () => {
   let emitter;
 
   let configuration;

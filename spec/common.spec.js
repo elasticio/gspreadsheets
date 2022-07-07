@@ -5,7 +5,7 @@ const common = require('../lib/common');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('common test', () => {
+xdescribe('common test', () => {
   describe('getRetriesFromConfig test', () => {
     it('should return 3', async () => {
       const configuration = { retries: 3 };
@@ -14,7 +14,7 @@ describe('common test', () => {
     });
 
     it('should return 5, empty cfg', async () => {
-      const configuration = { };
+      const configuration = {};
       const result = common.getRetriesFromConfig(configuration);
       expect(result).to.equal(5);
     });

@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 let context;
 
-describe('Verify Credentials', () => {
+xdescribe('Verify Credentials', () => {
   afterEach(() => {
     nock.cleanAll();
   });
