@@ -25,7 +25,18 @@ const replyListSpreadseets = {
   ],
 };
 const spreadsheetId = '1U6lUeRnBzyUiWNQwbNIG18oKLYbjTQddGe-W7AiT2tA';
-const worksheetId = 'Sheet A';
+const worksheetId = '23742873';
+const worksheetName = 'Sheet A';
+const listWorksheetsReply = {
+  sheets: [
+    {
+      properties: {
+        sheetId: worksheetId,
+        title: worksheetName,
+      },
+    },
+  ],
+};
 
 describe('Google client', () => {
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
@@ -238,23 +249,31 @@ describe('Google client', () => {
     });
 
     it('getSpreadsheet', async () => {
+      const listWorksheets = nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetId)}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, ['done'], []);
       const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
       const result = await client.callFunction(client.getSpreadsheet);
       expect(result.data).to.deep.equal(['done']);
+      expect(listWorksheets.isDone()).to.be.equal(true);
     });
 
     it('writeToSpreadsheet', async () => {
       const values = [1, -6.8, 'string_line', true];
+      const listWorksheets = nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetId)}:append`, { majorDimension: 'ROWS', values: [values] })
+        .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}:append`, { majorDimension: 'ROWS', values: [values] })
         .query({ valueInputOption: 'RAW' })
         .reply(200, ['done'], []);
       const client = new GoogleOauth2Client({ ...configuration, worksheetId, spreadsheetId }, context);
       const result = await client.callFunction(client.writeToSpreadsheet, { values });
       expect(result.data).to.deep.equal(['done']);
+      expect(listWorksheets.isDone()).to.be.equal(true);
     });
 
     it('getDrive', async () => {

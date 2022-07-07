@@ -12,12 +12,24 @@ const upsertSpreadsheetRow = require('../../lib/actions/upsertSpreadsheetRow');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('create/update/upsert row/column action test', async () => {
+let worksheetId = '23742873';
+const worksheetName = 'Sheet A';
+const listWorksheetsReply = {
+  sheets: [
+    {
+      properties: {
+        sheetId: worksheetId,
+        title: worksheetName,
+      },
+    },
+  ],
+};
+
+xdescribe('create/update/upsert row/column action test', async () => {
   let emitter;
   let configuration;
   let secretId;
   let spreadsheetId;
-  let worksheetId;
   const secret = {
     data: {
       attributes: {
@@ -38,7 +50,7 @@ describe('create/update/upsert row/column action test', async () => {
     }
     secretId = process.env.SECRET_ID || 'secretId';
     spreadsheetId = process.env.SPREARSHEET_ID || 'some_id';
-    worksheetId = process.env.WORKSHEET_ID || 'some_worksheet';
+    worksheetId = process.env.WORKSHEET_ID || worksheetId;
     configuration = {
       secretId,
       spreadsheetId,
@@ -134,8 +146,11 @@ describe('create/update/upsert row/column action test', async () => {
         });
 
         it('more than one match is found, throw an error', async () => {
+          const listWorksheets1 = nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetName}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -166,6 +181,9 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          const listWorksheets2 = nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           configuration.dimension = 'ROWS';
           configuration.mode = 'header';
           configuration.upsertCriteria = 'ColumnC';
@@ -178,6 +196,8 @@ describe('create/update/upsert row/column action test', async () => {
             },
           };
           await expect(upsertSpreadsheetRow.process.call(emitter, msg, configuration)).be.rejectedWith('More than one rows found');
+          expect(listWorksheets1.isDone()).to.be.equal(true);
+          expect(listWorksheets2.isDone()).to.be.equal(true);
         });
 
         it('exactly one match is found', async () => {

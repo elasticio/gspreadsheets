@@ -9,7 +9,7 @@ const createSpreadsheet = require('../../lib/actions/createSpreadsheet');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe('Add new spreadsheet', () => {
+xdescribe('Add new spreadsheet', () => {
   let emitter;
 
   let configuration;
