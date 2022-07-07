@@ -100,7 +100,7 @@ describe('Add new row', () => {
       });
 
     const result = await createSpreadsheetRow.listWorksheets.call(emitter, configuration);
-    expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
+    expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
   });
 
   it('Generates metadata for array mode', async () => {

@@ -218,7 +218,7 @@ describe('Google client', () => {
 
       const googleOauth2Client = new GoogleOauth2Client(configuration, context);
       const result = await googleOauth2Client.callFunction(googleOauth2Client.listOfWorksheets, spreadsheetId);
-      expect(result).to.deep.equal({ Sheet1: 'Sheet1', Sheet2: 'Sheet2' });
+      expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
     });
 
     it('createSpreadsheets', async () => {

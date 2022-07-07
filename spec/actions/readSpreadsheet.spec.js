@@ -16,7 +16,7 @@ const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-xdescribe('Read spreadsheet', () => {
+describe('Read spreadsheet', () => {
   let context;
 
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
