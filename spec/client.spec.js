@@ -38,7 +38,7 @@ const listWorksheetsReply = {
   ],
 };
 
-xdescribe('Google client', () => {
+describe('Google client', () => {
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
   process.env.ELASTICIO_API_USERNAME = 'user';
   process.env.ELASTICIO_API_KEY = 'apiKey';

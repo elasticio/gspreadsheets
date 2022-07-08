@@ -12,7 +12,7 @@ const commonSelectModels = require('../../lib/commonSelectModels');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-xdescribe('commonSelectModels test', () => {
+describe('commonSelectModels test', () => {
   let emitter;
   const spreadsheetId = '1hmlsXhpNf0AVFlVEegsugxeWQZoZicBlFMqAjomVexs';
   let configuration;

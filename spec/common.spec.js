@@ -5,7 +5,7 @@ const common = require('../lib/common');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-xdescribe('common test', () => {
+describe('common test', () => {
   describe('getRetriesFromConfig test', () => {
     it('should return 3', async () => {
       const configuration = { retries: 3 };

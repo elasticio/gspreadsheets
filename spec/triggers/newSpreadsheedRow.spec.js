@@ -10,7 +10,7 @@ const { process: processTrigger } = require(
   '../../lib/triggers/newSpreadsheetRow',
 );
 
-xdescribe('newSpreadsheetRow', () => {
+describe('newSpreadsheetRow', () => {
   let configuration;
   let snapshot;
   let context;

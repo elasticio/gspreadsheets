@@ -25,7 +25,7 @@ const listWorksheetsReply = {
   ],
 };
 
-xdescribe('Add new row', () => {
+describe('Add new row', () => {
   let emitter;
 
   let configuration;
@@ -95,7 +95,6 @@ xdescribe('Add new row', () => {
     expect(result.body).to.deep.equal({ success: 'OK' });
     expect(listWorksheets.isDone()).to.be.equal(true);
   });
-
   it('list Worksheets', async () => {
     nock('https://sheets.googleapis.com')
       .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
@@ -119,7 +118,6 @@ xdescribe('Add new row', () => {
     const result = await createSpreadsheetRow.listWorksheets.call(emitter, configuration);
     expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
   });
-
   it('Generates metadata for array mode', async () => {
     configuration.mode = 'array';
     const result = await createSpreadsheetRow.getMetaModel.call(emitter, configuration);
@@ -127,12 +125,13 @@ xdescribe('Add new row', () => {
     expect(result.out).to.exist;
     expect(result.in.properties.values).to.be.exist;
   });
-  xit('Generates metadata for first header mode', async () => {
+  it('Generates metadata for first header mode', async () => {
     configuration.mode = 'header';
     const listWorksheets = nock('https://sheets.googleapis.com')
       .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
       .reply(200, listWorksheetsReply);
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${worksheetName}`)
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
       .reply(200, {
         values: [['header1', 'header 2'], ['value1', 'value2']],
       });
@@ -143,12 +142,12 @@ xdescribe('Add new row', () => {
     expect(result.in.properties.header2).to.be.exist;
     expect(listWorksheets.isDone()).to.be.equal(true);
   });
-  xit('Header mode error if values not present in first row', async () => {
+  it('Header mode error if values not present in first row', async () => {
     configuration.mode = 'header';
     const listWorksheets = nock('https://sheets.googleapis.com')
       .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
       .reply(200, listWorksheetsReply);
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${worksheetName}`)
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
       .reply(200, {
         values: [[], ['value1', 'value2']],
       });
@@ -160,12 +159,12 @@ xdescribe('Add new row', () => {
     }
     expect(listWorksheets.isDone()).to.be.equal(true);
   });
-  xit('Header mode throw error if values not unique', async () => {
+  it('Header mode throw error if values not unique', async () => {
     configuration.mode = 'header';
     const listWorksheets = nock('https://sheets.googleapis.com')
       .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
       .reply(200, listWorksheetsReply);
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${worksheetName}`)
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
       .reply(200, {
         values: [['header1', 'header1'], ['value1', 'value2']],
       });
@@ -177,12 +176,12 @@ xdescribe('Add new row', () => {
     }
     expect(listWorksheets.isDone()).to.be.equal(true);
   });
-  xit('Header mode throw errors if values is blank in first mode', async () => {
+  it('Header mode throw errors if values is blank in first mode', async () => {
     configuration.mode = 'header';
     const listWorksheets = nock('https://sheets.googleapis.com')
       .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
       .reply(200, listWorksheetsReply);
-    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${worksheetName}`)
+    nock('https://sheets.googleapis.com').get(`/v4/spreadsheets/${configuration.spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
       .reply(200, {
         values: [['header1', '', 'header3'], ['value1', 'value2']],
       });
