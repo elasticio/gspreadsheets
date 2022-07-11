@@ -16,7 +16,20 @@ const readSpreadsheet = require('../../lib/actions/readSpreadsheet');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-xdescribe('Read spreadsheet', () => {
+const worksheetId = '23742873';
+const worksheetName = 'Sheet A';
+const listWorksheetsReply = {
+  sheets: [
+    {
+      properties: {
+        sheetId: worksheetId,
+        title: worksheetName,
+      },
+    },
+  ],
+};
+
+describe('Read spreadsheet', () => {
   let context;
 
   process.env.ELASTICIO_API_URI = 'https://app.example.io';
@@ -58,15 +71,18 @@ xdescribe('Read spreadsheet', () => {
   it('success, rows', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
+      worksheetId,
       dimension: 'ROWS',
       useFirstRowAsHeader: 'yes',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${encodeURIComponent(worksheetName)}?majorDimension=ROWS`)
       .reply(200, { values: usersRows });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
@@ -94,15 +110,18 @@ xdescribe('Read spreadsheet', () => {
   it('success, columns', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
+      worksheetId,
       dimension: 'COLUMNS',
       useFirstRowAsHeader: 'yes',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${encodeURIComponent(worksheetName)}?majorDimension=COLUMNS`)
       .reply(200, { values: usersColumns });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
@@ -115,15 +134,18 @@ xdescribe('Read spreadsheet', () => {
   it('success, columns, not use custom header', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
+      worksheetId,
       dimension: 'COLUMNS',
       useFirstRowAsHeader: 'no',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=COLUMNS`)
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${encodeURIComponent(worksheetName)}?majorDimension=COLUMNS`)
       .reply(200, { values: usersColumnsNoHeader });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
@@ -136,15 +158,18 @@ xdescribe('Read spreadsheet', () => {
   it('success, rows, not use custom header', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
+      worksheetId,
       dimension: 'ROWS',
       useFirstRowAsHeader: 'no',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${encodeURIComponent(worksheetName)}?majorDimension=ROWS`)
       .reply(200, { values: usersRowsNoHeader });
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
@@ -172,15 +197,18 @@ xdescribe('Read spreadsheet', () => {
   it('success, rows, not use custom header, emitIndividually', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
+      worksheetId,
       dimension: 'ROWS',
       useFirstRowAsHeader: 'no',
       emitBehaviour: 'emitIndividually',
     };
     const msg = { body: {} };
 
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${encodeURIComponent(worksheetName)}?majorDimension=ROWS`)
       .reply(200, { values: usersRowsNoHeader });
 
     await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
@@ -210,15 +238,18 @@ xdescribe('Read spreadsheet', () => {
   it('should empty array (empty table)', async () => {
     const cfg = {
       spreadsheetId: 'spreadsheetId',
-      worksheetId: 'worksheetId',
+      worksheetId,
       dimension: 'ROWS',
       useFirstRowAsHeader: 'no',
       emitBehaviour: 'fetchAll',
     };
     const msg = { body: {} };
 
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
     nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${cfg.worksheetId}?majorDimension=ROWS`)
+      .get(`/v4/spreadsheets/${cfg.spreadsheetId}/values/${encodeURIComponent(worksheetName)}?majorDimension=ROWS`)
       .reply(200, {});
 
     const { body } = await readSpreadsheet.process.call(context, msg, { ...cfg, secretId });
