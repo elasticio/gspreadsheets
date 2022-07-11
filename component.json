@@ -3,7 +3,7 @@
   "description": "Spreadsheets from Google",
   "docsUrl": "/components/gspreadsheet/actions#add-spreadsheet-row",
   "url": "http://www.google.com/spreadsheets/",
-  "version": "3.0.0-dev.4",
+  "version": "3.0.1-dev.18",
   "authClientTypes": [
     "oauth2"
   ],
@@ -88,6 +88,80 @@
     }
   },
   "actions": {
+    "readSpreadsheet": {
+      "main": "./lib/actions/readSpreadsheet.js",
+      "title": "Read Spreadsheet",
+      "help": {
+        "description": "Action to read spreadsheet.",
+        "link": "/components/gspreadsheet/actions#read-spreadsheet"
+      },
+      "fields": {
+        "spreadsheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "order": 10,
+          "model": "listSpreadsheets"
+        },
+        "worksheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your worksheet (spreadsheet required)",
+          "label": "Worksheet",
+          "required": true,
+          "order": 8,
+          "model": "listWorksheets",
+          "require": [
+            "spreadsheetId"
+          ]
+        },
+        "dimension": {
+          "viewClass": "SelectView",
+          "prompt": "Select dimension",
+          "label": "Dimension",
+          "required": true,
+          "order": 6,
+          "model": {
+            "ROWS": "Rows",
+            "COLUMNS": "Columns"
+          }
+        },
+        "useFirstRowAsHeader": {
+          "viewClass": "SelectView",
+          "prompt": "Yes/No",
+          "label": "Use first row or column as a header",
+          "required": true,
+          "order": 4,
+          "model": {
+            "yes": "Yes",
+            "no": "No"
+          }
+        },
+        "emitBehaviour": {
+          "label": "Emit Behaviour",
+          "viewClass": "SelectView",
+          "prompt": "Select Behavior",
+          "required": true,
+          "order": 2,
+          "model": {
+            "emitIndividually": "Emit Individually",
+            "fetchAll": "Fetch All"
+          }
+        }
+      },
+      "metadata": {
+        "in": {},
+        "out": {
+          "type": "object",
+          "properties": {
+            "result": {
+              "type": "array",
+              "items": {}
+            }
+          }
+        }
+      }
+    },
     "createSpreadsheet": {
       "main": "./lib/actions/createSpreadsheet.js",
       "title": "Create new Spreadsheet",
@@ -138,6 +212,75 @@
             "header": "First Row As Headers",
             "array": "Array Based"
           }
+        }
+      },
+      "dynamicMetadata": true
+    },
+    "upsertSpreadsheetRow": {
+      "main": "./lib/actions/upsertSpreadsheetRow.js",
+      "title": "Create/Upsert/Update Spreadsheet Row",
+      "help": {
+        "description": "Action appends new row/column to spreadsheet or update it",
+        "link": "/components/gspreadsheet/actions#upsert-spreadsheet-row"
+      },
+      "fields": {
+        "spreadsheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your spreadsheet",
+          "label": "Spreadsheet",
+          "required": true,
+          "order": 5,
+          "model": "listSpreadsheets"
+        },
+        "worksheetId": {
+          "viewClass": "SelectView",
+          "prompt": "Select your worksheet",
+          "label": "Worksheet",
+          "order": 4,
+          "required": true,
+          "model": "listWorksheets",
+          "require": [
+            "spreadsheetId"
+          ]
+        },
+        "dimension": {
+          "viewClass": "SelectView",
+          "prompt": "Select dimension",
+          "label": "Dimension",
+          "required": true,
+          "order": 3,
+          "model": {
+            "ROWS": "Rows",
+            "COLUMNS": "Columns"
+          }
+        },
+        "mode": {
+          "viewClass": "SelectView",
+          "prompt": "Choose input mode. Default: First Row As Headers.",
+          "required": false,
+          "label": "Input Mode",
+          "order": 2,
+          "help": {
+            "description": "Input mode: First Row As Headers (Default): generates input based on values in first row cells. Array Based: generates input for array of `values`.",
+            "link": "/components/gspreadsheet/actions#add-spreadsheet-row"
+          },
+          "model": {
+            "header": "First Row As Headers",
+            "array": "Array Based"
+          }
+        },
+        "upsertCriteria": {
+          "viewClass": "SelectView",
+          "prompt": "Select your Upsert Criteria",
+          "label": "Upsert Criteria",
+          "order": 1,
+          "required": true,
+          "model": "getUpsertCriteria",
+          "require": [
+            "spreadsheetId",
+            "worksheetId",
+            "dimension"
+          ]
         }
       },
       "dynamicMetadata": true

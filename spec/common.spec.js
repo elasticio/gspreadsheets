@@ -14,7 +14,7 @@ describe('common test', () => {
     });
 
     it('should return 5, empty cfg', async () => {
-      const configuration = { };
+      const configuration = {};
       const result = common.getRetriesFromConfig(configuration);
       expect(result).to.equal(5);
     });

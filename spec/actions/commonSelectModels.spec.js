@@ -116,8 +116,8 @@ describe('commonSelectModels test', () => {
       });
     const result = await commonSelectModels.listWorksheets.call(emitter, configuration);
     expect(result).to.deep.equal({
-      'Sheet A': 'Sheet A',
-      'Sheet B': 'Sheet B',
+      387964220: 'Sheet A',
+      1462989167: 'Sheet B',
     });
   });
 });
