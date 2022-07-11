@@ -12,12 +12,24 @@ const upsertSpreadsheetRow = require('../../lib/actions/upsertSpreadsheetRow');
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
+let worksheetId = '23742873';
+const worksheetName = 'Sheet A';
+const listWorksheetsReply = {
+  sheets: [
+    {
+      properties: {
+        sheetId: worksheetId,
+        title: worksheetName,
+      },
+    },
+  ],
+};
+
 describe('create/update/upsert row/column action test', async () => {
   let emitter;
   let configuration;
   let secretId;
   let spreadsheetId;
-  let worksheetId;
   const secret = {
     data: {
       attributes: {
@@ -38,7 +50,7 @@ describe('create/update/upsert row/column action test', async () => {
     }
     secretId = process.env.SECRET_ID || 'secretId';
     spreadsheetId = process.env.SPREARSHEET_ID || 'some_id';
-    worksheetId = process.env.WORKSHEET_ID || 'some_worksheet';
+    worksheetId = process.env.WORKSHEET_ID || worksheetId;
     configuration = {
       secretId,
       spreadsheetId,
@@ -61,8 +73,11 @@ describe('create/update/upsert row/column action test', async () => {
     describe('dimension = ROWS', async () => {
       describe('mode = header', async () => {
         it('no matches are found, going to create new row', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -93,8 +108,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}:append`, {
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}:append`, {
               majorDimension: 'ROWS',
               values: [[
                 'NewColumnA',
@@ -134,8 +153,11 @@ describe('create/update/upsert row/column action test', async () => {
         });
 
         it('more than one match is found, throw an error', async () => {
+          const listWorksheets1 = nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -166,6 +188,9 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          const listWorksheets2 = nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           configuration.dimension = 'ROWS';
           configuration.mode = 'header';
           configuration.upsertCriteria = 'ColumnC';
@@ -178,11 +203,16 @@ describe('create/update/upsert row/column action test', async () => {
             },
           };
           await expect(upsertSpreadsheetRow.process.call(emitter, msg, configuration)).be.rejectedWith('More than one rows found');
+          expect(listWorksheets1.isDone()).to.be.equal(true);
+          expect(listWorksheets2.isDone()).to.be.equal(true);
         });
 
         it('exactly one match is found', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -213,8 +243,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21A2%3AD2?valueInputOption=RAW`,
+            .put(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21A2%3AD2?valueInputOption=RAW`,
               {
                 majorDimension: 'ROWS',
                 values: [
@@ -252,8 +286,11 @@ describe('create/update/upsert row/column action test', async () => {
         });
 
         it('exactly one match is found, empty header', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -275,9 +312,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
-
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}:append`, { majorDimension: 'ROWS', values: [['NewColumnA', 'valueB1', 'valueC1']] })
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}:append`, { majorDimension: 'ROWS', values: [['NewColumnA', 'valueB1', 'valueC1']] })
             .query({ valueInputOption: 'RAW' })
             .reply(200, {
               spreadsheetId,
@@ -308,8 +348,11 @@ describe('create/update/upsert row/column action test', async () => {
 
       describe('mode = array', async () => {
         it('no matches are found, going to create new row, mode = array', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -340,8 +383,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}:append`, {
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}:append`, {
               majorDimension: 'ROWS',
               values: [[
                 'NewColumnA',
@@ -381,8 +428,11 @@ describe('create/update/upsert row/column action test', async () => {
         });
 
         it('more than one match is found, throw an error, mode = array', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -413,6 +463,9 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           configuration.dimension = 'ROWS';
           configuration.mode = 'array';
           configuration.upsertCriteria = 'C';
@@ -428,8 +481,11 @@ describe('create/update/upsert row/column action test', async () => {
         });
 
         it('exactly one match is found, mode = array', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -460,8 +516,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21A2%3AD2?valueInputOption=RAW`,
+            .put(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21A2%3AD2?valueInputOption=RAW`,
               {
                 majorDimension: 'ROWS',
                 values: [
@@ -503,8 +563,11 @@ describe('create/update/upsert row/column action test', async () => {
     describe('dimension = COLUMNS', async () => {
       describe('mode = header', async () => {
         it('no matches are found, going to create new column', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -526,8 +589,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21D1%3AD3:append`, {
               majorDimension: 'COLUMNS',
               values: [
                 ['ValueRow1',
@@ -561,10 +628,12 @@ describe('create/update/upsert row/column action test', async () => {
           expect(result.body.updatedColumns).to.equal(1);
           expect(result.body.updatedCells).to.equal(3);
         });
-
         it('more than one match column is found, throw an error', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -586,8 +655,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21D1%3AD3:append`, {
               majorDimension: 'COLUMNS',
               values: [
                 ['ValueRow1',
@@ -617,10 +690,12 @@ describe('create/update/upsert row/column action test', async () => {
           };
           await expect(upsertSpreadsheetRow.process.call(emitter, msg, configuration)).be.rejectedWith('More than one rows found');
         });
-
         it('exactly one match column is found', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -642,8 +717,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21B1%3AB3`, { majorDimension: 'COLUMNS', values: [['ValueRow1', 'valueB2', 'ValueRow3']] })
+            .put(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21B1%3AB3`, { majorDimension: 'COLUMNS', values: [['ValueRow1', 'valueB2', 'ValueRow3']] })
             .query({ valueInputOption: 'RAW' })
             .reply(200, {
               spreadsheetId,
@@ -672,8 +751,11 @@ describe('create/update/upsert row/column action test', async () => {
 
       describe('mode = array', async () => {
         it('no matches are found, going to create new column, mode = array', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -695,8 +777,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21D1%3AD3:append`, {
               majorDimension: 'COLUMNS',
               values: [
                 ['ValueRow1',
@@ -730,10 +816,12 @@ describe('create/update/upsert row/column action test', async () => {
           expect(result.body.updatedColumns).to.equal(1);
           expect(result.body.updatedCells).to.equal(3);
         });
-
         it('more than one match column is found, throw an error, mode = array', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -755,8 +843,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .post(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21D1%3AD3:append`, {
+            .post(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21D1%3AD3:append`, {
               majorDimension: 'COLUMNS',
               values: [
                 ['ValueRow1',
@@ -786,10 +878,12 @@ describe('create/update/upsert row/column action test', async () => {
           };
           await expect(upsertSpreadsheetRow.process.call(emitter, msg, configuration)).be.rejectedWith('More than one rows found');
         });
-
         it('exactly one match column is found, mode = array', async () => {
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+            .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
             .reply(200, {
               range: 'Sheet1!A1:AB1001',
               majorDimension: 'ROWS',
@@ -811,8 +905,12 @@ describe('create/update/upsert row/column action test', async () => {
                 ],
               ],
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .times(2)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-            .put(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}%21B1%3AB3`, { majorDimension: 'COLUMNS', values: [['ValueRow1', 'valueB2', 'ValueRow3']] })
+            .put(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}%21B1%3AB3`, { majorDimension: 'COLUMNS', values: [['ValueRow1', 'valueB2', 'ValueRow3']] })
             .query({ valueInputOption: 'RAW' })
             .reply(200, {
               spreadsheetId,
@@ -866,8 +964,11 @@ describe('create/update/upsert row/column action test', async () => {
         ],
       ];
       it('dimension = ROWS, mode = header', async () => {
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
         nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
           .reply(200, {
             values: spreadSheetValues,
           });
@@ -880,10 +981,12 @@ describe('create/update/upsert row/column action test', async () => {
           ColumnC1: 'ColumnC1',
         });
       });
-
       it('dimension = ROWS, mode = array', async () => {
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
         nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
           .reply(200, {
             range: 'Sheet1!A1:AB1001',
             majorDimension: 'ROWS',
@@ -898,10 +1001,12 @@ describe('create/update/upsert row/column action test', async () => {
           C: 'C',
         });
       });
-
       it('dimension = COLUMNS, mode = header', async () => {
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
         nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
           .reply(200, {
             range: 'Sheet1!A1:AB1001',
             majorDimension: 'ROWS',
@@ -917,10 +1022,12 @@ describe('create/update/upsert row/column action test', async () => {
           RowA4: 'RowA4',
         });
       });
-
       it('dimension = COLUMNS, mode = array', async () => {
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
         nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
           .reply(200, {
             values: spreadSheetValues,
           });
@@ -934,10 +1041,12 @@ describe('create/update/upsert row/column action test', async () => {
           4: 4,
         });
       });
-
       it('dimension = ROWS, mode = header, more than one cell empty, throw an error', async () => {
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
         nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
           .reply(200, {
             values: [
               [
@@ -966,10 +1075,12 @@ describe('create/update/upsert row/column action test', async () => {
         configuration.mode = 'header';
         await expect(upsertSpreadsheetRow.getUpsertCriteria.call(emitter, configuration)).be.rejectedWith('Input Mode: "First Row As Headers" requires at most one cell in the header row can be empty.');
       });
-
       it('dimension = COLUMNS, mode = header, more than one cell empty, throw an error', async () => {
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
         nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-          .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+          .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
           .reply(200, {
             values: [
               [
@@ -1025,8 +1136,11 @@ describe('create/update/upsert row/column action test', async () => {
       ],
     ];
     it('dimension = ROWS, mode = header', async () => {
+      nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, {
           values: spreadSheetValues,
         });
@@ -1058,10 +1172,12 @@ describe('create/update/upsert row/column action test', async () => {
         },
       });
     });
-
     it('dimension = ROWS, mode = array', async () => {
+      nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, {
           values: spreadSheetValues,
         });
@@ -1093,10 +1209,12 @@ describe('create/update/upsert row/column action test', async () => {
         },
       });
     });
-
     it('dimension = COLUMNS, mode = header', async () => {
+      nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, {
           range: 'Sheet1!A1:AB1001',
           majorDimension: 'ROWS',
@@ -1136,10 +1254,12 @@ describe('create/update/upsert row/column action test', async () => {
         },
       });
     });
-
     it('dimension = COLUMNS, mode = array', async () => {
+      nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, {
           values: spreadSheetValues,
         });
@@ -1177,10 +1297,12 @@ describe('create/update/upsert row/column action test', async () => {
         },
       });
     });
-
     it('dimension = ROWS, mode = header, more than one cell empty, throw an error', async () => {
+      nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, {
           values: [
             [
@@ -1210,10 +1332,12 @@ describe('create/update/upsert row/column action test', async () => {
       configuration.upsertCriteria = 'ColumnC1';
       await expect(upsertSpreadsheetRow.getMetaModel.call(emitter, configuration)).be.rejectedWith('Input Mode: "First Row As Headers" requires at most one cell with empty header');
     });
-
     it('dimension = COLUMNS, mode = header, more than one cell empty, throw an error', async () => {
+      nock('https://sheets.googleapis.com')
+        .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+        .reply(200, listWorksheetsReply);
       nock('https://sheets.googleapis.com:443', { encodedQueryParams: true })
-        .get(`/v4/spreadsheets/${spreadsheetId}/values/${worksheetId}`)
+        .get(`/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(worksheetName)}`)
         .reply(200, {
           values: [
             [
