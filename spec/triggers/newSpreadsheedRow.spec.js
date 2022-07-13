@@ -96,9 +96,7 @@ describe('newSpreadsheetRow', () => {
                   ['Tom9', 'Smith9'],
                   ['Tom10', 'Smith10']],
               }],
-          },
-          ['Content-Type', 'application/json; charset=UTF-8']);
-        // nock.recorder.rec();
+          }, ['Content-Type', 'application/json; charset=UTF-8']);
         await processTrigger.call(context, {}, configuration, snapshot);
         expect(context.emit.getCalls().length).to.be.equal(11);
         expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
