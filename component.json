@@ -41,14 +41,16 @@
           "viewClass": "SelectView",
           "prompt": "Select your spreadsheet",
           "label": "Spreadsheet",
+          "order": 10,
           "required": true,
           "model": "listSpreadsheets"
         },
-        "worksheetName": {
+        "worksheetId": {
           "viewClass": "SelectView",
-          "prompt": "Select your worksheet",
+          "prompt": "Select your worksheet (spreadsheet required)",
           "label": "Worksheet",
           "required": true,
+          "order": 8,
           "model": "listWorksheets",
           "require": [
             "spreadsheetId"
