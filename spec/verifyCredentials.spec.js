@@ -1,28 +1,35 @@
-const fs = require('fs');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const logger = require('@elastic.io/component-logger')();
 const nock = require('nock');
 
+const sinon = require('sinon');
 const verify = require('../verifyCredentials');
 
 chai.use(chaiAsPromised);
+const { expect } = chai;
+let context;
 
 describe('Verify Credentials', () => {
-  let configuration;
-  before(() => {
-    if (fs.existsSync('.env')) {
-      // eslint-disable-next-line global-require
-      require('dotenv').config();
-    }
-    configuration = {
-      oauth: {
-        access_token: 'some_token',
-        expiry_date: 5000000000000,
-        refresh_token: 'some_refresh_token',
-        scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',
-        token_type: 'Bearer',
+  afterEach(() => {
+    nock.cleanAll();
+  });
+  const configuration = {
+    oauth: {
+      type: 'OAuth2',
+      oauth2: {
+        keys: {
+          access_token: 'access_token',
+          expires_in: 3599,
+          refresh_token: 'refresh_token',
+          scope: 'https://www.googleapis.com/auth/spreadsheets,https://www.googleapis.com/auth/drive.metadata.readonly',
+          additional_params: '{"access_type":"offline","prompt":"consent"}',
+        },
       },
-    };
+    },
+  };
+  beforeEach(() => {
+    context = { logger, emit: sinon.spy() };
   });
 
 
@@ -44,6 +51,7 @@ describe('Verify Credentials', () => {
         ],
       });
 
-    await verify(configuration);
+    const result = await verify.call(context, configuration);
+    expect(result).to.deep.equal({ 1: 'Sheet1', 2: 'Sheet2' });
   });
 });

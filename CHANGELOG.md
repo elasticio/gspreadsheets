@@ -1,3 +1,9 @@
+## 3.0.0 (July 15, 2022)
+
+* Use Faceless service for authentication 
+* Add `Create/Upsert/Update Spreadsheet Row` action
+* Added `Read Spreadsheet` action
+ 
 ## 2.0.3 (May 20, 2022)
 
 * Moved a delay between calls value from env vars to credentials

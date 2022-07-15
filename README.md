@@ -1,12 +1,25 @@
 [![CircleCI](https://circleci.com/gh/elasticio/gspreadsheets.svg?style=svg)](https://circleci.com/gh/elasticio/gspreadsheets)
 # Google Spreadsheets component
 
+## Table of Contents
+
+* [Description](#description)
+* [Google preparations](#google-preparations)
+* [Environment variables](#environment-variables)
+* [Credentials](#credentials)
+* [Triggers](#triggers)
+ * [Get Spreadsheet Row](#get-spreadsheet-row) 
+* [Actions](#actions) 
+ * [Read Spreadsheet](#read-spreadsheet) 
+ * [Create new Spreadsheet](#create-new-spreadsheet) 
+ * [Add Spreadsheet Row](#add-spreadsheet-row)
+* [Recommendations](#recommendations)
+* [License](#license)
+
 ## Description
 
 [elastic.io](http://www.elastic.io) iPaaS component to read and write to Google Spreadsheets
 Component Completeness [Matrix](https://docs.google.com/spreadsheets/d/1usD_k7NxyiplSEXgttAT9dmpgDNADCED7z4UCoRaAfs)
-
-## Requirements
 
 ### Google preparations
 
@@ -24,27 +37,36 @@ https://support.google.com/cloud/answer/7454865?hl=en
 
 ### Environment variables
 
-Here are the environment variables to configure for the component to connect with
-the Google API:
-
-Following environment variables are required:
-
- - `OAUTH_CLIENT_ID` - oauth App ID
- - `OAUTH_CLIENT_SECRET` - oauth App Secret
- 
-To get these please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
- 
- Additional environment variables:
- 
- - `TENANT_DOMAIN` - your Google API tenant domain. Defaults to `app.elastic.io` if not provided
- - `EIO_REQUIRED_RAM_MB` - recommended value of allocated memory is `512` MB
+Name|Mandatory|Description|Values|
+|----|---------|-----------|------|
+|`REQUEST_MAX_RETRY`| false | Set how many time system try to make request to API on errors (3 by default) | any `integer` above 0|
+|`REQUEST_RETRY_DELAY`| false | Delay between retry attempts in milliseconds (1000 by default) | any `integer` above 0|
+|`REQUEST_TIMEOUT`| false | HTTP requests timeout in milliseconds (120000 by default) | any `integer` above 0|
+|`EIO_REQUIRED_RAM_MB`| false | recommended value of allocated memory is 512 MB | any `integer` above 0|
 
 ## Credentials
 
-Google Spreadsheet works with OAuth2 app configured at your Google Developer Console.
-To Authenticate the component you only need to press the button *Authentication*
-and the process would take you to Google to log-in and give permissions to the
-platform to access your Spreadsheets.
+To get `Client ID` and `Client Secret` please use the [Google Developers Console](https://console.developers.google.com). As a callback please use `https://your-tenant.address/callback/oauth2`.
+During credentials creation you would need to:
+- select existing Auth Client from drop-down list ``Choose Auth Client`` or create the new one.
+  For creating Auth Client you should specify following fields:
+
+Field name|Mandatory| Description                                                                       |
+|----|---------|-----------------------------------------------------------------------------------|
+|Name| true | your Auth Client's name                                                           |
+|Client ID| true | your OAuth client key                                                             |
+|Client Secret| true | your OAuth client secret                                                          |
+|Authorization Endpoint| true | your OAuth authorization endpoint: `https://accounts.google.com/o/oauth2/v2/auth` |
+|Token Endpoint| true | your OAuth Token endpoint for refreshing access token: `https://www.googleapis.com/oauth2/v4/token`|
+
+- fill field ``Name Your Credential``
+- fill field ``Scopes (Comma-separated list)`` as `https://www.googleapis.com/auth/spreadsheets, https://www.googleapis.com/auth/drive.metadata.readonly`
+- fill field ``Additional parameters (Comma-separated list)`` as `access_type:offline,prompt:consent`
+- click on ``Authenticate`` button - the process would take you to Google to log-in and give permissions to the platform to access your Spreadsheets.
+- optional fill field `Enter number of retries`
+- optional fill field `Max number of calls per second`
+- click on ``Verify`` button for verifying your credentials
+- click on ``Save`` button for saving your credentials
 
 - Enter number of retries (Default: 5)
 
@@ -69,7 +91,6 @@ Note: If you don't set a value to either `Enter number of retries` or `Max numbe
 
 
 ## Triggers
-
 
 ### Get Spreadsheet Row
 	
@@ -202,6 +223,29 @@ You can find more information in the [Google Sheets API Documentation](https://d
 
 ## Actions
 
+### Read Spreadsheet
+
+Action read spreadsheet. This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/get). All data structures and limitations are the same to Google API.
+
+*Important!*: Place (start) your table in the top left corner (cell) for data to be processed in the right way. 
+
+#### Configuration Fields
+
+* **Spreadsheet** - (dropdown, required): Spreadsheet name selected from dropdown.
+* **Worksheet** - (dropdown, required): Worksheet to read.
+* **Dimension** - (dropdown, required): The major dimension of the values. `ROWS` or `COLUMNS`.
+* **Use first row or column as a header** - (dropdown, required): If `yes` first row or column will be skipped.
+* **Emit Behavior** - (dropdown, required): A way to emit items. `Emit Individually` or `Fetch All`.
+
+#### Input Metadata
+
+N/A
+
+#### Output Metadata
+
+If `Emit Behavior` = `Fetch All`: object with key `result` - array of items.
+If `Emit Behavior` = `Emit Individually`:  object with key `result` - each item emitted individually.
+
 ### Create new Spreadsheet
 
 Action to create a new Google spreadsheet. This action is based on [Google Spreadsheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create).
@@ -243,6 +287,44 @@ Schema type|Json schema location
 -----------| -------------
 |Output   |[/schemas/createSpreadsheetRow.out.json](/schemas/createSpreadsheetRow.out.json)
 
+### Create/Upsert/Update Spreadsheet Row
+
+Action search the row/column identified by Upsert Criteria and find rows/columns where the value in the sheet matches the value in the incoming message:
+ * If more than one match is found, throw an error.
+ * If no matches are found, add a new row to the bottom of the sheet.
+ * If exactly one match is found, re-write this row/column with the values provided in the incoming message:
+    * If a value is provided in the message, replace the existing cell
+    * If the null value is provided in the message, clear the contents of the existing cell
+    * If the value provided in the message is undefined or the empty string, leave the contents of the cell as is.
+
+#### Configuration Fields
+
+* **Spreadsheet** - (dropdown, required): Spreadsheet name to make changes
+* **Worksheet** - (dropdown, required): Worksheet name of selected Spreadsheet to make changes
+* **Dimension** - (dropdown, required): The major dimension of the values, allowed values: `ROWS`, `COLUMNS`
+* **Input Mode** - (dropdown, non required): Options: `First Row As Headers`, `Array Based`. Default is `First Row As Headers`
+    * First Row As Headers (Default): generates input metadata based on values in first row or column cells (depend on dimension field)
+      This method has few limitations:
+        * There should be at least one value in first row/column;
+        * Values in first row cells must be distinct;
+        * There can be at most one empty cell in first row/column;
+    * Array Based: generates input as the sheet rows/column identifiers (A, B, C, 1, 2, 3, etc);
+* **Upsert Criteria** - (dropdown, required): List of available row/column headers (based on selected dimension)
+
+#### Input Metadata
+
+One input field for each row/column, all inputs optional except for the field identified by Upsert Criteria which is required.
+
+#### Output Metadata
+
+| Field          | Type   | Required | Description                          |
+|----------------|--------|----------|--------------------------------------|
+| spreadsheetId  | string | true     | Unique identifier of the spreadsheet |
+| tableRange     | string | true     | Range of Table                       |
+| updateRange    | string | true     | Updated Range                        |
+| updatedRows    | number | true     | Count of updated rows                |
+| updatedColumns | number | true     | Count of updated columns             |
+| updatedCells   | number | true     | Count of updated cells               |
 
 ## Recommendations
 
