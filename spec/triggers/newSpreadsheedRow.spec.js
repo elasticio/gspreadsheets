@@ -10,6 +10,19 @@ const { process: processTrigger } = require(
   '../../lib/triggers/newSpreadsheetRow',
 );
 
+const worksheetId = '23742873';
+const worksheetName = 'Sheet A';
+const listWorksheetsReply = {
+  sheets: [
+    {
+      properties: {
+        sheetId: worksheetId,
+        title: worksheetName,
+      },
+    },
+  ],
+};
+
 describe('newSpreadsheetRow', () => {
   let configuration;
   let snapshot;
@@ -36,7 +49,7 @@ describe('newSpreadsheetRow', () => {
     configuration = {
       secretId,
       spreadsheetId: '1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM',
-      worksheetName: 'ROWS Dimension',
+      worksheetId,
       includeHeader: 'yes',
       dimension: 'ROWS',
     };
@@ -49,6 +62,9 @@ describe('newSpreadsheetRow', () => {
     nock(process.env.ELASTICIO_API_URI)
       .get(`/v2/workspaces/${process.env.ELASTICIO_WORKSPACE_ID}/secrets/${secretId}`)
       .reply(200, secret);
+    nock('https://sheets.googleapis.com')
+      .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+      .reply(200, listWorksheetsReply);
   });
 
   describe('process', () => {
@@ -62,6 +78,9 @@ describe('newSpreadsheetRow', () => {
             name: 'TestData',
             modifiedTime: '2019-06-20T10:15:14.763Z',
           });
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
 
         nock('https://sheets.googleapis.com:443',
           { encodedQueryParams: true })
@@ -69,7 +88,7 @@ describe('newSpreadsheetRow', () => {
             '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
           )
           .query({
-            ranges: ['ROWS Dimension!A1:GJH1', 'ROWS Dimension!A2:GJH1001'],
+            ranges: ['Sheet A!A1:GJH1', 'Sheet A!A2:GJH1001'],
             majorDimension: 'ROWS',
             valueRenderOption: 'UNFORMATTED_VALUE',
           })
@@ -96,9 +115,7 @@ describe('newSpreadsheetRow', () => {
                   ['Tom9', 'Smith9'],
                   ['Tom10', 'Smith10']],
               }],
-          },
-          ['Content-Type', 'application/json; charset=UTF-8']);
-        // nock.recorder.rec();
+          }, ['Content-Type', 'application/json; charset=UTF-8']);
         await processTrigger.call(context, {}, configuration, snapshot);
         expect(context.emit.getCalls().length).to.be.equal(11);
         expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -116,6 +133,9 @@ describe('newSpreadsheetRow', () => {
             name: 'TestData',
             modifiedTime: '2019-06-20T10:15:14.763Z',
           });
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
 
         nock('https://sheets.googleapis.com:443',
           { encodedQueryParams: true })
@@ -123,7 +143,7 @@ describe('newSpreadsheetRow', () => {
             '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
           )
           .query({
-            ranges: ['ROWS Dimension!A1:GJH1', 'ROWS Dimension!A5:GJH1004'],
+            ranges: ['Sheet A!A1:GJH1', 'Sheet A!A5:GJH1004'],
             majorDimension: 'ROWS',
             valueRenderOption: 'UNFORMATTED_VALUE',
           })
@@ -148,7 +168,6 @@ describe('newSpreadsheetRow', () => {
                   ['Tom10', 'Smith10']],
               }],
           }, ['Content-Type', 'application/json; charset=UTF-8']);
-        // nock.recorder.rec();
 
         await processTrigger.call(context, {}, configuration, snapshot);
         expect(context.emit.getCalls().length).to.be.equal(8);
@@ -172,6 +191,9 @@ describe('newSpreadsheetRow', () => {
             name: 'TestData',
             modifiedTime: '2019-06-20T10:15:14.763Z',
           });
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
 
         nock('https://sheets.googleapis.com:443',
           { encodedQueryParams: true })
@@ -179,7 +201,7 @@ describe('newSpreadsheetRow', () => {
             '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
           )
           .query({
-            ranges: 'ROWS Dimension!A1:GJH1000',
+            ranges: 'Sheet A!A1:GJH1000',
             majorDimension: 'ROWS',
             valueRenderOption: 'UNFORMATTED_VALUE',
           })
@@ -204,8 +226,6 @@ describe('newSpreadsheetRow', () => {
               }],
           }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-        // nock.recorder.rec();
-
         await processTrigger.call(context, {}, configuration, snapshot);
         expect(context.emit.getCalls().length).to.be.equal(12);
         expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -228,6 +248,9 @@ describe('newSpreadsheetRow', () => {
             name: 'TestData',
             modifiedTime: '2019-06-20T10:15:14.763Z',
           });
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
 
         nock('https://sheets.googleapis.com:443',
           { encodedQueryParams: true })
@@ -235,7 +258,7 @@ describe('newSpreadsheetRow', () => {
             '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
           )
           .query({
-            ranges: 'ROWS Dimension!A5:GJH1004',
+            ranges: 'Sheet A!A5:GJH1004',
             majorDimension: 'ROWS',
             valueRenderOption: 'UNFORMATTED_VALUE',
           })
@@ -256,8 +279,6 @@ describe('newSpreadsheetRow', () => {
               }],
           }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-        // nock.recorder.rec();
-
         await processTrigger.call(context, {}, configuration, snapshot);
         expect(context.emit.getCalls().length).to.be.equal(8);
         expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -275,7 +296,6 @@ describe('newSpreadsheetRow', () => {
           snapshot = { lastEmittedLine: 0 };
           configuration.includeHeader = 'yes';
           configuration.dimension = 'COLUMNS';
-          configuration.worksheetName = 'COLUMNS Dimension';
 
           nock('https://www.googleapis.com:443', { encodedQueryParams: true })
             .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
@@ -285,6 +305,9 @@ describe('newSpreadsheetRow', () => {
               name: 'TestData',
               modifiedTime: '2019-06-20T10:15:14.763Z',
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
 
           nock('https://sheets.googleapis.com:443',
             { encodedQueryParams: true })
@@ -292,7 +315,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['COLUMNS Dimension!A1:A5000', 'COLUMNS Dimension!B1:ALM5000'],
+              ranges: ['Sheet A!A1:A5000', 'Sheet A!B1:ALM5000'],
               majorDimension: 'COLUMNS',
               valueRenderOption: 'UNFORMATTED_VALUE',
             })
@@ -322,8 +345,6 @@ describe('newSpreadsheetRow', () => {
                 }],
             }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-          // nock.recorder.rec();
-
           await processTrigger.call(context, {}, configuration, snapshot);
           expect(context.emit.getCalls().length).to.be.equal(11);
           expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -339,7 +360,6 @@ describe('newSpreadsheetRow', () => {
           snapshot = { lastEmittedLine: 4 };
           configuration.includeHeader = 'yes';
           configuration.dimension = 'COLUMNS';
-          configuration.worksheetName = 'COLUMNS Dimension';
 
           nock('https://www.googleapis.com:443', { encodedQueryParams: true })
             .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
@@ -349,14 +369,16 @@ describe('newSpreadsheetRow', () => {
               name: 'TestData',
               modifiedTime: '2019-06-20T10:15:14.763Z',
             });
-
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
           nock('https://sheets.googleapis.com:443',
             { encodedQueryParams: true })
             .get(
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: ['COLUMNS Dimension!A1:A5000', 'COLUMNS Dimension!E1:ALP5000'],
+              ranges: ['Sheet A!A1:A5000', 'Sheet A!E1:ALP5000'],
               majorDimension: 'COLUMNS',
               valueRenderOption: 'UNFORMATTED_VALUE',
             })
@@ -382,8 +404,6 @@ describe('newSpreadsheetRow', () => {
                 }],
             }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-          // nock.recorder.rec();
-
           await processTrigger.call(context, {}, configuration, snapshot);
           expect(context.emit.getCalls().length).to.be.equal(8);
           expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -399,7 +419,6 @@ describe('newSpreadsheetRow', () => {
           snapshot = { lastEmittedLine: 0 };
           configuration.includeHeader = 'no';
           configuration.dimension = 'COLUMNS';
-          configuration.worksheetName = 'COLUMNS Dimension';
 
           nock('https://www.googleapis.com:443', { encodedQueryParams: true })
             .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
@@ -409,6 +428,9 @@ describe('newSpreadsheetRow', () => {
               name: 'TestData',
               modifiedTime: '2019-06-20T10:15:14.763Z',
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
 
           nock('https://sheets.googleapis.com:443',
             { encodedQueryParams: true })
@@ -416,7 +438,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: 'COLUMNS Dimension!A1:ALL5000',
+              ranges: 'Sheet A!A1:ALL5000',
               majorDimension: 'COLUMNS',
               valueRenderOption: 'UNFORMATTED_VALUE',
             })
@@ -441,8 +463,6 @@ describe('newSpreadsheetRow', () => {
                 }],
             }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-          // nock.recorder.rec();
-
           await processTrigger.call(context, {}, configuration, snapshot);
           expect(context.emit.getCalls().length).to.be.equal(12);
           expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -458,7 +478,6 @@ describe('newSpreadsheetRow', () => {
           snapshot = { lastEmittedLine: 4 };
           configuration.includeHeader = 'no';
           configuration.dimension = 'COLUMNS';
-          configuration.worksheetName = 'COLUMNS Dimension';
 
           nock('https://www.googleapis.com:443', { encodedQueryParams: true })
             .get('/drive/v3/files/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM')
@@ -468,6 +487,9 @@ describe('newSpreadsheetRow', () => {
               name: 'TestData',
               modifiedTime: '2019-06-20T10:15:14.763Z',
             });
+          nock('https://sheets.googleapis.com')
+            .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+            .reply(200, listWorksheetsReply);
 
           nock('https://sheets.googleapis.com:443',
             { encodedQueryParams: true })
@@ -475,7 +497,7 @@ describe('newSpreadsheetRow', () => {
               '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
             )
             .query({
-              ranges: 'COLUMNS Dimension!E1:ALP5000',
+              ranges: 'Sheet A!E1:ALP5000',
               majorDimension: 'COLUMNS',
               valueRenderOption: 'UNFORMATTED_VALUE',
             })
@@ -496,8 +518,6 @@ describe('newSpreadsheetRow', () => {
                 }],
             }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-          // nock.recorder.rec();
-
           await processTrigger.call(context, {}, configuration, snapshot);
           expect(context.emit.getCalls().length).to.be.equal(8);
           expect(context.emit.lastCall.args[0]).to.be.equal('snapshot');
@@ -514,7 +534,6 @@ describe('newSpreadsheetRow', () => {
         const conf = Object.create(configuration);
         conf.includeHeader = 'no';
         conf.dimension = 'COLUMNS';
-        conf.worksheetName = 'Sheet1';
         const snap = {
           lastEmittedLine: 11,
           modifiedTime: new Date('2019-06-20T10:15:14.763Z').getTime() - 1000,
@@ -527,6 +546,9 @@ describe('newSpreadsheetRow', () => {
             name: 'TestData',
             modifiedTime: '2019-06-20T10:15:14.763Z',
           });
+        nock('https://sheets.googleapis.com')
+          .get(`/v4/spreadsheets/${configuration.spreadsheetId}`)
+          .reply(200, listWorksheetsReply);
 
         nock('https://sheets.googleapis.com:443',
           { encodedQueryParams: true })
@@ -534,7 +556,7 @@ describe('newSpreadsheetRow', () => {
             '/v4/spreadsheets/1gzn1CA_lvkzrjWETWhUoh0cyY_GBvgwK55IAhfGGVlM/values:batchGet',
           )
           .query({
-            ranges: 'Sheet1!L1:ALW5000',
+            ranges: 'Sheet A!L1:ALW5000',
             majorDimension: 'COLUMNS',
             valueRenderOption: 'UNFORMATTED_VALUE',
           })
@@ -547,7 +569,6 @@ describe('newSpreadsheetRow', () => {
               }],
           }, ['Content-Type', 'application/json; charset=UTF-8']);
 
-        // nock.recorder.rec();
 
         await processTrigger.call(context, {}, conf, snap);
       });
