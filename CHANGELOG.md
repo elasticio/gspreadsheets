@@ -1,3 +1,8 @@
+## 2.0.4 (October 07, 2022)
+* Update Sailor version to 2.7.0
+* Get rid of vulnerabilities in dependencies
+* Fixed errors during push to platform - reduced size of metadata
+
 ## 2.0.3 (May 20, 2022)
 
 * Moved a delay between calls value from env vars to credentials
